@@ -50,10 +50,10 @@ export function FeaturesPage() {
   return (
     <div className="max-w-6xl mx-auto px-6 py-16 space-y-16 animate-fade-in">
       <div className="text-center space-y-4 max-w-3xl mx-auto">
-        <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+        <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
           Everything You Need to Hire Top Talent
         </h1>
-        <p className="text-sm text-slate-300 leading-relaxed">
+        <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
           HirebridgeHR combines modern design aesthetics with enterprise-grade productivity. Every tool is crafted to eliminate recruiter busywork and accelerate time-to-hire.
         </p>
       </div>
@@ -62,12 +62,12 @@ export function FeaturesPage() {
         {features.map((feat, i) => {
           const Icon = feat.icon;
           return (
-            <Card key={i} className="p-6 space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-brand-500/15 border border-brand-500/30 flex items-center justify-center text-brand-400">
+            <Card key={i} className="p-6 space-y-3 hover:translate-y-[-2px] transition-transform">
+              <div className="w-10 h-10 rounded-xl bg-brand-500/15 border border-brand-500/30 flex items-center justify-center text-brand-600 dark:text-brand-400">
                 <Icon className="w-5 h-5" />
               </div>
-              <h3 className="text-base font-bold text-white">{feat.title}</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">{feat.desc}</p>
+              <h3 className="text-base font-bold text-slate-900 dark:text-white">{feat.title}</h3>
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">{feat.desc}</p>
             </Card>
           );
         })}

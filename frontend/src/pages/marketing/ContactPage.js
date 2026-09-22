@@ -19,10 +19,10 @@ export function ContactPage() {
   return (
     <div className="max-w-4xl mx-auto px-6 py-16 space-y-12 animate-fade-in">
       <div className="text-center space-y-4">
-        <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+        <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
           Get in Touch with Our Team
         </h1>
-        <p className="text-sm text-slate-400 max-w-lg mx-auto leading-relaxed">
+        <p className="text-sm text-slate-600 dark:text-slate-400 max-w-lg mx-auto leading-relaxed">
           Questions regarding enterprise deployment, ATS migration, or product onboarding? We&apos;re here to assist.
         </p>
       </div>
@@ -30,25 +30,25 @@ export function ContactPage() {
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
         <div className="md:col-span-5 space-y-6">
           <Card className="p-6 space-y-4">
-            <h3 className="text-sm font-bold text-white uppercase tracking-wider">Contact Details</h3>
-            <div className="space-y-3 text-xs text-slate-300">
+            <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">Contact Details</h3>
+            <div className="space-y-3 text-xs text-slate-700 dark:text-slate-300">
               <div className="flex items-center gap-2.5">
-                <Mail className="w-4 h-4 text-brand-400" />
+                <Mail className="w-4 h-4 text-brand-600 dark:text-brand-400" />
                 <span>support@hirebridgehr.example.com</span>
               </div>
               <div className="flex items-center gap-2.5">
-                <Phone className="w-4 h-4 text-brand-400" />
+                <Phone className="w-4 h-4 text-brand-600 dark:text-brand-400" />
                 <span>+1 (800) 555-0199</span>
               </div>
               <div className="flex items-center gap-2.5">
-                <MapPin className="w-4 h-4 text-brand-400" />
+                <MapPin className="w-4 h-4 text-brand-600 dark:text-brand-400" />
                 <span>500 Howard Street, San Francisco, CA</span>
               </div>
             </div>
           </Card>
 
-          <Card className="p-6 space-y-2 text-xs text-slate-400">
-            <h4 className="font-bold text-white">Support Availability</h4>
+          <Card className="p-6 space-y-2 text-xs text-slate-600 dark:text-slate-400">
+            <h4 className="font-bold text-slate-900 dark:text-white">Support Availability</h4>
             <p>24/7 Priority Support for Enterprise & Agency tiers.</p>
             <p>General inquiry response time: &lt; 4 hours.</p>
           </Card>

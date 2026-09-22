@@ -52,24 +52,55 @@ export function MarketingLayout() {
           </Link>
         </div>
 
-        {/* Mobile Hamburger */}
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white p-1"
-        >
-          {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
+        {/* Mobile Action Controls */}
+        <div className="flex md:hidden items-center gap-1.5">
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-white/10 min-w-[38px] min-h-[38px] flex items-center justify-center transition-colors"
+            aria-label="Toggle Theme"
+          >
+            {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-cyan-600" />}
+          </button>
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-white/10 min-w-[40px] min-h-[40px] flex items-center justify-center active:scale-95 transition-all"
+            aria-label="Toggle Navigation Menu"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
       </header>
+
+      {/* Mobile Drawer Backdrop */}
+      {mobileMenuOpen && (
+        <div
+          className="md:hidden fixed inset-0 z-40 bg-slate-950/60 backdrop-blur-sm transition-opacity"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-x-4 top-24 z-50 glass-panel rounded-2xl p-6 border border-white/80 dark:border-white/15 shadow-glass-lg flex flex-col gap-4 animate-scale-in">
-          <Link to="/features" onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-slate-800 dark:text-slate-200">Features</Link>
-          <Link to="/pricing" onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-slate-800 dark:text-slate-200">Pricing</Link>
-          <Link to="/about" onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-slate-800 dark:text-slate-200">About</Link>
-          <Link to="/contact" onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-slate-800 dark:text-slate-200">Contact</Link>
+        <div className="md:hidden fixed inset-x-4 top-24 z-50 glass-panel rounded-2xl p-6 border border-slate-200/90 dark:border-white/15 shadow-glass-lg flex flex-col gap-3.5 animate-scale-in">
+          <Link to="/features" onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-slate-800 dark:text-slate-200 hover:text-brand-600 dark:hover:text-brand-400 py-1 transition-colors">Features</Link>
+          <Link to="/pricing" onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-slate-800 dark:text-slate-200 hover:text-brand-600 dark:hover:text-brand-400 py-1 transition-colors">Pricing</Link>
+          <Link to="/about" onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-slate-800 dark:text-slate-200 hover:text-brand-600 dark:hover:text-brand-400 py-1 transition-colors">About</Link>
+          <Link to="/contact" onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-slate-800 dark:text-slate-200 hover:text-brand-600 dark:hover:text-brand-400 py-1 transition-colors">Contact</Link>
+          <Link to="/dashboard" onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-cyan-600 dark:text-cyan-400 py-1 transition-colors">Launch ATS Demo</Link>
           <hr className="border-slate-200 dark:border-white/10" />
-          <Link to="/signin" onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-slate-700 dark:text-slate-300">Sign In</Link>
+          <div className="flex items-center justify-between py-1">
+            <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Appearance</span>
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-slate-300"
+            >
+              {theme === 'dark' ? <><Sun className="w-3.5 h-3.5 text-amber-400" /> Light</> : <><Moon className="w-3.5 h-3.5 text-cyan-600" /> Dark</>}
+            </button>
+          </div>
+          <Link to="/signin" onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-slate-700 dark:text-slate-300 py-1">Sign In</Link>
           <Link to="/signup" onClick={() => setMobileMenuOpen(false)}>
             <Button variant="primary" className="w-full">
               Get Started Free &rarr;
@@ -123,10 +154,10 @@ export function MarketingLayout() {
           <div>
             <h4 className="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-[11px] mb-3">Legal & Trust</h4>
             <ul className="space-y-2">
-              <li><span className="hover:text-slate-900 dark:hover:text-white cursor-pointer">Security & SOC2</span></li>
-              <li><span className="hover:text-slate-900 dark:hover:text-white cursor-pointer">Privacy Policy</span></li>
-              <li><span className="hover:text-slate-900 dark:hover:text-white cursor-pointer">Terms of Service</span></li>
-              <li><span className="hover:text-slate-900 dark:hover:text-white cursor-pointer">GDPR Compliance</span></li>
+              <li><Link to="/security" className="hover:text-slate-900 dark:hover:text-white transition-colors">Security & SOC2</Link></li>
+              <li><Link to="/privacy" className="hover:text-slate-900 dark:hover:text-white transition-colors">Privacy Policy</Link></li>
+              <li><Link to="/terms" className="hover:text-slate-900 dark:hover:text-white transition-colors">Terms of Service</Link></li>
+              <li><Link to="/security" className="hover:text-slate-900 dark:hover:text-white transition-colors">GDPR Compliance</Link></li>
             </ul>
           </div>
         </div>

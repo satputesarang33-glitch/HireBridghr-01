@@ -58,10 +58,10 @@ export function PricingPage() {
   return (
     <div className="max-w-6xl mx-auto px-6 py-16 space-y-16 animate-fade-in">
       <div className="text-center space-y-4 max-w-2xl mx-auto">
-        <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+        <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
           Simple, Transparent Pricing
         </h1>
-        <p className="text-sm text-slate-300 leading-relaxed">
+        <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
           Scale your hiring operations without hidden fees or per-candidate penalties.
         </p>
       </div>
@@ -70,8 +70,8 @@ export function PricingPage() {
         {tiers.map((t, i) => (
           <Card
             key={i}
-            className={`p-6 sm:p-8 flex flex-col justify-between relative ${
-              t.popular ? 'border-brand-400/50 shadow-glow-brand bg-slate-900/80' : ''
+            className={`p-6 sm:p-8 flex flex-col justify-between relative hover:translate-y-[-2px] transition-transform ${
+              t.popular ? 'border-brand-500/50 shadow-glow-brand bg-brand-50/40 dark:bg-slate-900/80 ring-1 ring-brand-500/30' : ''
             }`}
           >
             {t.popular && (
@@ -82,19 +82,19 @@ export function PricingPage() {
 
             <div className="space-y-4">
               <div>
-                <h3 className="text-lg font-bold text-white">{t.name}</h3>
-                <p className="text-xs text-slate-400 mt-1 leading-relaxed">{t.desc}</p>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white">{t.name}</h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">{t.desc}</p>
               </div>
 
               <div className="flex items-baseline gap-1 py-2">
-                <span className="text-3xl sm:text-4xl font-black text-white">{t.price}</span>
-                <span className="text-xs text-slate-400">{t.period}</span>
+                <span className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white">{t.price}</span>
+                <span className="text-xs text-slate-500 dark:text-slate-400">{t.period}</span>
               </div>
 
-              <ul className="space-y-2.5 pt-2 border-t border-white/10 text-xs text-slate-300">
+              <ul className="space-y-2.5 pt-2 border-t border-slate-200 dark:border-white/10 text-xs text-slate-700 dark:text-slate-300">
                 {t.features.map((f, j) => (
                   <li key={j} className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-4 h-4 text-emerald-500 dark:text-emerald-400 flex-shrink-0 mt-0.5" />
                     <span>{f}</span>
                   </li>
                 ))}
