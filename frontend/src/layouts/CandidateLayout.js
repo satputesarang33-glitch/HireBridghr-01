@@ -73,7 +73,7 @@ export function CandidateLayout() {
       {/* Mobile Drawer Overlay */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-40 bg-slate-950/60 backdrop-blur-md lg:hidden"
+          className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm lg:hidden transition-opacity"
           onClick={() => setMobileOpen(false)}
         />
       )}
@@ -81,7 +81,7 @@ export function CandidateLayout() {
       {/* Candidate Sidebar */}
       <aside
         className={cn(
-          'app-sidebar fixed lg:static inset-y-0 left-0 z-50 flex flex-col justify-between p-4',
+          'app-sidebar fixed lg:static inset-y-0 left-0 z-[60] flex flex-col justify-between p-4 overflow-y-auto max-h-screen',
           mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         )}
       >
@@ -102,8 +102,10 @@ export function CandidateLayout() {
               </div>
             </Link>
             <button
+              type="button"
               onClick={() => setMobileOpen(false)}
-              className="lg:hidden text-slate-400 hover:text-slate-900 dark:hover:text-white p-1"
+              className="lg:hidden text-slate-400 hover:text-slate-900 dark:hover:text-white p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-white/10 min-w-[38px] min-h-[38px] flex items-center justify-center transition-colors"
+              aria-label="Close sidebar"
             >
               <X className="w-5 h-5" />
             </button>
@@ -199,21 +201,22 @@ export function CandidateLayout() {
       {/* Main Candidate Content */}
       <div className="app-main-content flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Top Floating Glass Header */}
-        <header className="glass-header h-16 px-6 flex items-center justify-between gap-4 z-20 shrink-0">
-          <div className="flex items-center gap-3">
+        <header className="glass-header h-16 px-4 sm:px-6 flex items-center justify-between gap-3 sm:gap-4 z-20 shrink-0">
+          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
             <button
+              type="button"
               onClick={() => setMobileOpen(true)}
-              className="lg:hidden text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-white/10"
+              className="lg:hidden text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white p-2 -ml-1 rounded-xl hover:bg-slate-100 dark:hover:bg-white/10 active:scale-95 transition-all min-w-[40px] min-h-[40px] flex items-center justify-center"
               aria-label="Open sidebar"
             >
               <Menu className="w-5 h-5" />
             </button>
 
             {/* Breadcrumb Navigation */}
-            <div className="flex items-center gap-2 text-xs">
-              <span className="text-slate-500 dark:text-slate-400 font-medium">Candidate Portal</span>
-              <ChevronRight className="w-3.5 h-3.5 text-slate-400 dark:text-slate-600" />
-              <span className="text-slate-900 dark:text-white font-bold">{breadcrumbTitle}</span>
+            <div className="flex items-center gap-1.5 sm:gap-2 text-xs min-w-0">
+              <span className="hidden sm:inline text-slate-500 dark:text-slate-400 font-medium">Candidate Portal</span>
+              <ChevronRight className="hidden sm:inline w-3.5 h-3.5 text-slate-400 dark:text-slate-600 shrink-0" />
+              <span className="text-slate-900 dark:text-white font-bold truncate">{breadcrumbTitle}</span>
             </div>
           </div>
 
