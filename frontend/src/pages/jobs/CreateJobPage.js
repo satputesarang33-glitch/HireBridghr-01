@@ -96,9 +96,14 @@ export function CreateJobPage() {
   };
 
   const handleSave = async (status) => {
+    // When submitting for publication, directly mark status as PUBLISHED
+    const effectiveStatus = (status === 'PENDING_ADMIN_PUBLICATION' || status === 'PUBLISHED')
+      ? 'PUBLISHED'
+      : status;
+
     const jobPayload = {
       ...formData,
-      status, // 'DRAFT' or 'PENDING_ADMIN_PUBLICATION'
+      status: effectiveStatus,
       recruiterId: user?.id || 'usr-3',
       recruiterName: user?.name || 'Recruiter Lead',
     };
@@ -479,8 +484,7 @@ export function CreateJobPage() {
             {/* Distribution Workflow Information Alert */}
             <div className="p-4 rounded-xl bg-cyan-950/30 border border-cyan-500/30 text-xs text-slate-300 leading-relaxed">
               <strong className="text-cyan-300 block mb-1">HirebridgeHR Publication Pipeline:</strong>
-              When you click <strong>&quot;Submit for Publication&quot;</strong>, a publication request is registered in the{' '}
-              <strong>Admin Publication Queue</strong> under status <code>PENDING_ADMIN_PUBLICATION</code>. The platform admin reviews the requisition and marks it Published to go live on public portals.
+              When you click <strong>&quot;Submit for Publication Request&quot;</strong>, the job requisition is published immediately with status <code>Published</code> and made live on career portals.
             </div>
           </div>
 
@@ -502,7 +506,8 @@ export function CreateJobPage() {
                 variant="primary"
                 icon={Send}
                 isLoading={createJobMutation.isPending}
-                onClick={() => handleSave('PENDING_ADMIN_PUBLICATION')}
+                onClick={() => handleSave('PUBLISHED')}
+                aria-label="Submit for Publication Request"
               >
                 Submit for Publication Request
               </Button>

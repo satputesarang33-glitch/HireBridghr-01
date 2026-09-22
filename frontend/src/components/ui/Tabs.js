@@ -3,13 +3,15 @@ import { cn } from '../../utils/cn.js';
 
 export function Tabs({ tabs, activeTab, onChange, className }) {
   return (
-    <div className={cn('flex items-center gap-1.5 p-1 glass-panel rounded-2xl border border-white/80 dark:border-white/10 w-fit overflow-x-auto', className)}>
+    <div role="tablist" className={cn('flex items-center gap-1.5 p-1 glass-panel rounded-2xl border border-white/80 dark:border-white/10 w-fit overflow-x-auto', className)}>
       {tabs.map((tab) => {
         const isActive = activeTab === tab.id;
         const Icon = tab.icon;
         return (
           <button
             key={tab.id}
+            role="tab"
+            aria-selected={isActive}
             onClick={() => onChange(tab.id)}
             className={cn(
               'flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 whitespace-nowrap',

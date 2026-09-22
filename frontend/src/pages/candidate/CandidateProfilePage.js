@@ -164,7 +164,11 @@ export function CandidateProfilePage() {
 
   const handleSaveAllChanges = async () => {
     try {
-      await updateProfileMutation.mutateAsync(formData);
+      const updatedPayload = {
+        ...formData,
+        fullName: `${formData.firstName || ''} ${formData.lastName || ''}`.trim(),
+      };
+      await updateProfileMutation.mutateAsync(updatedPayload);
       setIsEditing(false);
       toast.success('Profile updated', 'Your candidate profile changes have been saved.');
     } catch (err) {
@@ -384,7 +388,10 @@ export function CandidateProfilePage() {
             </div>
 
             <div className="space-y-4">
-              {(formData.experience || []).map((exp, index) => (
+              {((formData.experience && formData.experience.length > 0)
+                ? formData.experience
+                : (formData.workExperience || [])
+              ).map((exp, index) => (
                 <div
                   key={exp.id || index}
                   className="p-4 rounded-xl bg-white/5 border border-white/10 space-y-2 relative"
@@ -482,7 +489,12 @@ export function CandidateProfilePage() {
                     {proj.description}
                   </p>
                   <div className="flex flex-wrap gap-1 pt-1">
-                    {(proj.technologies || []).map((tech) => (
+                    {(Array.isArray(proj.technologies)
+                      ? proj.technologies
+                      : typeof proj.technologies === 'string'
+                      ? proj.technologies.split(',').map((t) => t.trim()).filter(Boolean)
+                      : []
+                    ).map((tech) => (
                       <span
                         key={tech}
                         className="px-1.5 py-0.5 rounded text-[10px] bg-white/5 border border-white/10 text-slate-300"

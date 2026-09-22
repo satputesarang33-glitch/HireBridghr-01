@@ -18,8 +18,15 @@ import {
   Share2,
   ExternalLink,
   ShieldCheck,
+  Star,
 } from 'lucide-react';
-import { useCandidate, useAddCandidateNote, useAssignRecruiter } from '../../hooks/useCandidates.js';
+import {
+  useCandidate,
+  useAddCandidateNote,
+  useAssignRecruiter,
+  useSaveCandidateEvaluation,
+  useUpdateCandidateRating,
+} from '../../hooks/useCandidates.js';
 import { useApplications } from '../../hooks/useApplications.js';
 import { useAuth } from '../../context/AuthContext.js';
 import { useToast } from '../../context/ToastContext.js';
@@ -39,6 +46,7 @@ export function CandidateDetailsPage() {
 
   const [activeTab, setActiveTab] = useState('overview');
   const [newNoteContent, setNewNoteContent] = useState('');
+  const [newNoteRating, setNewNoteRating] = useState(5);
   const [showAssignModal, setShowAssignModal] = useState(false);
   const [selectedRecruiter, setSelectedRecruiter] = useState('usr-3');
 
@@ -46,6 +54,8 @@ export function CandidateDetailsPage() {
   const { data: appsRes } = useApplications();
   const addNoteMutation = useAddCandidateNote();
   const assignRecruiterMutation = useAssignRecruiter();
+  const saveEvaluationMutation = useSaveCandidateEvaluation();
+  const updateRatingMutation = useUpdateCandidateRating();
 
   const candidate = candRes?.data;
   const applications = (appsRes?.data || []).filter((a) => a.candidateId === id);
@@ -75,18 +85,33 @@ export function CandidateDetailsPage() {
     e.preventDefault();
     if (!newNoteContent.trim()) return;
 
-    addNoteMutation.mutate(
+    saveEvaluationMutation.mutate(
       {
         candidateId: id,
-        note: {
-          author: user?.name || 'Recruiter Lead',
-          content: newNoteContent.trim(),
+        evaluationData: {
+          note: newNoteContent.trim(),
+          rating: Number(newNoteRating),
+          recruiter: user?.name || 'Recruiter Lead',
         },
       },
       {
-        onSuccess: () => setNewNoteContent(''),
+        onSuccess: () => {
+          setNewNoteContent('');
+        },
       }
     );
+  };
+
+  const handleDirectRatingUpdate = (newRating) => {
+    setNewNoteRating(newRating);
+    saveEvaluationMutation.mutate({
+      candidateId: id,
+      evaluationData: {
+        rating: Number(newRating),
+        note: `Updated candidate evaluation rating to ${newRating}/5.`,
+        recruiter: user?.name || 'Recruiter Lead',
+      },
+    });
   };
 
   const handleAssignRecruiter = () => {
@@ -151,6 +176,16 @@ export function CandidateDetailsPage() {
 
         {/* Recruiter Ownership Badge & Actions */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+          <div className="p-2 px-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs" data-testid="candidate-rating-badge">
+            <span className="text-[10px] text-amber-400 uppercase tracking-wider block font-semibold">Evaluation Rating</span>
+            <div className="flex items-center gap-1.5 mt-0.5">
+              <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
+              <span className="text-white font-bold text-sm" data-testid="candidate-rating-display">
+                {candidate.rating ? `${candidate.rating}/5` : '5/5'}
+              </span>
+            </div>
+          </div>
+
           <div className="p-2 px-3 rounded-xl bg-white/5 border border-white/10 text-xs">
             <span className="text-[10px] text-slate-400 uppercase tracking-wider block font-semibold">Assigned Recruiter</span>
             <span className="text-white font-bold">{candidate.assignedRecruiterName || 'Unassigned'}</span>
@@ -219,6 +254,13 @@ export function CandidateDetailsPage() {
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 border-b border-white/10 pb-2">
                 Profile Insights
               </h3>
+              <div className="flex justify-between items-center">
+                <span className="text-slate-400">Candidate Rating:</span>
+                <div className="flex items-center gap-1 font-bold text-amber-400">
+                  <Star className="w-3.5 h-3.5 fill-amber-400" />
+                  <span>{candidate.rating ? `${candidate.rating}/5` : '5/5'}</span>
+                </div>
+              </div>
               <div className="flex justify-between">
                 <span className="text-slate-400">Total Experience:</span>
                 <span className="font-mono font-bold text-white">{candidate.experienceYears} Years</span>
@@ -381,25 +423,117 @@ export function CandidateDetailsPage() {
         <div className="space-y-6">
           {/* Add Note Form */}
           <Card className="p-5">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
-              Add Recruiter Assessment Note
-            </h4>
-            <form onSubmit={handleAddNote} className="space-y-3">
-              <textarea
-                rows={3}
-                placeholder="Write interview notes, phone screen summary, or evaluation feedback..."
-                value={newNoteContent}
-                onChange={(e) => setNewNoteContent(e.target.value)}
-                className="glass-input w-full rounded-xl p-3 text-xs leading-relaxed"
-                required
-              />
-              <div className="flex justify-end">
+            <div className="flex items-center justify-between mb-3">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                Add Recruiter Assessment & Rating
+              </h4>
+              <span className="text-xs font-bold text-amber-400 font-mono">
+                Current Rating: {candidate.rating ? `${candidate.rating}/5` : '5/5'}
+              </span>
+            </div>
+
+            <form onSubmit={handleAddNote} className="space-y-4">
+              {/* Rating Controls Area */}
+              <div className="p-3.5 rounded-xl bg-white/5 border border-white/10 space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <label htmlFor="rating" className="block text-xs font-semibold text-slate-300 mb-1">
+                      Candidate Rating
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <select
+                        id="rating"
+                        name="rating"
+                        aria-label="Rating"
+                        value={newNoteRating}
+                        onChange={(e) => setNewNoteRating(Number(e.target.value))}
+                        className="glass-input rounded-xl px-3 py-1.5 text-xs text-white bg-slate-900 border border-white/20 focus:outline-none focus:ring-2 focus:ring-brand-500 font-medium cursor-pointer"
+                      >
+                        <option value={5} className="bg-slate-900 text-white">5 - Exceptional (5/5)</option>
+                        <option value={4} className="bg-slate-900 text-white">4 - Strong Fit (4/5)</option>
+                        <option value={3} className="bg-slate-900 text-white">3 - Meets Requirements (3/5)</option>
+                        <option value={2} className="bg-slate-900 text-white">2 - Marginal Fit (2/5)</option>
+                        <option value={1} className="bg-slate-900 text-white">1 - Does Not Meet (1/5)</option>
+                      </select>
+
+                      <input
+                        id="candidate-rating-number"
+                        type="number"
+                        min={1}
+                        max={5}
+                        step={1}
+                        name="candidateRating"
+                        aria-label="Numeric Rating"
+                        value={newNoteRating}
+                        onChange={(e) => setNewNoteRating(Math.max(1, Math.min(5, Number(e.target.value) || 1)))}
+                        className="glass-input w-16 rounded-xl px-2 py-1.5 text-xs text-center text-white bg-slate-900 border border-white/20 font-mono font-bold"
+                      />
+                      <span className="text-xs text-slate-400 font-medium">/ 5</span>
+                    </div>
+                  </div>
+
+                  {/* Star Rating Control */}
+                  <div>
+                    <span className="block text-xs font-semibold text-slate-300 mb-1">
+                      Rating Stars
+                    </span>
+                    <div className="flex items-center gap-1" role="radiogroup" aria-label="Candidate Rating Stars">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          type="button"
+                          role="radio"
+                          aria-checked={newNoteRating === star}
+                          aria-label={`Rate ${star} star${star > 1 ? 's' : ''}`}
+                          onClick={() => setNewNoteRating(star)}
+                          className="p-1 rounded hover:bg-white/10 transition-transform hover:scale-110 focus:outline-none"
+                        >
+                          <Star
+                            className={`w-5 h-5 transition-colors ${
+                              star <= newNoteRating
+                                ? 'text-amber-400 fill-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]'
+                                : 'text-slate-600 hover:text-slate-400'
+                            }`}
+                          />
+                        </button>
+                      ))}
+                      <span className="text-xs font-bold text-amber-400 ml-2 font-mono">
+                        {newNoteRating} / 5
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Note Textarea */}
+              <div className="space-y-1">
+                <label htmlFor="note-content" className="block text-xs font-semibold text-slate-300">
+                  Evaluation Note
+                </label>
+                <textarea
+                  id="note-content"
+                  name="noteContent"
+                  rows={3}
+                  placeholder="Write interview notes, phone screen summary, or evaluation feedback..."
+                  value={newNoteContent}
+                  onChange={(e) => setNewNoteContent(e.target.value)}
+                  className="glass-input w-full rounded-xl p-3 text-xs leading-relaxed"
+                  required
+                />
+              </div>
+
+              <div className="flex justify-between items-center pt-1">
+                <div className="text-xs text-slate-400 flex items-center gap-1.5">
+                  <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
+                  <span>Rating to be saved: <strong>{newNoteRating}/5</strong></span>
+                </div>
                 <Button
                   type="submit"
                   variant="primary"
                   size="sm"
                   isLoading={addNoteMutation.isPending}
                   icon={Plus}
+                  aria-label="Post Note"
                 >
                   Post Note
                 </Button>
@@ -416,8 +550,17 @@ export function CandidateDetailsPage() {
             ) : (
               (candidate.notes || []).map((note) => (
                 <Card key={note.id} className="p-4 border-l-4 border-l-brand-400">
-                  <div className="flex items-center justify-between text-xs mb-1.5">
-                    <span className="font-bold text-white">{note.author}</span>
+                  <div className="flex items-center justify-between text-xs mb-1.5 flex-wrap gap-2">
+                    <div className="flex items-center gap-2.5">
+                      <span className="font-bold text-white">{note.author}</span>
+                      <div
+                        className="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[11px] font-semibold"
+                        aria-label={`Rating: ${note.rating || candidate.rating || 5} out of 5`}
+                      >
+                        <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+                        <span>Rating: {note.rating || candidate.rating || 5}/5</span>
+                      </div>
+                    </div>
                     <span className="text-[10px] text-slate-400 font-mono">
                       {new Date(note.createdAt).toLocaleString()}
                     </span>

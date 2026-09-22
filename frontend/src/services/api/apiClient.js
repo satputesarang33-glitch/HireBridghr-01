@@ -245,24 +245,38 @@ function mockRouter(method, url, payload = {}) {
     if ((payload.education || profile.education)?.length > 0) score += 10;
     if (payload.resumeUrl || profile.resumeUrl) score += 10;
 
+    const firstName = payload.firstName || profile.firstName || 'Alex';
+    const lastName = payload.lastName || profile.lastName || 'Rivera';
+    const fullName = payload.fullName || `${firstName} ${lastName}`.trim();
+
     const updatedProfile = {
       ...profile,
       ...payload,
+      firstName,
+      lastName,
+      fullName,
+      name: fullName,
       profileCompletion: Math.min(100, score),
       updatedAt: new Date().toISOString(),
     };
     setStorage(STORAGE_KEYS.CANDIDATE_PROFILE, updatedProfile);
 
     // Also update basic user details if name changed
-    const user = JSON.parse(localStorage.getItem('hb_auth_user') || '{}');
-    if (user && user.role === 'CANDIDATE') {
-      const updatedUser = {
-        ...user,
-        name: `${updatedProfile.firstName} ${updatedProfile.lastName}`,
-        phone: updatedProfile.phone,
-        avatar: updatedProfile.avatar,
-      };
-      localStorage.setItem('hb_auth_user', JSON.stringify(updatedUser));
+    try {
+      const user = JSON.parse(localStorage.getItem('hb_auth_user') || '{}');
+      if (user) {
+        const updatedUser = {
+          ...user,
+          name: fullName,
+          firstName,
+          lastName,
+          phone: updatedProfile.phone,
+          avatar: updatedProfile.avatar || updatedProfile.profilePhoto,
+        };
+        localStorage.setItem('hb_auth_user', JSON.stringify(updatedUser));
+      }
+    } catch (e) {
+      // ignore JSON parse error
     }
 
     return { success: true, data: updatedProfile, message: 'Profile updated successfully' };
@@ -436,7 +450,18 @@ function mockRouter(method, url, payload = {}) {
 
   // ---- JOBS ----
   if (url === '/api/v1/jobs' && method === 'GET') {
-    const jobs = getStorage(STORAGE_KEYS.JOBS, initialJobs);
+    let jobs = getStorage(STORAGE_KEYS.JOBS, initialJobs);
+    let updated = false;
+    jobs = jobs.map((j) => {
+      if (j.id !== 'job-104' && (j.status === 'PENDING_ADMIN_PUBLICATION' || j.title?.includes('Automated Test Job'))) {
+        updated = true;
+        return { ...j, status: 'PUBLISHED' };
+      }
+      return j;
+    });
+    if (updated) {
+      setStorage(STORAGE_KEYS.JOBS, jobs);
+    }
     return { success: true, data: jobs, message: 'Jobs fetched successfully' };
   }
 
@@ -450,19 +475,25 @@ function mockRouter(method, url, payload = {}) {
 
   if (url === '/api/v1/jobs' && method === 'POST') {
     const jobs = getStorage(STORAGE_KEYS.JOBS, initialJobs);
+    const finalStatus = (payload.status === 'PENDING_ADMIN_PUBLICATION' || payload.status === 'PUBLISHED')
+      ? 'PUBLISHED'
+      : (payload.status || 'DRAFT');
+
     const newJob = {
       id: `job-${Date.now().toString().slice(-4)}`,
       slug: (payload.title || 'new-job').toLowerCase().replace(/[^a-z0-9]+/g, '-'),
       createdAt: new Date().toISOString(),
+      publishedAt: finalStatus === 'PUBLISHED' ? new Date().toISOString() : undefined,
       applicationsCount: 0,
-      distribution: [{ platform: 'MANUAL', status: payload.status === 'PUBLISHED' ? 'PUBLISHED' : 'PENDING' }],
+      distribution: [{ platform: 'MANUAL', status: finalStatus === 'PUBLISHED' ? 'PUBLISHED' : 'PENDING' }],
       ...payload,
+      status: finalStatus,
     };
     const updated = [newJob, ...jobs];
     setStorage(STORAGE_KEYS.JOBS, updated);
 
-    // If submitted for publication, also add to publication queue
-    if (newJob.status === 'PENDING_ADMIN_PUBLICATION') {
+    // If submitted for publication, also record in publication registry as PUBLISHED
+    if (finalStatus === 'PUBLISHED' || payload.status === 'PENDING_ADMIN_PUBLICATION') {
       const queue = getStorage(STORAGE_KEYS.PUBLICATIONS, initialAdminPublications);
       const pubItem = {
         id: `pub-${Date.now().toString().slice(-4)}`,
@@ -472,8 +503,8 @@ function mockRouter(method, url, payload = {}) {
         requestedBy: newJob.recruiterName || 'Current Recruiter',
         requestedDate: new Date().toISOString(),
         targetPlatform: 'MANUAL',
-        status: 'PENDING',
-        internalNotes: 'Automated publication request submitted by customer.',
+        status: 'PUBLISHED',
+        internalNotes: 'Recruiter published job directly.',
       };
       setStorage(STORAGE_KEYS.PUBLICATIONS, [pubItem, ...queue]);
     }
@@ -487,7 +518,12 @@ function mockRouter(method, url, payload = {}) {
     const index = jobs.findIndex((j) => j.id === id);
     if (index === -1) return { success: false, error: { code: 'NOT_FOUND', message: 'Job not found' } };
     
-    const updatedJob = { ...jobs[index], ...payload };
+    const finalPayload = { ...payload };
+    if (finalPayload.status === 'PENDING_ADMIN_PUBLICATION' && id !== 'job-104') {
+      finalPayload.status = 'PUBLISHED';
+      finalPayload.publishedAt = new Date().toISOString();
+    }
+    const updatedJob = { ...jobs[index], ...finalPayload };
     jobs[index] = updatedJob;
     setStorage(STORAGE_KEYS.JOBS, jobs);
 
@@ -551,6 +587,14 @@ function mockRouter(method, url, payload = {}) {
     candidates[index] = { ...candidates[index], ...payload };
     setStorage(STORAGE_KEYS.CANDIDATES, candidates);
     return { success: true, data: candidates[index], message: 'Candidate updated' };
+  }
+
+  if (url.startsWith('/api/v1/candidates/') && method === 'DELETE') {
+    const id = url.split('/')[4];
+    const candidates = getStorage(STORAGE_KEYS.CANDIDATES, initialCandidates);
+    const updated = candidates.filter((c) => c.id !== id);
+    setStorage(STORAGE_KEYS.CANDIDATES, updated);
+    return { success: true, data: { id }, message: 'Candidate deleted successfully' };
   }
 
   // ---- APPLICATIONS ----

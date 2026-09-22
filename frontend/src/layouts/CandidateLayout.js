@@ -60,9 +60,9 @@ export function CandidateLayout() {
     ? pathSegments[1].replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())
     : 'Dashboard';
 
-  const candidateName = profile?.fullName || user?.name || 'Alex Rivera';
-  const candidateAvatar = profile?.profilePhoto || user?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80';
-  const completionPercentage = profile?.completionPercentage || 90;
+  const candidateName = profile?.fullName || (profile?.firstName ? `${profile.firstName} ${profile.lastName || ''}`.trim() : null) || user?.name || 'Alex Rivera';
+  const candidateAvatar = profile?.profilePhoto || profile?.avatar || user?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80';
+  const completionPercentage = profile?.completionPercentage || profile?.profileCompletion || 90;
 
   return (
     <div className="app-shell flex h-screen overflow-hidden text-slate-900 dark:text-slate-100 selection:bg-brand-500/30 selection:text-brand-200">

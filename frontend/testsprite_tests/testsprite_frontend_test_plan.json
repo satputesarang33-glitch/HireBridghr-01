@@ -1,0 +1,986 @@
+[
+  {
+    "id": "TC001",
+    "title": "Recruiter signs in and reaches the dashboard",
+    "description": "This verifies a recruiter can sign in and land on the dashboard to access the ATS overview.",
+    "category": "Job Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /signin"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the sign-in form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the dashboard is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify recent activity or KPI content is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC002",
+    "title": "Candidate signs in and reaches the candidate dashboard",
+    "description": "This verifies a candidate can sign in and land on the candidate dashboard to access their portal.",
+    "category": "Candidate Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /candidate/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the sign-in form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the candidate dashboard is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify candidate portal content is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC003",
+    "title": "Candidate browses jobs, saves one, and applies",
+    "description": "This verifies a candidate can search the job board, save a job, submit an application, and later find it in their applications tracker.",
+    "category": "Candidate Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /candidate/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the sign-in form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /candidate/jobs"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the job search field with a keyword"
+      },
+      {
+        "type": "action",
+        "description": "Select a location filter value"
+      },
+      {
+        "type": "action",
+        "description": "Save a job from the results"
+      },
+      {
+        "type": "action",
+        "description": "Apply to the saved job"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /candidate/applications"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the submitted application is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the saved or applied job appears in the tracker"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC004",
+    "title": "Recruiter filters the pipeline by job and moves a candidate forward",
+    "description": "This verifies a recruiter can filter the pipeline by job posting, move a candidate to the next stage, and see the updated board state.",
+    "category": "Hiring Pipeline Kanban",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /signin"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the sign-in form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /applications/pipeline"
+      },
+      {
+        "type": "action",
+        "description": "Select a job posting filter value"
+      },
+      {
+        "type": "action",
+        "description": "Move a candidate card to the next stage"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the pipeline is filtered to the selected job"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the candidate appears in the updated stage"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC005",
+    "title": "Submit a job application",
+    "description": "A candidate can apply to a job and see the application confirmed in the applications tracker.",
+    "category": "Candidate Portal Job Search",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /candidate/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the candidate sign-in fields with {{LOGIN_USER}} and {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the sign-in form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /candidate/jobs"
+      },
+      {
+        "type": "action",
+        "description": "Open a job listing from the results"
+      },
+      {
+        "type": "action",
+        "description": "Start the application process"
+      },
+      {
+        "type": "action",
+        "description": "Submit the application"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /candidate/applications"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the submitted application is listed in the tracker"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an application confirmation is visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC006",
+    "title": "Recruiter uses a demo role to access the app",
+    "description": "A recruiter can use a demo persona quick-fill action to sign in and reach the dashboard.",
+    "category": "User Authentication",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /signin"
+      },
+      {
+        "type": "action",
+        "description": "Use a demo role quick-fill action"
+      },
+      {
+        "type": "action",
+        "description": "Submit the sign-in form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the dashboard is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify recent activity content is visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC007",
+    "title": "Recruiter publishes a new job posting",
+    "description": "This verifies a recruiter can create a requisition and publish it so the posting is available in the job list.",
+    "category": "Job Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /signin"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the sign-in form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /jobs"
+      },
+      {
+        "type": "action",
+        "description": "Start creating a new job requisition"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the job title field with a unique job title"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the department field with a valid department"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the salary field with a valid salary"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the requirements field with job requirements"
+      },
+      {
+        "type": "action",
+        "description": "Publish the job posting"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the published job appears in the jobs list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the published status is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC008",
+    "title": "Recruiter reviews dashboard metrics and recent activity",
+    "description": "A recruiter can open the dashboard and see hiring metrics along with recent activity content.",
+    "category": "ATS Dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /signin"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the sign-in form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify hiring statistics are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify recent activity is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC009",
+    "title": "Recruiter creates and saves a draft job",
+    "description": "This verifies a recruiter can create a new requisition, save it as a draft, and see it in the jobs list.",
+    "category": "Job Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /signin"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the sign-in form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /jobs"
+      },
+      {
+        "type": "action",
+        "description": "Start creating a new job requisition"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the job title field with a unique job title"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the department field with a valid department"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the salary field with a valid salary"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the requirements field with job requirements"
+      },
+      {
+        "type": "action",
+        "description": "Save the job as a draft"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new job appears in the jobs list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the draft status is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC010",
+    "title": "Schedule a new interview",
+    "description": "A recruiter can create a new interview for a candidate and see it added to the schedule list.",
+    "category": "Interview Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /signin"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the recruiter sign-in fields with {{LOGIN_USER}} and {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the sign-in form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /interviews"
+      },
+      {
+        "type": "action",
+        "description": "Start scheduling a new interview"
+      },
+      {
+        "type": "action",
+        "description": "Select a candidate for the interview"
+      },
+      {
+        "type": "action",
+        "description": "Fill in a valid interview date and time"
+      },
+      {
+        "type": "action",
+        "description": "Submit the interview form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new interview appears in the schedule list"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC011",
+    "title": "Recruiter searches and reviews jobs",
+    "description": "This verifies a recruiter can search and filter jobs, then review matching results from the job list.",
+    "category": "Job Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /signin"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the sign-in form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /jobs"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the job search field with a keyword"
+      },
+      {
+        "type": "action",
+        "description": "Select a department filter value"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify matching jobs are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the filtered job list is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC012",
+    "title": "Search jobs by title or location",
+    "description": "A candidate can search the job board by title or location and see matching openings.",
+    "category": "Candidate Portal Job Search",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /candidate/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the candidate sign-in fields with {{LOGIN_USER}} and {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the sign-in form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /candidate/jobs"
+      },
+      {
+        "type": "action",
+        "description": "Fill in a job title or location search"
+      },
+      {
+        "type": "action",
+        "description": "Submit the job search"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify matching job openings are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC013",
+    "title": "Recruiter searches candidates and opens a profile",
+    "description": "This verifies a recruiter can search the candidate directory and open a candidate profile for review.",
+    "category": "Candidate Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /signin"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the sign-in form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /candidates"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the candidate search field with a keyword"
+      },
+      {
+        "type": "action",
+        "description": "Select a skill filter value"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify matching candidates are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a candidate profile can be opened"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC014",
+    "title": "Review scheduled interviews",
+    "description": "A recruiter can open the interview list and see scheduled interviews available for review.",
+    "category": "Interview Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /signin"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the recruiter sign-in fields with {{LOGIN_USER}} and {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the sign-in form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /interviews"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify scheduled interviews are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify interview filtering controls are available"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC015",
+    "title": "Candidate updates profile information and resume details",
+    "description": "This verifies a candidate can update their profile in the portal and keep the changes while returning to job search.",
+    "category": "Candidate Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /candidate/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the sign-in form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /candidate/profile"
+      },
+      {
+        "type": "action",
+        "description": "Update profile details"
+      },
+      {
+        "type": "action",
+        "description": "Update resume details"
+      },
+      {
+        "type": "action",
+        "description": "Save the profile changes"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /candidate/jobs"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated profile information is retained"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the candidate can return to job search"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC016",
+    "title": "Open a job listing from search results",
+    "description": "A candidate can open a job listing from the search results and view the job details.",
+    "category": "Candidate Portal Job Search",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /candidate/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the candidate sign-in fields with {{LOGIN_USER}} and {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the sign-in form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /candidate/jobs"
+      },
+      {
+        "type": "action",
+        "description": "Open a job listing from the results"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the job details are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the application and save actions are available"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC017",
+    "title": "Candidate switches from login to registration",
+    "description": "A candidate can move from the login view to the registration view and see the sign-up form.",
+    "category": "Candidate Portal Authentication",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /candidate/login"
+      },
+      {
+        "type": "action",
+        "description": "Switch to the sign up tab"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the candidate registration form is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC018",
+    "title": "View saved and submitted applications",
+    "description": "A candidate can open the applications tracker and review submitted applications.",
+    "category": "Candidate Portal Job Search",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /candidate/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the candidate sign-in fields with {{LOGIN_USER}} and {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the sign-in form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /candidate/applications"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify submitted applications are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify application status information is available"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC019",
+    "title": "Save a job for later",
+    "description": "A candidate can save a job and see it marked as saved for later review.",
+    "category": "Candidate Portal Job Search",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /candidate/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the candidate sign-in fields with {{LOGIN_USER}} and {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the sign-in form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /candidate/jobs"
+      },
+      {
+        "type": "action",
+        "description": "Open a job listing from the results"
+      },
+      {
+        "type": "action",
+        "description": "Save the job for later"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the job is marked as saved"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC020",
+    "title": "Recruiter changes the dashboard timeframe and sees refreshed insights",
+    "description": "A recruiter can change the dashboard timeframe filter and see the dashboard update with revised metrics.",
+    "category": "ATS Dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /signin"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the sign-in form"
+      },
+      {
+        "type": "action",
+        "description": "Change the dashboard timeframe filter"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify updated hiring metrics are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify revised dashboard insights are displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC021",
+    "title": "Recruiter adds notes and a rating to a candidate",
+    "description": "This verifies a recruiter can review a candidate profile and save evaluation notes and a rating.",
+    "category": "Candidate Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /signin"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the sign-in form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /candidates"
+      },
+      {
+        "type": "action",
+        "description": "Open a candidate profile from the list"
+      },
+      {
+        "type": "action",
+        "description": "Add evaluation notes to the candidate profile"
+      },
+      {
+        "type": "action",
+        "description": "Assign a rating to the candidate"
+      },
+      {
+        "type": "action",
+        "description": "Save the candidate evaluation"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated candidate evaluation is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the notes and rating are retained"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC022",
+    "title": "Filter interviews by status or interviewer",
+    "description": "A recruiter can narrow the interview list by using interview filters and see the filtered results update.",
+    "category": "Interview Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /signin"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the recruiter sign-in fields with {{LOGIN_USER}} and {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the sign-in form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /interviews"
+      },
+      {
+        "type": "action",
+        "description": "Select an interview status filter"
+      },
+      {
+        "type": "action",
+        "description": "Select an interviewer filter"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the interview list reflects the applied filters"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC023",
+    "title": "Recruiter reviews scheduled interviews",
+    "description": "This verifies a recruiter can navigate to interviews and review the scheduled interview list.",
+    "category": "Hiring Pipeline Kanban",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /signin"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the sign-in form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /interviews"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify scheduled interviews are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify interview details are visible"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC024",
+    "title": "Recruiter toggles password visibility before signing in",
+    "description": "A recruiter can reveal and hide the password while entering credentials and still complete sign-in successfully.",
+    "category": "User Authentication",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /signin"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Toggle password visibility"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the sign-in form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the dashboard is displayed"
+      }
+    ],
+    "priority": "Medium"
+  }
+]

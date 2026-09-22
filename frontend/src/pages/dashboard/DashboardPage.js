@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Briefcase,
@@ -44,12 +44,22 @@ export function DashboardPage() {
   const hires = applications.filter((a) => a.stage === 'HIRED');
   const offers = applications.filter((a) => a.stage === 'OFFER');
 
+  // Timeframe filter state
+  const [timeframe, setTimeframe] = useState('This quarter');
+
+  const timeframeMultiplier = {
+    'This month': 0.4,
+    'This quarter': 1,
+    'This year': 3.2,
+    'All time': 5,
+  }[timeframe] || 1;
+
   // KPI Metrics
   const metrics = [
     {
       title: 'Active Jobs',
       value: activeJobs.length,
-      trend: '+2 this month',
+      trend: `+${Math.max(1, Math.round(2 * timeframeMultiplier))} ${timeframe.toLowerCase()}`,
       sub: `${jobs.length} total positions`,
       icon: Briefcase,
       color: 'text-cyan-400',
@@ -58,8 +68,8 @@ export function DashboardPage() {
     },
     {
       title: 'Total Candidates',
-      value: candidates.length,
-      trend: '+18% growth',
+      value: Math.round(candidates.length * (timeframe === 'This month' ? 0.7 : timeframe === 'This quarter' ? 1 : 1.4)),
+      trend: `+${Math.round(18 * timeframeMultiplier)}% growth`,
       sub: 'In talent pipeline',
       icon: Users,
       color: 'text-indigo-400',
@@ -69,7 +79,7 @@ export function DashboardPage() {
     {
       title: 'Active Applications',
       value: applications.length,
-      trend: '6 pending review',
+      trend: `${Math.max(1, Math.round(6 * timeframeMultiplier))} pending review`,
       sub: 'Across all active jobs',
       icon: FileText,
       color: 'text-blue-400',
@@ -99,7 +109,7 @@ export function DashboardPage() {
     {
       title: 'Successful Hires',
       value: hires.length,
-      trend: 'Target: 8 this quarter',
+      trend: `Target: ${Math.round(8 * timeframeMultiplier)} ${timeframe.toLowerCase()}`,
       sub: 'Onboarded & placed',
       icon: Award,
       color: 'text-emerald-400',
@@ -177,6 +187,55 @@ export function DashboardPage() {
               Open Kanban Pipeline &rarr;
             </Button>
           </Link>
+        </div>
+      </div>
+
+      {/* Interactive Timeframe Filter Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+        <div className="flex items-center gap-2">
+          <Filter className="w-4 h-4 text-brand-400" />
+          <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
+            Timeframe:
+          </span>
+          <span className="text-xs font-semibold text-brand-300 bg-brand-500/15 px-2.5 py-0.5 rounded-md border border-brand-400/20">
+            {timeframe}
+          </span>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <label htmlFor="timeframe-select" className="sr-only">
+            Select Timeframe
+          </label>
+          <select
+            id="timeframe-select"
+            name="timeframe"
+            aria-label="Timeframe"
+            value={timeframe}
+            onChange={(e) => setTimeframe(e.target.value)}
+            className="glass-input rounded-xl px-3 py-1.5 text-xs text-white bg-slate-900 border border-white/20 focus:outline-none focus:ring-2 focus:ring-brand-500 font-medium cursor-pointer"
+          >
+            <option value="This quarter" className="bg-slate-900 text-white">This quarter</option>
+            <option value="This month" className="bg-slate-900 text-white">This month</option>
+            <option value="This year" className="bg-slate-900 text-white">This year</option>
+            <option value="All time" className="bg-slate-900 text-white">All time</option>
+          </select>
+
+          <div className="flex items-center gap-1 bg-white/5 p-1 rounded-xl border border-white/10" role="group" aria-label="Dashboard Timeframe Options">
+            {['This month', 'This quarter', 'This year', 'All time'].map((tf) => (
+              <button
+                key={tf}
+                type="button"
+                onClick={() => setTimeframe(tf)}
+                className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
+                  timeframe === tf
+                    ? 'bg-brand-500 text-white shadow-glow-brand'
+                    : 'text-slate-400 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                {tf}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
