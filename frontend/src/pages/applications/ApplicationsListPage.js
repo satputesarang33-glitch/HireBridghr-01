@@ -52,7 +52,7 @@ export function ApplicationsListPage() {
         </div>
         <Link to="/applications/pipeline">
           <Button variant="primary" size="sm" icon={Columns}>
-            Switch to Kanban Board View
+            Switch to Hiring Stages View
           </Button>
         </Link>
       </div>

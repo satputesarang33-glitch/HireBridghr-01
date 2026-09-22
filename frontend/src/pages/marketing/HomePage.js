@@ -82,7 +82,7 @@ export function HomePage() {
   const faqs = [
     {
       q: 'How does HirebridgeHR differ from traditional enterprise ATS platforms?',
-      a: 'HirebridgeHR is built on modern liquid-glass UI architecture with real-time state management. Unlike monolithic legacy systems, it combines interactive visual Kanban pipelines, automated pre-publication review queues, zero-trust candidate resume vaults, and candidate self-service portals into a unified, lightning-fast platform.',
+      a: 'HirebridgeHR is built on modern liquid-glass UI architecture with real-time state management. Unlike monolithic legacy systems, it combines interactive visual hiring stages, automated pre-publication review queues, zero-trust candidate resume vaults, and candidate self-service portals into a unified, lightning-fast platform.',
     },
     {
       q: 'Can we migrate candidate data and existing requisitions easily?',
@@ -119,7 +119,7 @@ export function HomePage() {
         </h1>
 
         <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
-          HirebridgeHR unifies candidate sourcing, multi-channel publication review, interactive Kanban pipelines, and structured interview scorecards into a cohesive, high-velocity workspace.
+          HirebridgeHR unifies candidate sourcing, multi-channel publication review, interactive hiring stages, and structured interview scorecards into a cohesive, high-velocity workspace.
         </p>
 
         {/* CTA Buttons */}
@@ -175,7 +175,7 @@ export function HomePage() {
                       : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
-                  Kanban Pipeline
+                  Hiring Stages
                 </button>
                 <button
                   type="button"
@@ -450,7 +450,7 @@ export function HomePage() {
             <div className="w-10 h-10 rounded-xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
               <GitPullRequest className="w-5 h-5" />
             </div>
-            <h3 className="text-base font-bold text-slate-900 dark:text-white">Interactive Kanban Pipeline</h3>
+            <h3 className="text-base font-bold text-slate-900 dark:text-white">Interactive Hiring Stages</h3>
             <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
               Progress candidates smoothly across Applied, Screening, Interview, Offer, and Hired with instant stage transition controls.
             </p>

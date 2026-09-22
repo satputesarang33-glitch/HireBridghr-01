@@ -309,7 +309,7 @@ export function SettingsPage() {
                   { area: 'Submit Publication Requests', owner: true, admin: true, recruiter: true, hm: false, int: false },
                   { area: 'View All Candidates', owner: true, admin: true, recruiter: true, hm: true, int: false },
                   { area: 'Assign Recruiters to Candidates', owner: true, admin: true, recruiter: true, hm: false, int: false },
-                  { area: 'Advance Kanban Pipeline Stages', owner: true, admin: true, recruiter: true, hm: false, int: false },
+                  { area: 'Advance Hiring Stages', owner: true, admin: true, recruiter: true, hm: false, int: false },
                   { area: 'Schedule Interviews', owner: true, admin: true, recruiter: true, hm: false, int: false },
                   { area: 'Submit Interview Feedback Scorecard', owner: true, admin: true, recruiter: true, hm: true, int: true },
                   { area: 'Export Analytics CSV', owner: true, admin: true, recruiter: true, hm: false, int: false },

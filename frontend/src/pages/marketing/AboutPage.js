@@ -20,7 +20,7 @@ export function AboutPage() {
           Recruitment teams spend up to 40% of their time navigating fragmented spreadsheets, messy candidate email threads, and cumbersome legacy software. HirebridgeHR was conceived to streamline the entire recruitment lifecycle into a single high-velocity SaaS platform.
         </p>
         <p>
-          From the moment a job requisition is approved, to syndicating it through our admin review queue, managing applicants on an interactive visual Kanban pipeline, and scoring interviews, HirebridgeHR empowers talent leaders to make informed, data-driven decisions.
+          From the moment a job requisition is approved, to syndicating it through our admin review queue, managing applicants across interactive visual hiring stages, and scoring interviews, HirebridgeHR empowers talent leaders to make informed, data-driven decisions.
         </p>
       </div>
 

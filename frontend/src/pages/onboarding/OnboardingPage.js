@@ -117,7 +117,7 @@ export function OnboardingPage() {
                 <div className="p-3 rounded-xl bg-white/5 border border-white/10">
                   <Compass className="w-5 h-5 text-brand-400 mb-2" />
                   <p className="text-xs font-bold text-white">Visual Pipeline</p>
-                  <p className="text-[11px] text-slate-400">Drag-and-drop Kanban tracking from application to offer.</p>
+                  <p className="text-[11px] text-slate-400">Drag-and-drop hiring stage tracking from application to offer.</p>
                 </div>
                 <div className="p-3 rounded-xl bg-white/5 border border-white/10">
                   <Globe className="w-5 h-5 text-accent-400 mb-2" />

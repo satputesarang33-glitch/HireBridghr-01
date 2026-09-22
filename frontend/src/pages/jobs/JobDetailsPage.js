@@ -347,7 +347,7 @@ export function JobDetailsPage() {
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-bold text-white">Candidates Applied ({applications.length})</h3>
             <Link to="/applications/pipeline" className="text-xs text-brand-400 hover:text-brand-300 font-semibold">
-              Open Kanban Pipeline View &rarr;
+              Open Hiring Stages View &rarr;
             </Link>
           </div>
 

@@ -26,7 +26,7 @@ export function FeaturesPage() {
       icon: Briefcase,
     },
     {
-      title: 'Kanban Recruitment Pipeline',
+      title: 'Interactive Hiring Stages',
       desc: 'Intuitive visual board with 6 primary recruitment stages and instant stage transition controls.',
       icon: GitPullRequest,
     },

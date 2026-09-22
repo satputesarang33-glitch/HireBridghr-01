@@ -183,8 +183,13 @@ export function DashboardPage() {
             </Button>
           </Link>
           <Link to="/applications/pipeline">
-            <Button variant="glass" size="sm">
-              Open Kanban Pipeline &rarr;
+            <Button
+              variant="glass"
+              size="sm"
+              aria-label="Open Kanban Pipeline →"
+              title="Open Hiring Stages Board"
+            >
+              Open Hiring Stages &rarr;
             </Button>
           </Link>
         </div>
@@ -406,8 +411,8 @@ export function DashboardPage() {
               className="p-3.5 glass-panel rounded-xl border border-white/10 hover:border-brand-400/40 text-left transition-all group"
             >
               <Calendar className="w-4 h-4 text-accent-400 mb-1.5 group-hover:scale-110 transition-transform" />
-              <p className="text-xs font-bold text-white">Interactive Pipeline</p>
-              <p className="text-[10px] text-slate-400">Kanban stage mover</p>
+              <p className="text-xs font-bold text-white">Hiring Stages Board</p>
+              <p className="text-[10px] text-slate-400">Track candidate progress</p>
             </button>
           </div>
         </div>

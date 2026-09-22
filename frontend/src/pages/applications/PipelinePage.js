@@ -35,7 +35,7 @@ export function PipelinePage() {
 
   // Filtered applications
   const filteredApps = applications.filter((app) => {
-    const matchesJob = selectedJob === 'ALL' || app.jobId === selectedJob;
+    const matchesJob = !selectedJob || selectedJob === 'ALL' || app.jobId === selectedJob;
     const matchesSearch =
       !search ||
       app.candidateName.toLowerCase().includes(search.toLowerCase()) ||
@@ -101,7 +101,7 @@ export function PipelinePage() {
             value={selectedJob}
             onChange={(e) => setSelectedJob(e.target.value)}
             options={[
-              { label: 'All Job Requisitions', value: 'ALL' },
+              { label: 'All Job Requisitions', value: '' },
               ...jobs.map((j) => ({ label: j.title, value: j.id })),
             ]}
           />

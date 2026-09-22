@@ -14,7 +14,7 @@ export function PricingPage() {
       features: [
         'Up to 10 Active Job Requisitions',
         'Unlimited Candidate Records',
-        'Visual Kanban Pipeline',
+        'Visual Hiring Stages Board',
         'Manual Job Distribution Channel',
         'Email & Calendar Integration',
       ],
