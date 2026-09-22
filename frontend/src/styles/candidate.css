@@ -1,0 +1,263 @@
+/* ==========================================================================
+   HIREBRIDGEHR — CANDIDATE PORTAL STYLES (LIQUID GLASS FIGMA METHOD)
+   Separate modular CSS for Candidate Portal, Application Stepper & Resume Drop
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Candidate Navigation & Layout Sheen
+   -------------------------------------------------------------------------- */
+.candidate-nav-item {
+  position: relative;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.candidate-nav-item.active {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.2) 0%, rgba(99, 102, 241, 0.15) 100%);
+  border-color: rgba(6, 182, 212, 0.4);
+  box-shadow: 0 4px 16px -2px rgba(6, 182, 212, 0.25), inset 0 1px 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.light .candidate-nav-item.active {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(240, 253, 250, 0.9) 100%);
+  border-color: rgba(6, 182, 212, 0.5);
+  box-shadow: 0 4px 14px -2px rgba(6, 182, 212, 0.15), inset 0 1px 2px 0 rgba(255, 255, 255, 1);
+  color: #0891b2;
+}
+
+/* --------------------------------------------------------------------------
+   2. Resume Dropzone & Upload Area
+   -------------------------------------------------------------------------- */
+.resume-dropzone {
+  position: relative;
+  border: 2px dashed rgba(6, 182, 212, 0.35);
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.6) 0%, rgba(30, 41, 59, 0.4) 100%);
+  backdrop-filter: blur(12px);
+  border-radius: 1rem;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.resume-dropzone:hover,
+.resume-dropzone.drag-active {
+  border-color: rgba(6, 182, 212, 0.85);
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(15, 23, 42, 0.75) 100%);
+  box-shadow: 0 0 24px -2px rgba(6, 182, 212, 0.35);
+  transform: translateY(-2px);
+}
+
+.light .resume-dropzone {
+  border: 2px dashed rgba(6, 182, 212, 0.45);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(240, 253, 250, 0.65) 100%);
+}
+
+.light .resume-dropzone:hover,
+.light .resume-dropzone.drag-active {
+  border-color: #0891b2;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(236, 254, 255, 0.85) 100%);
+  box-shadow: 0 8px 24px -4px rgba(6, 182, 212, 0.2);
+}
+
+/* --------------------------------------------------------------------------
+   3. Application Multi-Stage Timeline & Tracker
+   -------------------------------------------------------------------------- */
+.timeline-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  width: 100%;
+}
+
+.timeline-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.timeline-step-node {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(8px);
+}
+
+.timeline-step-node.completed {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  box-shadow: 0 0 16px -2px rgba(16, 185, 129, 0.5);
+  border: 2px solid #34d399;
+}
+
+.timeline-step-node.current {
+  background: linear-gradient(135deg, #06b6d4 0%, #0284c7 100%);
+  color: #ffffff;
+  box-shadow: 0 0 20px 2px rgba(6, 182, 212, 0.6);
+  border: 2px solid #67e8f9;
+  animation: pulse-node 2.2s infinite ease-in-out;
+}
+
+.timeline-step-node.upcoming {
+  background: rgba(15, 23, 42, 0.7);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  color: #94a3b8;
+}
+
+.light .timeline-step-node.upcoming {
+  background: rgba(255, 255, 255, 0.85);
+  border: 2px solid rgba(203, 213, 225, 0.8);
+  color: #64748b;
+}
+
+.timeline-connector {
+  position: absolute;
+  top: 1.125rem;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 1;
+}
+
+.light .timeline-connector {
+  background: rgba(203, 213, 225, 0.6);
+}
+
+.timeline-connector-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981 0%, #06b6d4 100%);
+  transition: width 0.4s ease-in-out;
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.4);
+}
+
+@keyframes pulse-node {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 20px 2px rgba(6, 182, 212, 0.5);
+  }
+  50% {
+    transform: scale(1.08);
+    box-shadow: 0 0 28px 4px rgba(6, 182, 212, 0.8);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   4. Status Badges & Glow Indicators
+   -------------------------------------------------------------------------- */
+.status-badge-applied {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.35);
+}
+.light .status-badge-applied {
+  background: #eff6ff;
+  color: #2563eb;
+  border-color: #bfdbfe;
+}
+
+.status-badge-screening {
+  background: rgba(147, 51, 234, 0.15);
+  color: #c084fc;
+  border: 1px solid rgba(147, 51, 234, 0.35);
+}
+.light .status-badge-screening {
+  background: #faf5ff;
+  color: #7e22ce;
+  border-color: #e9d5ff;
+}
+
+.status-badge-shortlisted {
+  background: rgba(6, 182, 212, 0.15);
+  color: #22d3ee;
+  border: 1px solid rgba(6, 182, 212, 0.35);
+}
+.light .status-badge-shortlisted {
+  background: #ecfeff;
+  color: #0891b2;
+  border-color: #a5f3fc;
+}
+
+.status-badge-interview {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+.light .status-badge-interview {
+  background: #fffbeb;
+  color: #d97706;
+  border-color: #fde68a;
+}
+
+.status-badge-offer {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+.light .status-badge-offer {
+  background: #ecfdf5;
+  color: #059669;
+  border-color: #a7f3d0;
+}
+
+.status-badge-hired {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(6, 182, 212, 0.2) 100%);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.5);
+  font-weight: 700;
+}
+.light .status-badge-hired {
+  background: #d1fae5;
+  color: #047857;
+  border-color: #6ee7b7;
+}
+
+.status-badge-rejected {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+}
+.light .status-badge-rejected {
+  background: #fef2f2;
+  color: #dc2626;
+  border-color: #fecaca;
+}
+
+.status-badge-withdrawn {
+  background: rgba(148, 163, 184, 0.15);
+  color: #94a3b8;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+}
+.light .status-badge-withdrawn {
+  background: #f8fafc;
+  color: #64748b;
+  border-color: #cbd5e1;
+}
+
+/* --------------------------------------------------------------------------
+   5. Profile Progress Ring / Progress Bar
+   -------------------------------------------------------------------------- */
+.completion-progress-bar {
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  border-radius: 9999px;
+  position: relative;
+}
+
+.light .completion-progress-bar {
+  background: rgba(203, 213, 225, 0.4);
+}
+
+.completion-progress-fill {
+  background: linear-gradient(90deg, #06b6d4 0%, #3b82f6 50%, #10b981 100%);
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 0 12px rgba(6, 182, 212, 0.5);
+}
