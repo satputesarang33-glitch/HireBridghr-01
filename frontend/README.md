@@ -1,70 +1,115 @@
-# Getting Started with Create React App
+# HirebridgeHR — Frontend Web Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern, high-fidelity Multi-Tenant SaaS Applicant Tracking System (ATS), Job Distribution Engine, and Candidate Career Portal built with **React 18**, **Vite**, **Tailwind CSS**, and an enterprise **Liquid Glass Design System**.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## Key Features
 
-### `npm start`
+- **Full Multi-Tenant ATS**:
+  - Requisition & Job Management (Draft, Approval Pipeline, Distribution)
+  - Candidate Relationship Management & Pipeline Tracking (Kanban board & list views)
+  - Interview Scheduling & Feedback Management
+  - Advanced Analytics & Hiring Reports
+  - Multi-tenant Role-Based Access Control (RBAC)
+- **Candidate Career Portal**:
+  - Dedicated Candidate Login & Signup
+  - Job Search, Filtering, and One-Click Applications
+  - Saved Jobs & Application Tracking Dashboard
+  - Candidate Profile Management (Skills, Experience, Education)
+- **Super-Admin Platform Operations**:
+  - Organization & Workspace Management
+  - Job Publication Queue & Cross-Tenant Oversight
+  - Platform Audit Logging & System Telemetry
+- **Public Careers & Job Pages**:
+  - SEO-friendly public job details & branded company career pages
+  - Liquid Glass Multi-Step Application Modal with Resume Upload
+- **Liquid Glass Design System**:
+  - Figma-fidelity mesh canvas & frosted glassmorphism
+  - Instant Light/Dark mode toggling with adaptive typography
+  - Micro-animations, responsive data tables, and skeleton loaders
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Tech Stack
 
-### `npm test`
+- **Core**: React 18, Vite 6, React Router DOM v6
+- **State & Data**: TanStack React Query v5, Context API
+- **Styling**: Tailwind CSS v3, PostCSS, Custom Liquid Glass Engine
+- **Icons & Graphics**: Lucide React, Recharts
+- **Forms & Validation**: React Hook Form, Zod
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## Getting Started
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 1. Install Dependencies
+```bash
+npm install
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 2. Environment Configuration
+Copy the example environment file:
+```bash
+cp .env.example .env
+```
+Default configuration:
+```env
+VITE_API_URL=
+VITE_APP_URL=http://localhost:3000
+VITE_ENV=development
+VITE_USE_MOCK=true
+```
+> **Note**: When `VITE_USE_MOCK=true` (or `VITE_API_URL` is blank), the app runs in full standalone mock mode with local storage persistence and simulated network delay. Set `VITE_USE_MOCK=false` and point `VITE_API_URL` to your backend server when ready.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 3. Run Locally
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-### `npm run eject`
+### 4. Build for Production
+```bash
+npm run build
+npm run preview
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Demo & Testing Credentials (Mock Mode)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+In mock mode, you can quickly switch roles or sign in with any of the following accounts (password: `password123`):
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+| Role | Name | Email | Description |
+| :--- | :--- | :--- | :--- |
+| **Owner** | Sarah Connor | `sarah.connor@apextech.com` | Full tenant control, settings & billing |
+| **Admin** | Marcus Vance | `marcus.vance@apextech.com` | Org user management & job approvals |
+| **Recruiter** | Elena Rostova | `elena.rostova@apextech.com` | Job posting, candidate pipeline & interviews |
+| **Hiring Manager** | David Chen | `david.chen@apextech.com` | Candidate reviews & feedback |
+| **Super Admin** | Alex Mercer | `alex.mercer@hirebridge.internal` | Platform operations & publication queue |
+| **Candidate** | Alex Rivera | `alex.candidate@example.com` | Candidate career portal & applications |
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Project Structure
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```
+frontend/
+├── public/                 # Static assets (favicons, manifests)
+├── src/
+│   ├── components/         # Reusable UI library (Button, Modal, Card, etc.)
+│   ├── context/            # Global context (Auth, Theme, Toast)
+│   ├── hooks/              # Custom React Query & entity hooks
+│   ├── layouts/            # AppLayout, AdminLayout, CandidateLayout, MarketingLayout
+│   ├── pages/              # Pages categorized by domain (jobs, candidates, candidate, admin, etc.)
+│   ├── routes/             # AppRoutes and route protection guards
+│   ├── services/           # API client, HTTP services, and mock database
+│   ├── styles/             # Modular CSS architecture (globals, liquid-glass, layout, components)
+│   ├── utils/              # Helper utilities (cn, formatting)
+│   ├── App.js              # Providers and application root
+│   └── main.js             # Vite entrypoint
+├── index.html              # Vite HTML template
+├── package.json
+├── tailwind.config.js
+└── vite.config.js
+```

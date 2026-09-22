@@ -56,6 +56,15 @@ function setStorage(key, data) {
 // Simulated network delay helper
 const delay = (ms = 220) => new Promise((resolve) => setTimeout(resolve, ms));
 
+const getAuthHeaders = (customHeaders = {}) => {
+  const token = localStorage.getItem('hb_auth_token');
+  return {
+    'Content-Type': 'application/json',
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    ...customHeaders,
+  };
+};
+
 /**
  * Standard API Response Wrapper conforming to HirebridgeHR REST API contracts
  */
@@ -64,7 +73,7 @@ export const apiClient = {
     if (!USE_MOCK) {
       const query = new URLSearchParams(params).toString();
       const res = await fetch(`${API_BASE_URL}${url}${query ? `?${query}` : ''}`, {
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders(),
       });
       return res.json();
     }
@@ -77,7 +86,7 @@ export const apiClient = {
     if (!USE_MOCK) {
       const res = await fetch(`${API_BASE_URL}${url}`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders(),
         body: JSON.stringify(data),
       });
       return res.json();
@@ -91,7 +100,7 @@ export const apiClient = {
     if (!USE_MOCK) {
       const res = await fetch(`${API_BASE_URL}${url}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders(),
         body: JSON.stringify(data),
       });
       return res.json();
@@ -105,7 +114,7 @@ export const apiClient = {
     if (!USE_MOCK) {
       const res = await fetch(`${API_BASE_URL}${url}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders(),
         body: JSON.stringify(data),
       });
       return res.json();
@@ -119,6 +128,7 @@ export const apiClient = {
     if (!USE_MOCK) {
       const res = await fetch(`${API_BASE_URL}${url}`, {
         method: 'DELETE',
+        headers: getAuthHeaders(),
       });
       return res.json();
     }
