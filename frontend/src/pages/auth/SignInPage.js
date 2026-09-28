@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Lock, Mail, ArrowRight, UserCheck } from 'lucide-react';
+import { Eye, EyeOff, Lock, Mail, ArrowRight } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.js';
 import { useToast } from '../../context/ToastContext.js';
 import { Input } from '../../components/ui/Input.js';
@@ -8,11 +8,11 @@ import { Button } from '../../components/ui/Button.js';
 
 export function SignInPage() {
   const navigate = useNavigate();
-  const { login, availableUsers } = useAuth();
+  const { login } = useAuth();
   const toast = useToast();
 
-  const [email, setEmail] = useState('sarah.connor@apextech.com');
-  const [password, setPassword] = useState('password123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -45,12 +45,6 @@ export function SignInPage() {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  // Quick preset fills for test evaluation
-  const handleQuickFill = (userEmail) => {
-    setEmail(userEmail);
-    setPassword('password123');
   };
 
   return (
@@ -144,44 +138,6 @@ export function SignInPage() {
           <Link to="/candidate/signup" className="text-brand-400 hover:text-brand-300 font-medium underline">
             Create Candidate Account
           </Link>
-        </div>
-      </div>
-
-      {/* Quick Mock Persona Demo Fill Bar */}
-      <div className="mt-5 pt-4 border-t border-white/10">
-        <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2 flex items-center justify-between">
-          <span className="flex items-center gap-1.5">
-            <UserCheck className="w-3.5 h-3.5 text-brand-400" />
-            Quick Demo Logins:
-          </span>
-          <span className="text-[9px] text-slate-500">Click to fill credentials</span>
-        </p>
-        <div className="grid grid-cols-2 gap-1.5">
-          {availableUsers.filter(u => u.role !== 'CANDIDATE').slice(0, 4).map((u) => (
-            <button
-              key={u.id}
-              type="button"
-              onClick={() => handleQuickFill(u.email)}
-              className="text-left p-1.5 rounded bg-white/5 hover:bg-white/10 border border-white/5 text-[11px] text-slate-300 transition-colors"
-            >
-              <span className="font-semibold text-white block truncate">{u.role}</span>
-              <span className="text-[10px] text-slate-400 block truncate">{u.name.split(' ')[0]}</span>
-            </button>
-          ))}
-          {/* Demo Candidate Persona */}
-          <button
-            type="button"
-            onClick={() => navigate('/candidate/login')}
-            className="col-span-2 text-left p-2 rounded bg-brand-500/10 hover:bg-brand-500/20 border border-brand-400/30 text-[11px] text-brand-200 transition-colors flex items-center justify-between"
-          >
-            <div>
-              <span className="font-bold text-brand-300 block">CANDIDATE — Alex Rivera</span>
-              <span className="text-[10px] text-slate-400 block">alex.candidate@example.com</span>
-            </div>
-            <span className="text-[10px] bg-brand-400/20 text-brand-300 px-2 py-0.5 rounded font-medium">
-              Demo Candidate Portal &rarr;
-            </span>
-          </button>
         </div>
       </div>
 

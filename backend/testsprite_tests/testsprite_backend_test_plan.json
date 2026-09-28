@@ -1,0 +1,52 @@
+[
+  {
+    "id": "TC001",
+    "title": "postapiauthregisterenterpriseuser",
+    "description": "Test registration of enterprise recruiter or owner account with valid details to ensure 201 response and correct organization context creation."
+  },
+  {
+    "id": "TC002",
+    "title": "postapiauthcandidatesignup",
+    "description": "Verify candidate portal registration with valid candidate details returns 201 and creates candidate account successfully."
+  },
+  {
+    "id": "TC003",
+    "title": "postapiauthlogin",
+    "description": "Validate universal authentication endpoint with valid and invalid credentials to confirm correct issuance of access and refresh tokens or 401 unauthorized response."
+  },
+  {
+    "id": "TC004",
+    "title": "postapiauthrefresh",
+    "description": "Test refresh token rotation endpoint to ensure new access token is issued with valid refresh token and 401 error on invalid or missing token."
+  },
+  {
+    "id": "TC005",
+    "title": "postapiauthlogout",
+    "description": "Verify logout endpoint revokes session and clears cookies, returning appropriate 200 or 204 response."
+  },
+  {
+    "id": "TC006",
+    "title": "getapiauthme",
+    "description": "Check retrieval of current authenticated user profile with valid access token returns 200 and correct user data."
+  },
+  {
+    "id": "TC007",
+    "title": "postapiv1jobs",
+    "description": "Test creation of new job posting by authenticated recruiter with valid payload returns 201 and job details."
+  },
+  {
+    "id": "TC008",
+    "title": "postapijobsjobidapply",
+    "description": "Validate candidate job application submission endpoint prevents duplicate applications and returns 201 on first submission and 409 on duplicates."
+  },
+  {
+    "id": "TC009",
+    "title": "postapiv1candidates",
+    "description": "Verify creation of new candidate record by authenticated recruiter returns 201 with candidate details."
+  },
+  {
+    "id": "TC010",
+    "title": "postapiv1interviews",
+    "description": "Test scheduling of new candidate interview with required fields by authenticated recruiter returns 201 with interview details."
+  }
+]

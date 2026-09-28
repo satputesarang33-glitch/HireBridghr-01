@@ -74,6 +74,7 @@ export const apiClient = {
       const query = new URLSearchParams(params).toString();
       const res = await fetch(`${API_BASE_URL}${url}${query ? `?${query}` : ''}`, {
         headers: getAuthHeaders(),
+        credentials: 'include',
       });
       return res.json();
     }
@@ -87,6 +88,7 @@ export const apiClient = {
       const res = await fetch(`${API_BASE_URL}${url}`, {
         method: 'POST',
         headers: getAuthHeaders(),
+        credentials: 'include',
         body: JSON.stringify(data),
       });
       return res.json();
@@ -101,6 +103,7 @@ export const apiClient = {
       const res = await fetch(`${API_BASE_URL}${url}`, {
         method: 'PUT',
         headers: getAuthHeaders(),
+        credentials: 'include',
         body: JSON.stringify(data),
       });
       return res.json();
@@ -115,6 +118,7 @@ export const apiClient = {
       const res = await fetch(`${API_BASE_URL}${url}`, {
         method: 'PATCH',
         headers: getAuthHeaders(),
+        credentials: 'include',
         body: JSON.stringify(data),
       });
       return res.json();
@@ -129,6 +133,7 @@ export const apiClient = {
       const res = await fetch(`${API_BASE_URL}${url}`, {
         method: 'DELETE',
         headers: getAuthHeaders(),
+        credentials: 'include',
       });
       return res.json();
     }
@@ -201,8 +206,7 @@ function mockRouter(method, url, payload = {}) {
 
   if (url === '/api/auth/candidate/login' && method === 'POST') {
     const users = getStorage(STORAGE_KEYS.USERS, mockUsers);
-    const candidate = users.find(u => u.email.toLowerCase() === payload.email?.toLowerCase() && u.role === 'CANDIDATE')
-      || users.find(u => u.role === 'CANDIDATE');
+    const candidate = users.find(u => u.email.toLowerCase() === payload.email?.toLowerCase() && u.role === 'CANDIDATE');
 
     if (!candidate) {
       return { success: false, error: { code: 'INVALID_CREDENTIALS', message: 'Invalid candidate email or password.' } };
@@ -401,12 +405,11 @@ function mockRouter(method, url, payload = {}) {
   if (url === '/api/candidates/applications' && method === 'GET') {
     const applications = getStorage(STORAGE_KEYS.APPLICATIONS, initialApplications);
     const currentCandidate = JSON.parse(localStorage.getItem('hb_auth_user') || '{}');
-    const candEmail = (currentCandidate.email || 'alex.candidate@example.com').toLowerCase();
+    const candEmail = (currentCandidate.email || '').toLowerCase();
 
     const candidateApps = applications.filter(
-      a => (a.candidateEmail && a.candidateEmail.toLowerCase() === candEmail) ||
-           (a.candidateId && a.candidateId === currentCandidate.id) ||
-           a.jobId === 'job-101' || a.jobId === 'job-102' // include sample records
+      a => (candEmail && a.candidateEmail && a.candidateEmail.toLowerCase() === candEmail) ||
+           (currentCandidate.id && a.candidateId && a.candidateId === currentCandidate.id)
     );
 
     return { success: true, data: candidateApps, message: 'Candidate applications fetched' };

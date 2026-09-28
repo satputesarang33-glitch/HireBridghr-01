@@ -149,7 +149,7 @@ export function CandidateSignUpPage() {
           <Input
             label="Email Address"
             type="email"
-            placeholder="sarah.connor@example.com"
+            placeholder="jane.doe@example.com"
             icon={Mail}
             value={formData.email}
             onChange={(e) => handleChange('email', e.target.value)}

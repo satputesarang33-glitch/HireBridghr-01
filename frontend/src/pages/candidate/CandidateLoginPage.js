@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Lock, Mail, ArrowRight, Sparkles, Briefcase, CheckCircle2 } from 'lucide-react';
+import { Eye, EyeOff, Lock, Mail, ArrowRight, Briefcase } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.js';
 import { useToast } from '../../context/ToastContext.js';
 import { Input } from '../../components/ui/Input.js';
@@ -11,8 +11,8 @@ export function CandidateLoginPage() {
   const { candidateLogin } = useAuth();
   const toast = useToast();
 
-  const [email, setEmail] = useState('alex.candidate@example.com');
-  const [password, setPassword] = useState('password123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -41,11 +41,6 @@ export function CandidateLoginPage() {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleDemoCandidateFill = () => {
-    setEmail('alex.candidate@example.com');
-    setPassword('password123');
   };
 
   return (
@@ -123,32 +118,6 @@ export function CandidateLoginPage() {
           Sign In
         </Button>
       </form>
-
-      {/* Quick Demo Fill for Candidate */}
-      <div className="mt-5 p-3 rounded-xl bg-white/5 border border-white/10">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-[10px] uppercase tracking-wider font-bold text-slate-400 flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-brand-400" />
-            Quick Demo Candidate
-          </span>
-          <span className="text-[10px] text-emerald-400 font-medium flex items-center gap-1">
-            <CheckCircle2 className="w-3 h-3" /> Ready
-          </span>
-        </div>
-        <button
-          type="button"
-          onClick={handleDemoCandidateFill}
-          className="w-full text-left p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 text-xs text-slate-200 transition-colors flex items-center justify-between"
-        >
-          <div>
-            <span className="font-semibold text-white block">Alex Rivera</span>
-            <span className="text-[11px] text-slate-400 block">alex.candidate@example.com</span>
-          </div>
-          <span className="text-[11px] text-brand-300 bg-brand-500/20 px-2 py-0.5 rounded">
-            Click to fill
-          </span>
-        </button>
-      </div>
 
       <div className="mt-5 text-center text-xs text-slate-400">
         Don&apos;t have an account?{' '}

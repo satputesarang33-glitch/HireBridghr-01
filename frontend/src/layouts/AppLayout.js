@@ -30,13 +30,12 @@ import { cn } from '../utils/cn.js';
 export function AppLayout() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, role, logout, switchUser, availableUsers } = useAuth();
+  const { user, role, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications();
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [showNotifMenu, setShowNotifMenu] = useState(false);
-  const [showRoleSwitcher, setShowRoleSwitcher] = useState(false);
 
   const navItems = [
     { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
@@ -175,50 +174,8 @@ export function AppLayout() {
           </nav>
         </div>
 
-        {/* Bottom User Area & Role Persona Switcher */}
+        {/* Bottom User Area */}
         <div className="pt-4 border-t border-slate-200/80 dark:border-white/10 flex flex-col gap-2">
-          {/* Quick Role Switcher Button */}
-          <div className="relative">
-            <button
-              onClick={() => setShowRoleSwitcher(!showRoleSwitcher)}
-              className="w-full text-left p-2 rounded-xl text-xs bg-white/70 hover:bg-white dark:bg-white/5 dark:hover:bg-white/10 border border-slate-200/90 dark:border-white/10 text-slate-700 dark:text-slate-300 flex items-center justify-between transition-colors shadow-sm dark:shadow-none"
-              title="Test ATS under different recruiter & manager personas"
-            >
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="truncate">Persona: <strong className="text-slate-900 dark:text-white">{role}</strong></span>
-              </div>
-              <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
-            </button>
-
-            {showRoleSwitcher && (
-              <div className="absolute bottom-full left-0 mb-2 w-64 glass-panel rounded-2xl p-2 border border-white/80 dark:border-white/15 shadow-glass-lg z-50 animate-scale-in">
-                <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider px-2 py-1">
-                  Switch Persona / Role:
-                </p>
-                {availableUsers.map((u) => (
-                  <button
-                    key={u.id}
-                    onClick={() => {
-                      switchUser(u.id);
-                      setShowRoleSwitcher(false);
-                    }}
-                    className={cn(
-                      'w-full text-left px-2.5 py-1.5 rounded-xl text-xs flex items-center justify-between hover:bg-slate-100 dark:hover:bg-white/10 transition-colors',
-                      user?.id === u.id ? 'bg-brand-50 dark:bg-brand-500/20 text-brand-700 dark:text-brand-300 font-semibold' : 'text-slate-700 dark:text-slate-300'
-                    )}
-                  >
-                    <div>
-                      <p className="font-semibold text-slate-900 dark:text-white">{u.name}</p>
-                      <p className="text-[10px] text-slate-500 dark:text-slate-400">{u.role} &bull; {u.jobTitle}</p>
-                    </div>
-                    {user?.id === u.id && <CheckCircle2 className="w-3.5 h-3.5 text-brand-600 dark:text-brand-400" />}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
           {/* User Profile Card */}
           <div className="flex items-center justify-between p-2 rounded-xl bg-white/70 dark:bg-white/5 border border-slate-200/90 dark:border-white/10 shadow-sm dark:shadow-none">
             <div className="flex items-center gap-2.5 min-w-0">

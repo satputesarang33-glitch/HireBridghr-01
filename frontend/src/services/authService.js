@@ -1,39 +1,35 @@
 import { apiClient } from './api/apiClient.js';
-import { mockUsers } from './api/mockData.js';
 
 export const authService = {
   login: async ({ email, password }) => {
-    // In mock mode, find matching user or default to first recruiter
-    const matched = mockUsers.find(u => u.email.toLowerCase() === email?.toLowerCase());
-    const user = matched || mockUsers[0];
-    localStorage.setItem('hb_auth_user', JSON.stringify(user));
-    localStorage.setItem('hb_auth_token', 'jwt-mock-token-' + user.id);
-    return { success: true, data: { user, token: 'jwt-mock-token-' + user.id } };
+    const res = await apiClient.post('/api/auth/login', { email, password });
+    if (res.data?.user) {
+      localStorage.setItem('hb_auth_user', JSON.stringify(res.data.user));
+      localStorage.setItem('hb_auth_token', res.data.token || res.data.accessToken || ('jwt-token-' + res.data.user.id));
+    }
+    return res;
   },
 
   signup: async (formData) => {
-    const newUser = {
-      id: `usr-${Date.now().toString().slice(-4)}`,
-      name: `${formData.firstName} ${formData.lastName}`,
+    const res = await apiClient.post('/api/auth/register', {
+      name: `${formData.firstName} ${formData.lastName}`.trim(),
       email: formData.email,
-      role: 'OWNER',
-      organizationId: 'org-new',
+      password: formData.password || 'Password123!',
       organizationName: formData.organizationName || 'My New Organization',
-      jobTitle: 'Founder / Lead Recruiter',
       phone: formData.phone || '',
-      avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80',
-      status: 'ACTIVE',
-    };
-    localStorage.setItem('hb_auth_user', JSON.stringify(newUser));
-    localStorage.setItem('hb_auth_token', 'jwt-mock-token-' + newUser.id);
-    return { success: true, data: { user: newUser, token: 'jwt-mock-token-' + newUser.id } };
+    });
+    if (res.data?.user) {
+      localStorage.setItem('hb_auth_user', JSON.stringify(res.data.user));
+      localStorage.setItem('hb_auth_token', res.data.token || res.data.accessToken || ('jwt-token-' + res.data.user.id));
+    }
+    return res;
   },
 
   candidateLogin: async ({ email, password }) => {
     const res = await apiClient.post('/api/auth/candidate/login', { email, password });
     if (res.data?.user) {
       localStorage.setItem('hb_auth_user', JSON.stringify(res.data.user));
-      localStorage.setItem('hb_auth_token', res.data.token || ('jwt-cand-' + res.data.user.id));
+      localStorage.setItem('hb_auth_token', res.data.token || res.data.accessToken || ('jwt-cand-' + res.data.user.id));
     }
     return res;
   },
@@ -42,16 +38,16 @@ export const authService = {
     const res = await apiClient.post('/api/auth/candidate/signup', formData);
     if (res.data?.user) {
       localStorage.setItem('hb_auth_user', JSON.stringify(res.data.user));
-      localStorage.setItem('hb_auth_token', res.data.token || ('jwt-cand-' + res.data.user.id));
+      localStorage.setItem('hb_auth_token', res.data.token || res.data.accessToken || ('jwt-cand-' + res.data.user.id));
     }
     return res;
   },
 
   logout: async () => {
     try {
-      await apiClient.post('/api/auth/candidate/logout');
+      await apiClient.post('/api/auth/logout');
     } catch {
-      // Ignore if not candidate
+      // Ignore
     }
     localStorage.removeItem('hb_auth_user');
     localStorage.removeItem('hb_auth_token');
@@ -60,25 +56,16 @@ export const authService = {
 
   getCurrentUser: () => {
     const saved = localStorage.getItem('hb_auth_user');
-    return saved ? JSON.parse(saved) : mockUsers[0]; // defaults to Owner Sarah Connor for rich experience
-  },
-
-  switchRoleUser: (userId) => {
-    const target = mockUsers.find(u => u.id === userId);
-    if (target) {
-      localStorage.setItem('hb_auth_user', JSON.stringify(target));
-      return target;
-    }
-    return null;
+    return saved ? JSON.parse(saved) : null;
   },
 
   forgotPassword: async (email) => {
-    const res = await apiClient.post('/api/auth/candidate/forgot-password', { email });
+    const res = await apiClient.post('/api/auth/forgot-password', { email });
     return res.data || { success: true, message: `Password reset link sent to ${email}` };
   },
 
   resetPassword: async ({ token, password }) => {
-    const res = await apiClient.post('/api/auth/candidate/reset-password', { token, password });
+    const res = await apiClient.post('/api/auth/reset-password', { token, password });
     return res.data || { success: true, message: 'Password has been successfully updated' };
   },
 

@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { authService } from '../services/authService.js';
-import { mockUsers } from '../services/api/mockData.js';
 
 const AuthContext = createContext(null);
 
@@ -147,8 +146,8 @@ export function AuthProvider({ children }) {
         candidateLogin,
         candidateSignup,
         logout,
-        switchUser,
-        availableUsers: mockUsers,
+        switchUser: () => {},
+        availableUsers: [],
         hasRole,
         can,
         hasPermission,

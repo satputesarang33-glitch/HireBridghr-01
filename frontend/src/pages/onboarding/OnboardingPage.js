@@ -38,10 +38,10 @@ export function OnboardingPage() {
     city: 'San Francisco',
     timeZone: 'America/Los_Angeles (PST)',
     // Step 4: User Info
-    fullName: user?.name || 'Sarah Connor',
-    jobTitle: user?.jobTitle || 'Head of Talent Acquisition',
-    phone: user?.phone || '+1 (415) 890-1234',
-    workEmail: user?.email || 'sarah.connor@apextech.com',
+    fullName: user?.name || '',
+    jobTitle: user?.jobTitle || '',
+    phone: user?.phone || '',
+    workEmail: user?.email || '',
     // Step 5: Recruitment Setup
     hiringVolume: '20-50 hires / year',
     typicalRoles: 'Software Engineers, Product Managers, SREs',

@@ -9,7 +9,7 @@ export function CandidateResetPasswordPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const toast = useToast();
-  const token = searchParams.get('token') || 'demo-reset-token-cand';
+  const token = searchParams.get('token') || '';
 
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -21,6 +21,11 @@ export function CandidateResetPasswordPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    if (!token) {
+      setError('Invalid or missing password reset token. Please request a new link.');
+      return;
+    }
 
     if (password.length < 8) {
       setError('Password must be at least 8 characters.');

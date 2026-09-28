@@ -49,15 +49,17 @@ export function CandidateForgotPasswordPage() {
             </p>
           </div>
 
-          <div className="p-3 rounded-lg bg-white/5 border border-white/10 text-xs text-slate-400 flex items-center justify-between">
-            <span>Demo Reset Link:</span>
-            <Link
-              to={`/candidate/reset-password?token=${resetToken || 'demo-reset-token-cand'}`}
-              className="text-brand-400 hover:text-brand-300 font-semibold"
-            >
-              Click to Reset Password &rarr;
-            </Link>
-          </div>
+          {resetToken && (
+            <div className="p-3 rounded-lg bg-white/5 border border-white/10 text-xs text-slate-400 flex items-center justify-between">
+              <span>Password Reset Link:</span>
+              <Link
+                to={`/candidate/reset-password?token=${resetToken}`}
+                className="text-brand-400 hover:text-brand-300 font-semibold"
+              >
+                Click to Reset Password &rarr;
+              </Link>
+            </div>
+          )}
 
           <div className="pt-3">
             <Link

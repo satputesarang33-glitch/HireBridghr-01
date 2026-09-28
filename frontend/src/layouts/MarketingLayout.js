@@ -88,7 +88,7 @@ export function MarketingLayout() {
           <Link to="/pricing" onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-slate-800 dark:text-slate-200 hover:text-brand-600 dark:hover:text-brand-400 py-1 transition-colors">Pricing</Link>
           <Link to="/about" onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-slate-800 dark:text-slate-200 hover:text-brand-600 dark:hover:text-brand-400 py-1 transition-colors">About</Link>
           <Link to="/contact" onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-slate-800 dark:text-slate-200 hover:text-brand-600 dark:hover:text-brand-400 py-1 transition-colors">Contact</Link>
-          <Link to="/dashboard" onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-cyan-600 dark:text-cyan-400 py-1 transition-colors">Launch ATS Demo</Link>
+          <Link to="/signin" onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-cyan-600 dark:text-cyan-400 py-1 transition-colors">Sign In</Link>
           <hr className="border-slate-200 dark:border-white/10" />
           <div className="flex items-center justify-between py-1">
             <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Appearance</span>
@@ -147,7 +147,7 @@ export function MarketingLayout() {
               <li><Link to="/about" className="hover:text-slate-900 dark:hover:text-white transition-colors">About Us</Link></li>
               <li><Link to="/pricing" className="hover:text-slate-900 dark:hover:text-white transition-colors">Pricing</Link></li>
               <li><Link to="/contact" className="hover:text-slate-900 dark:hover:text-white transition-colors">Contact Support</Link></li>
-              <li><Link to="/dashboard" className="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Launch ATS Demo</Link></li>
+              <li><Link to="/signin" className="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Sign In to ATS</Link></li>
             </ul>
           </div>
 

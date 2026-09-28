@@ -52,15 +52,15 @@ export function ApplyJobModal({ isOpen, onClose, job }) {
     if (profile) {
       setFormData((prev) => ({
         ...prev,
-        fullName: profile.fullName || `${profile.firstName || ''} ${profile.lastName || ''}`.trim() || 'Alex Rivera',
-        email: profile.email || 'alex.candidate@example.com',
-        phone: profile.phone || '+1 (555) 234-5678',
+        fullName: profile.fullName || `${profile.firstName || ''} ${profile.lastName || ''}`.trim() || '',
+        email: profile.email || '',
+        phone: profile.phone || '',
         portfolioUrl: profile.portfolioUrl || '',
         linkedinUrl: profile.linkedinUrl || '',
         githubUrl: profile.githubUrl || '',
-        resumeName: profile.resumeName || 'Alex_Rivera_Resume_2026.pdf',
-        resumeSize: profile.resumeSize || '1.8 MB',
-        resumeUrl: profile.resumeUrl || 'https://hirebridgehr.example.com/resumes/alex-rivera-resume.pdf',
+        resumeName: profile.resumeName || '',
+        resumeSize: profile.resumeSize || '',
+        resumeUrl: profile.resumeUrl || '',
       }));
     }
   }, [profile]);

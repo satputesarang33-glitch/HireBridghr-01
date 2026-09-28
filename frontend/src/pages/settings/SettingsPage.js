@@ -43,10 +43,10 @@ export function SettingsPage() {
 
   // Profile settings form
   const [profileForm, setProfileForm] = useState({
-    name: user?.name || 'Sarah Connor',
-    email: user?.email || 'sarah.connor@apextech.com',
-    phone: user?.phone || '+1 (415) 890-1234',
-    jobTitle: user?.jobTitle || 'Head of Talent Acquisition',
+    name: user?.name || '',
+    email: user?.email || '',
+    phone: user?.phone || '',
+    jobTitle: user?.jobTitle || '',
   });
 
   // Team Invite Modal
