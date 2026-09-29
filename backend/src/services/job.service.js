@@ -4,6 +4,33 @@ import { auditService } from './audit.service.js';
 import { devStore } from '../lib/devStore.js';
 import { env } from '../config/env.js';
 
+export const normalizeWorkplaceType = (val) => {
+  if (!val) return 'REMOTE';
+  const upper = String(val).toUpperCase().replace(/[\s-]/g, '_');
+  if (upper === 'ON_SITE' || upper === 'ONSITE') return 'ON_SITE';
+  if (upper === 'HYBRID') return 'HYBRID';
+  return 'REMOTE';
+};
+
+export const normalizeEmploymentType = (val) => {
+  if (!val) return 'FULL_TIME';
+  const upper = String(val).toUpperCase().replace(/[\s-]/g, '_');
+  if (upper === 'PART_TIME') return 'PART_TIME';
+  if (upper === 'CONTRACT') return 'CONTRACT';
+  if (upper === 'INTERNSHIP') return 'INTERNSHIP';
+  if (upper === 'TEMPORARY') return 'TEMPORARY';
+  return 'FULL_TIME';
+};
+
+export const normalizeJobStatus = (val) => {
+  if (!val) return 'DRAFT';
+  const upper = String(val).toUpperCase();
+  if (['DRAFT', 'PENDING_ADMIN_PUBLICATION', 'PROCESSING', 'PUBLISHED', 'CLOSED', 'ARCHIVED', 'FAILED', 'REJECTED'].includes(upper)) {
+    return upper;
+  }
+  return 'DRAFT';
+};
+
 export const jobService = {
   /**
    * List jobs with organization scoping, searching, filtering, and pagination
@@ -139,8 +166,10 @@ export const jobService = {
       .replace(/[^a-z0-9]+/g, '-')
       .concat(`-${Date.now().toString().slice(-4)}`);
 
-    const initialStatus = jobData.status || 'DRAFT';
+    const initialStatus = normalizeJobStatus(jobData.status || 'DRAFT');
     const isDirectlyPublished = initialStatus === 'PUBLISHED';
+    const workplaceType = normalizeWorkplaceType(jobData.workplaceType);
+    const employmentType = normalizeEmploymentType(jobData.employmentType);
 
     if (!env.DATABASE_URL) {
       const newJob = {
@@ -148,6 +177,8 @@ export const jobService = {
         organizationId: organizationId || 'org-1',
         slug,
         ...jobData,
+        workplaceType,
+        employmentType,
         status: initialStatus,
         applicationsCount: 0,
         createdAt: new Date().toISOString(),
@@ -165,8 +196,8 @@ export const jobService = {
         client: jobData.client || 'Internal',
         department: jobData.department,
         location: jobData.location,
-        workplaceType: jobData.workplaceType || 'REMOTE',
-        employmentType: jobData.employmentType || 'FULL_TIME',
+        workplaceType,
+        employmentType,
         experienceMin: jobData.experienceMin ? Number(jobData.experienceMin) : 0,
         experienceMax: jobData.experienceMax ? Number(jobData.experienceMax) : null,
         experienceLevel: jobData.experienceLevel,
@@ -239,6 +270,15 @@ export const jobService = {
 
     const isPublishing = updateData.status === 'PUBLISHED' && existing.status !== 'PUBLISHED';
     const cleanedUpdates = { ...updateData };
+    if (cleanedUpdates.workplaceType) {
+      cleanedUpdates.workplaceType = normalizeWorkplaceType(cleanedUpdates.workplaceType);
+    }
+    if (cleanedUpdates.employmentType) {
+      cleanedUpdates.employmentType = normalizeEmploymentType(cleanedUpdates.employmentType);
+    }
+    if (cleanedUpdates.status) {
+      cleanedUpdates.status = normalizeJobStatus(cleanedUpdates.status);
+    }
     if (Array.isArray(cleanedUpdates.responsibilities)) {
       cleanedUpdates.responsibilities = cleanedUpdates.responsibilities.join('\n');
     }
@@ -347,20 +387,95 @@ export const jobService = {
    * Candidate Saved Jobs Support
    */
   saveJob: async (jobId, userId) => {
+    // Keep devStore updated
     if (!devStore.savedJobs.find((s) => s.userId === userId && s.jobId === jobId)) {
       devStore.savedJobs.push({ userId, jobId });
+    }
+
+    if (env.DATABASE_URL) {
+      try {
+        // Resolve job ID if passed a slug
+        const targetJob = await prisma.job.findFirst({
+          where: { OR: [{ id: jobId }, { slug: jobId }] },
+          select: { id: true },
+        });
+        const resolvedId = targetJob ? targetJob.id : jobId;
+        await prisma.savedJob.upsert({
+          where: { userId_jobId: { userId, jobId: resolvedId } },
+          create: { userId, jobId: resolvedId },
+          update: {},
+        });
+      } catch (e) {
+        // Fallback to devStore already done
+      }
     }
     return { message: 'Job saved to favorites' };
   },
 
   unsaveJob: async (jobId, userId) => {
     devStore.savedJobs = devStore.savedJobs.filter((s) => !(s.userId === userId && s.jobId === jobId));
+
+    if (env.DATABASE_URL) {
+      try {
+        const targetJob = await prisma.job.findFirst({
+          where: { OR: [{ id: jobId }, { slug: jobId }] },
+          select: { id: true },
+        });
+        const resolvedId = targetJob ? targetJob.id : jobId;
+        await prisma.savedJob.deleteMany({
+          where: { userId, jobId: resolvedId },
+        });
+      } catch (e) {
+        // Fallback to devStore already done
+      }
+    }
     return { message: 'Job removed from saved list' };
   },
 
   getSavedJobs: async (userId) => {
-    const savedIds = devStore.savedJobs.filter((s) => s.userId === userId).map((s) => s.jobId);
-    const jobs = devStore.jobs.filter((j) => savedIds.includes(j.id));
+    let savedIds = devStore.savedJobs.filter((s) => s.userId === userId).map((s) => s.jobId);
+    let jobs = [];
+
+    if (env.DATABASE_URL) {
+      try {
+        const dbSaved = await prisma.savedJob.findMany({
+          where: { userId },
+          include: {
+            job: {
+              include: {
+                organization: { select: { id: true, name: true, slug: true } },
+              },
+            },
+          },
+          orderBy: { createdAt: 'desc' },
+        });
+
+        const dbJobs = dbSaved.map((s) => s.job).filter(Boolean);
+        const dbIds = dbSaved.map((s) => s.jobId);
+        savedIds = Array.from(new Set([...savedIds, ...dbIds]));
+        jobs = dbJobs;
+      } catch (e) {
+        // Ignore DB error, proceed to devStore
+      }
+    }
+
+    // Merge devStore jobs if not already included
+    const devJobs = devStore.jobs.filter(
+      (j) => savedIds.includes(j.id) && !jobs.some((existing) => existing.id === j.id)
+    );
+    jobs = [...jobs, ...devJobs];
+
+    // If there are still savedIds that don't have job records loaded, query prisma.job
+    const missingIds = savedIds.filter((id) => !jobs.some((j) => j.id === id || j.slug === id));
+    if (missingIds.length > 0 && env.DATABASE_URL) {
+      try {
+        const extraJobs = await prisma.job.findMany({
+          where: { id: { in: missingIds } },
+        });
+        jobs = [...jobs, ...extraJobs];
+      } catch (e) {}
+    }
+
     return { jobs, savedIds };
   },
 };

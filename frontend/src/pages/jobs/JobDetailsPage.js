@@ -9,7 +9,7 @@ import {
   XCircle,
   ExternalLink,
   Calendar,
-  DollarSign,
+  IndianRupee,
   MapPin,
   Clock,
   CheckCircle2,
@@ -192,11 +192,11 @@ export function JobDetailsPage() {
 
               <div className="flex items-center justify-between">
                 <span className="text-slate-400 flex items-center gap-1.5">
-                  <DollarSign className="w-3.5 h-3.5 text-emerald-400" />
+                  <IndianRupee className="w-3.5 h-3.5 text-emerald-400" />
                   Salary Range:
                 </span>
                 <span className="font-mono font-bold text-white">
-                  {job.currency} {job.salaryMin?.toLocaleString()} - {job.salaryMax?.toLocaleString()}
+                  ₹{job.salaryMin?.toLocaleString('en-IN')} - ₹{job.salaryMax?.toLocaleString('en-IN')}
                 </span>
               </div>
 

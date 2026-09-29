@@ -20,8 +20,12 @@ export const authController = {
 
       return ApiResponse.created(res, 'Account created successfully', {
         user: result.user,
+        organization: { id: result.user.organizationId, name: result.user.organizationName },
+        organizationName: result.user.organizationName,
+        organizationId: result.user.organizationId,
         token: result.accessToken,
         accessToken: result.accessToken,
+        refreshToken: result.rawRefreshToken,
       });
     } catch (error) {
       next(error);
@@ -46,6 +50,7 @@ export const authController = {
         user: result.user,
         token: result.accessToken,
         accessToken: result.accessToken,
+        refreshToken: result.rawRefreshToken,
       });
     } catch (error) {
       next(error);
@@ -60,6 +65,7 @@ export const authController = {
       const clientInfo = {
         ipAddress: req.ip,
         userAgent: req.headers['user-agent'],
+        isCandidate: Boolean(req.originalUrl && req.originalUrl.includes('candidate')),
       };
 
       const result = await authService.login(req.body, clientInfo);
@@ -70,6 +76,7 @@ export const authController = {
         user: result.user,
         token: result.accessToken,
         accessToken: result.accessToken,
+        refreshToken: result.rawRefreshToken,
       });
     } catch (error) {
       next(error);

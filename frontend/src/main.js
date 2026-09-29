@@ -8,6 +8,7 @@ import './styles/liquid-glass.css';
 import './styles/layout.css';
 import './styles/components.css';
 import './styles/candidate.css';
+import './styles/responsive.css';
 
 const rootElement = document.getElementById('root');
 if (rootElement) {

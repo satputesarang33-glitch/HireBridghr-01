@@ -11,7 +11,7 @@ import {
   X,
   Eye,
   Building,
-  DollarSign,
+  IndianRupee,
   Calendar,
   Sparkles,
 } from 'lucide-react';
@@ -41,9 +41,9 @@ export function CreateJobPage() {
     location: 'San Francisco, CA',
     description: `### Role Overview\nWe are looking for a skilled professional to join our team...\n\n### Key Responsibilities\n- Deliver high-quality software features.\n- Partner cross-functionally with team members.\n\n### Requirements\n- Proven track record and proficiency with modern stacks.`,
     skills: ['React.js', 'Node.js', 'TypeScript'],
-    currency: 'USD',
-    salaryMin: 120000,
-    salaryMax: 160000,
+    currency: 'INR',
+    salaryMin: 1200000,
+    salaryMax: 1800000,
     experienceMin: 3,
     experienceMax: 6,
     experienceLevel: 'Mid-Senior',
@@ -101,8 +101,23 @@ export function CreateJobPage() {
       ? 'PUBLISHED'
       : status;
 
+    const wpMap = {
+      'Hybrid': 'HYBRID',
+      'Remote': 'REMOTE',
+      'On-site': 'ON_SITE',
+    };
+    const empMap = {
+      'Full-time': 'FULL_TIME',
+      'Part-time': 'PART_TIME',
+      'Contract': 'CONTRACT',
+      'Internship': 'INTERNSHIP',
+      'Temporary': 'TEMPORARY',
+    };
+
     const jobPayload = {
       ...formData,
+      workplaceType: wpMap[formData.workplaceType] || formData.workplaceType || 'HYBRID',
+      employmentType: empMap[formData.employmentType] || formData.employmentType || 'FULL_TIME',
       status: effectiveStatus,
       recruiterId: user?.id || 'usr-3',
       recruiterName: user?.name || 'Recruiter Lead',
@@ -300,13 +315,7 @@ export function CreateJobPage() {
               value={formData.currency}
               onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
               options={[
-                { label: 'USD ($)', value: 'USD' },
                 { label: 'INR (₹)', value: 'INR' },
-                { label: 'GBP (£)', value: 'GBP' },
-                { label: 'EUR (€)', value: 'EUR' },
-                { label: 'AED (د.إ)', value: 'AED' },
-                { label: 'SAR (﷼)', value: 'SAR' },
-                { label: 'CAD ($)', value: 'CAD' },
               ]}
             />
 
@@ -455,7 +464,7 @@ export function CreateJobPage() {
               </div>
               <div className="text-right">
                 <p className="text-lg font-mono font-bold text-emerald-400">
-                  {formData.currency} {formData.salaryMin.toLocaleString()} - {formData.salaryMax.toLocaleString()}
+                  ₹{formData.salaryMin?.toLocaleString('en-IN')} - ₹{formData.salaryMax?.toLocaleString('en-IN')}
                 </p>
                 <p className="text-[11px] text-slate-400">{formData.employmentType} &bull; {formData.experienceMin}-{formData.experienceMax} Yrs Exp</p>
               </div>

@@ -30,6 +30,11 @@ export function Select({
           )}
           {...props}
         >
+          {options.length > 0 && !options.some((o) => o.value === '') && (
+            <option value="" style={{ display: 'none' }}>
+              {options[0]?.label || 'All'}
+            </option>
+          )}
           {options.length > 0
             ? options.map((opt) => (
                 <option key={opt.value} value={opt.value} className="bg-white text-slate-900 dark:bg-slate-900 dark:text-slate-100">

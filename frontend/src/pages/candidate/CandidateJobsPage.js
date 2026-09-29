@@ -390,6 +390,7 @@ export function CandidateJobsPage() {
                           : 'bg-white/5 border-white/10 text-slate-400 hover:text-white'
                       )}
                       title={saved ? 'Remove saved job' : 'Save job'}
+                      aria-label={saved ? 'Remove saved job' : 'Save job'}
                     >
                       <Bookmark className="w-4 h-4 fill-current" />
                     </button>

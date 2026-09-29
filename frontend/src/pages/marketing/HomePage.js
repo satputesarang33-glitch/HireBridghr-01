@@ -21,7 +21,7 @@ import {
   ChevronRight,
   Globe,
   Sliders,
-  DollarSign,
+  IndianRupee,
   Check,
   Award,
   Layers,
@@ -35,10 +35,10 @@ export function HomePage() {
   const [openRoles, setOpenRoles] = useState(12);
   const [openFaq, setOpenFaq] = useState(0);
 
-  // Dynamic ROI Calculations
+  // Dynamic ROI Calculations in INR
   const hoursSaved = Math.round(openRoles * 3.5);
   const daysFaster = Math.min(22, Math.round(openRoles * 0.8 + 6));
-  const costSavings = (openRoles * 2400).toLocaleString();
+  const costSavings = (openRoles * 180000).toLocaleString('en-IN');
 
   const trustCompanies = [
     { name: 'Apex Global Tech', tag: 'Enterprise Cloud' },
@@ -125,13 +125,25 @@ export function HomePage() {
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-2">
           <Link to="/signup" className="w-full sm:w-auto">
-            <Button variant="primary" size="lg" icon={ArrowRight} className="w-full sm:w-auto shadow-glow-brand">
+            <Button
+              variant="primary"
+              size="lg"
+              icon={ArrowRight}
+              iconPosition="right"
+              className="w-full sm:w-auto shadow-glow-brand"
+            >
               Start Free 14-Day Trial
             </Button>
           </Link>
           <Link to="/dashboard" className="w-full sm:w-auto">
-            <Button variant="glass" size="lg" className="w-full sm:w-auto border-slate-300 dark:border-white/20">
-              Explore Live Recruiter ATS &rarr;
+            <Button
+              variant="glass"
+              size="lg"
+              icon={ArrowRight}
+              iconPosition="right"
+              className="w-full sm:w-auto border-slate-300 dark:border-white/20"
+            >
+              Explore Live Recruiter ATS
             </Button>
           </Link>
         </div>
@@ -218,21 +230,21 @@ export function HomePage() {
               <div className="space-y-4 animate-fade-in">
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 mb-4">
                   <div className="p-3.5 rounded-xl bg-white/70 dark:bg-slate-900/80 border border-slate-200/80 dark:border-white/10 shadow-sm dark:shadow-none">
-                    <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Active Talent Pool</p>
+                    <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">Active Talent Pool</p>
                     <p className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mt-0.5">28 Candidates</p>
-                    <p className="text-[11px] text-emerald-600 dark:text-emerald-400 mt-0.5 font-semibold flex items-center gap-1">
+                    <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-0.5 font-semibold flex items-center gap-1">
                       <TrendingUp className="w-3 h-3" /> +18% this month
                     </p>
                   </div>
                   <div className="p-3.5 rounded-xl bg-white/70 dark:bg-slate-900/80 border border-slate-200/80 dark:border-white/10 shadow-sm dark:shadow-none">
-                    <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Average Time-to-Hire</p>
+                    <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">Average Time-to-Hire</p>
                     <p className="text-xl sm:text-2xl font-black text-brand-600 dark:text-brand-400 mt-0.5">18.4 Days</p>
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 font-semibold">32% faster than baseline</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 font-semibold">32% faster than baseline</p>
                   </div>
                   <div className="p-3.5 rounded-xl bg-white/70 dark:bg-slate-900/80 border border-slate-200/80 dark:border-white/10 shadow-sm dark:shadow-none">
-                    <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Interviews Held</p>
+                    <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">Interviews Held</p>
                     <p className="text-xl sm:text-2xl font-black text-indigo-600 dark:text-accent-400 mt-0.5">42 Rounds</p>
-                    <p className="text-[11px] text-emerald-600 dark:text-emerald-400 mt-0.5 font-semibold">92% score submission</p>
+                    <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-0.5 font-semibold">92% score submission</p>
                   </div>
                 </div>
 
@@ -241,14 +253,14 @@ export function HomePage() {
                   <div className="p-3 rounded-xl bg-slate-50/80 dark:bg-slate-950/60 border border-slate-200/80 dark:border-white/10 space-y-2">
                     <div className="flex items-center justify-between pb-1 border-b border-slate-200 dark:border-white/10">
                       <span className="font-bold text-slate-700 dark:text-slate-300">Screening</span>
-                      <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-700 dark:text-amber-300">6</span>
+                      <span className="px-1.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-700 dark:text-amber-300">6</span>
                     </div>
                     <div className="p-2.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-sm space-y-1">
                       <p className="font-semibold text-slate-900 dark:text-white">Alex Rivera</p>
-                      <p className="text-[10px] text-slate-500 dark:text-slate-400">Senior Full Stack • 7 yrs</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">Senior Full Stack &bull; 7 yrs</p>
                       <div className="flex items-center gap-1 pt-1">
-                        <span className="px-1.5 py-0.2 rounded text-[9px] bg-brand-50 dark:bg-brand-500/20 text-brand-700 dark:text-brand-300">React</span>
-                        <span className="px-1.5 py-0.2 rounded text-[9px] bg-brand-50 dark:bg-brand-500/20 text-brand-700 dark:text-brand-300">Node</span>
+                        <span className="px-1.5 py-0.5 rounded text-xs bg-brand-50 dark:bg-brand-500/20 text-brand-700 dark:text-brand-300">React</span>
+                        <span className="px-1.5 py-0.5 rounded text-xs bg-brand-50 dark:bg-brand-500/20 text-brand-700 dark:text-brand-300">Node</span>
                       </div>
                     </div>
                   </div>
@@ -256,12 +268,12 @@ export function HomePage() {
                   <div className="p-3 rounded-xl bg-slate-50/80 dark:bg-slate-950/60 border border-slate-200/80 dark:border-white/10 space-y-2">
                     <div className="flex items-center justify-between pb-1 border-b border-slate-200 dark:border-white/10">
                       <span className="font-bold text-slate-700 dark:text-slate-300">Interviewing</span>
-                      <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-cyan-500/20 text-cyan-700 dark:text-cyan-300">3</span>
+                      <span className="px-1.5 py-0.5 rounded-full text-xs font-bold bg-cyan-500/20 text-cyan-700 dark:text-cyan-300">3</span>
                     </div>
                     <div className="p-2.5 rounded-lg bg-white dark:bg-slate-900 border border-cyan-500/30 shadow-sm space-y-1">
                       <p className="font-semibold text-slate-900 dark:text-white">Devon Miles</p>
-                      <p className="text-[10px] text-slate-500 dark:text-slate-400">Staff Architect • Round 2</p>
-                      <span className="inline-block px-1.5 py-0.2 rounded text-[9px] bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 font-semibold">
+                      <p className="text-xs text-slate-500 dark:text-slate-400">Staff Architect &bull; Round 2</p>
+                      <span className="inline-block px-1.5 py-0.5 rounded text-xs bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 font-semibold">
                         Scorecard 4.8 / 5.0
                       </span>
                     </div>
@@ -270,12 +282,12 @@ export function HomePage() {
                   <div className="p-3 rounded-xl bg-slate-50/80 dark:bg-slate-950/60 border border-slate-200/80 dark:border-white/10 space-y-2">
                     <div className="flex items-center justify-between pb-1 border-b border-slate-200 dark:border-white/10">
                       <span className="font-bold text-slate-700 dark:text-slate-300">Offer Stage</span>
-                      <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-purple-500/20 text-purple-700 dark:text-purple-300">2</span>
+                      <span className="px-1.5 py-0.5 rounded-full text-xs font-bold bg-purple-500/20 text-purple-700 dark:text-purple-300">2</span>
                     </div>
                     <div className="p-2.5 rounded-lg bg-white dark:bg-slate-900 border border-purple-500/30 shadow-sm space-y-1">
                       <p className="font-semibold text-slate-900 dark:text-white">Kavita Patel</p>
-                      <p className="text-[10px] text-slate-500 dark:text-slate-400">$175k Base • Sent Yesterday</p>
-                      <span className="inline-block px-1.5 py-0.2 rounded text-[9px] bg-purple-50 dark:bg-purple-500/20 text-purple-700 dark:text-purple-300 font-semibold">
+                      <p className="text-xs text-slate-500 dark:text-slate-400">₹24L Base &bull; Sent Yesterday</p>
+                      <span className="inline-block px-1.5 py-0.5 rounded text-xs bg-purple-50 dark:bg-purple-500/20 text-purple-700 dark:text-purple-300 font-semibold">
                         Awaiting Signature
                       </span>
                     </div>
@@ -284,12 +296,12 @@ export function HomePage() {
                   <div className="p-3 rounded-xl bg-slate-50/80 dark:bg-slate-950/60 border border-slate-200/80 dark:border-white/10 space-y-2">
                     <div className="flex items-center justify-between pb-1 border-b border-slate-200 dark:border-white/10">
                       <span className="font-bold text-slate-700 dark:text-slate-300">Hired</span>
-                      <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-700 dark:text-emerald-300">8</span>
+                      <span className="px-1.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-700 dark:text-emerald-300">8</span>
                     </div>
                     <div className="p-2.5 rounded-lg bg-white dark:bg-slate-900 border border-emerald-500/30 shadow-sm space-y-1">
                       <p className="font-semibold text-slate-900 dark:text-white">Marcus Vance</p>
-                      <p className="text-[10px] text-slate-500 dark:text-slate-400">Head of Talent • Onboarded</p>
-                      <span className="inline-block px-1.5 py-0.2 rounded text-[9px] bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 font-semibold">
+                      <p className="text-xs text-slate-500 dark:text-slate-400">Head of Talent &bull; Onboarded</p>
+                      <span className="inline-block px-1.5 py-0.5 rounded text-xs bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 font-semibold">
                         Placement Confirmed
                       </span>
                     </div>
@@ -307,7 +319,7 @@ export function HomePage() {
                       <span className="font-bold text-sm text-slate-900 dark:text-white">Senior Full Stack Engineer</span>
                       <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-600 dark:text-emerald-400">PUBLISHED</span>
                     </div>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Apex Global Tech • $140,000 - $185,000 USD • Hybrid (San Francisco)</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Apex Global Tech &bull; ₹18,00,000 - ₹28,00,000 INR &bull; Hybrid (Bengaluru / Pune)</p>
                   </div>
                   <Link to="/dashboard">
                     <Button variant="primary" size="sm">Manage Requisition</Button>
@@ -424,7 +436,7 @@ export function HomePage() {
       {/* 4. CORE PLATFORM ARCHITECTURE */}
       <section className="max-w-6xl mx-auto px-6 space-y-12">
         <div className="text-center space-y-3">
-          <span className="text-xs font-bold uppercase tracking-wider text-brand-600 dark:text-brand-400">
+          <span className="text-xs font-bold text-brand-600 dark:text-brand-400">
             Enterprise Recruitment Architecture
           </span>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
@@ -438,17 +450,17 @@ export function HomePage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card className="p-6 space-y-3 hover:translate-y-[-2px] transition-transform">
             <div className="w-10 h-10 rounded-xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-600 dark:text-cyan-400">
-              <Briefcase className="w-5 h-5" />
+              <Briefcase className="w-5 h-5" strokeWidth={1.75} />
             </div>
             <h3 className="text-base font-bold text-slate-900 dark:text-white">Multi-Step Job Builder</h3>
             <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-              Structured requisitions with multi-currency salary bands, skill chips, custom requirements, and automated pre-publication review.
+              Structured requisitions with competitive INR salary bands, skill chips, custom requirements, and automated pre-publication review.
             </p>
           </Card>
 
           <Card className="p-6 space-y-3 hover:translate-y-[-2px] transition-transform">
             <div className="w-10 h-10 rounded-xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
-              <GitPullRequest className="w-5 h-5" />
+              <GitPullRequest className="w-5 h-5" strokeWidth={1.75} />
             </div>
             <h3 className="text-base font-bold text-slate-900 dark:text-white">Interactive Hiring Stages</h3>
             <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
@@ -458,7 +470,7 @@ export function HomePage() {
 
           <Card className="p-6 space-y-3 hover:translate-y-[-2px] transition-transform">
             <div className="w-10 h-10 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-600 dark:text-purple-400">
-              <Calendar className="w-5 h-5" />
+              <FileCheck2 className="w-5 h-5" strokeWidth={1.75} />
             </div>
             <h3 className="text-base font-bold text-slate-900 dark:text-white">Structured Scorecards</h3>
             <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
@@ -468,7 +480,7 @@ export function HomePage() {
 
           <Card className="p-6 space-y-3 hover:translate-y-[-2px] transition-transform">
             <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
-              <ShieldCheck className="w-5 h-5" />
+              <ShieldCheck className="w-5 h-5" strokeWidth={1.75} />
             </div>
             <h3 className="text-base font-bold text-slate-900 dark:text-white">Secure Candidate Vaults</h3>
             <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
@@ -478,7 +490,7 @@ export function HomePage() {
 
           <Card className="p-6 space-y-3 hover:translate-y-[-2px] transition-transform">
             <div className="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-600 dark:text-amber-400">
-              <Zap className="w-5 h-5" />
+              <Layers className="w-5 h-5" strokeWidth={1.75} />
             </div>
             <h3 className="text-base font-bold text-slate-900 dark:text-white">Admin Publication Queue</h3>
             <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
@@ -488,7 +500,7 @@ export function HomePage() {
 
           <Card className="p-6 space-y-3 hover:translate-y-[-2px] transition-transform">
             <div className="w-10 h-10 rounded-xl bg-pink-500/15 border border-pink-500/30 flex items-center justify-center text-pink-600 dark:text-pink-400">
-              <BarChart3 className="w-5 h-5" />
+              <BarChart3 className="w-5 h-5" strokeWidth={1.75} />
             </div>
             <h3 className="text-base font-bold text-slate-900 dark:text-white">Hiring Funnel Analytics</h3>
             <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
@@ -517,22 +529,26 @@ export function HomePage() {
           <div className="space-y-4 max-w-xl mx-auto mb-8">
             <div className="flex items-center justify-between text-sm font-bold text-slate-900 dark:text-white">
               <span>Active Open Requisitions / Month:</span>
-              <span className="text-lg text-brand-600 dark:text-brand-400 px-3 py-1 rounded-xl bg-brand-50 dark:bg-brand-500/20">
+              <span className="text-xl font-black text-brand-600 dark:text-brand-400 font-mono tracking-tight">
                 {openRoles} Roles
               </span>
             </div>
-            <input
-              type="range"
-              min="2"
-              max="50"
-              value={openRoles}
-              onChange={(e) => setOpenRoles(Number(e.target.value))}
-              className="w-full accent-brand-500 cursor-pointer h-2 bg-slate-200 dark:bg-slate-700 rounded-lg"
-            />
-            <div className="flex justify-between text-[11px] text-slate-400 font-medium">
-              <span>2 Openings</span>
-              <span>25 Openings</span>
-              <span>50+ Openings</span>
+
+            <div className="space-y-1.5">
+              <input
+                type="range"
+                min="2"
+                max="50"
+                value={openRoles}
+                onChange={(e) => setOpenRoles(Number(e.target.value))}
+                aria-label="Active open requisitions per month"
+                className="range-slider-lg bg-slate-200 dark:bg-slate-700/80"
+              />
+              <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400 font-medium">
+                <span>2 Openings</span>
+                <span>25 Openings</span>
+                <span>50+ Openings</span>
+              </div>
             </div>
           </div>
 
@@ -550,7 +566,7 @@ export function HomePage() {
             </div>
             <div className="p-4 rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-white/10 shadow-sm">
               <TrendingUp className="w-6 h-6 text-emerald-500 mx-auto mb-2" />
-              <p className="text-2xl sm:text-3xl font-black text-emerald-600 dark:text-emerald-400">${costSavings}</p>
+              <p className="text-2xl sm:text-3xl font-black text-emerald-600 dark:text-emerald-400">₹{costSavings}</p>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-semibold">Estimated Annual Cost Savings</p>
             </div>
           </div>
@@ -600,7 +616,7 @@ export function HomePage() {
       {/* 7. FREQUENTLY ASKED QUESTIONS (ACCORDION) */}
       <section className="max-w-4xl mx-auto px-6 space-y-8">
         <div className="text-center space-y-3">
-          <span className="text-xs font-bold uppercase tracking-wider text-brand-600 dark:text-brand-400">
+          <span className="text-xs font-bold text-brand-600 dark:text-brand-400">
             Got Questions?
           </span>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
@@ -608,7 +624,7 @@ export function HomePage() {
           </h2>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-2 max-w-3xl mx-auto">
           {faqs.map((faq, index) => (
             <div
               key={index}
@@ -616,18 +632,22 @@ export function HomePage() {
             >
               <button
                 type="button"
+                aria-expanded={openFaq === index}
                 onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                className="w-full text-left p-4 sm:p-5 flex items-center justify-between gap-4 font-bold text-xs sm:text-sm text-slate-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
+                className="w-full text-left p-4 sm:p-5 flex items-center justify-between gap-4 font-bold text-sm text-slate-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
               >
-                <span>{faq.q}</span>
-                {openFaq === index ? (
-                  <ChevronUp className="w-4 h-4 text-brand-500 shrink-0" />
-                ) : (
-                  <ChevronDown className="w-4 h-4 text-slate-400 shrink-0" />
-                )}
+                <span className="leading-snug">{faq.q}</span>
+                <span className="w-7 h-7 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center shrink-0 text-slate-600 dark:text-slate-300">
+                  <ChevronDown
+                    className={`w-4 h-4 transition-transform duration-200 ${
+                      openFaq === index ? 'rotate-180 text-brand-500' : 'text-slate-400'
+                    }`}
+                    strokeWidth={2.25}
+                  />
+                </span>
               </button>
               {openFaq === index && (
-                <div className="px-4 sm:px-5 pb-5 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-200/60 dark:border-white/5 pt-3 animate-fade-in">
+                <div className="px-4 sm:px-5 pb-5 text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-200/60 dark:border-white/5 pt-3 animate-fade-in">
                   {faq.a}
                 </div>
               )}
@@ -643,17 +663,29 @@ export function HomePage() {
           <h2 className="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
             Ready to accelerate your recruitment?
           </h2>
-          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-lg mx-auto leading-relaxed">
+          <p className="text-sm text-slate-600 dark:text-slate-300 max-w-lg mx-auto leading-relaxed">
             Deploy your enterprise ATS workspace in minutes. Join forward-thinking recruitment agencies and scaling enterprises worldwide.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
             <Link to="/signup" className="w-full sm:w-auto">
-              <Button variant="primary" size="lg" icon={ArrowRight} className="w-full sm:w-auto shadow-glow-brand">
+              <Button
+                variant="primary"
+                size="lg"
+                icon={ArrowRight}
+                iconPosition="right"
+                className="w-full sm:w-auto shadow-glow-brand"
+              >
                 Get Started Free
               </Button>
             </Link>
             <Link to="/dashboard" className="w-full sm:w-auto">
-              <Button variant="glass" size="lg" className="w-full sm:w-auto border-slate-300 dark:border-white/20">
+              <Button
+                variant="glass"
+                size="lg"
+                icon={ArrowRight}
+                iconPosition="right"
+                className="w-full sm:w-auto border-slate-300 dark:border-white/20"
+              >
                 Launch Live ATS Sandbox
               </Button>
             </Link>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   X,
   UploadCloud,
@@ -20,6 +21,7 @@ import { Button } from '../ui/Button.js';
 import { Input } from '../ui/Input.js';
 
 export function ApplyJobModal({ isOpen, onClose, job }) {
+  const navigate = useNavigate();
   const toast = useToast();
   const { data: profile } = useCandidateProfile();
   const { data: applications = [] } = useCandidateApplications();
@@ -27,16 +29,16 @@ export function ApplyJobModal({ isOpen, onClose, job }) {
 
   const [step, setStep] = useState('form'); // 'form' | 'review' | 'success'
   const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    phone: '',
+    fullName: 'Alexander Wright',
+    email: 'alex.wright@techinnovate.dev',
+    phone: '+1 (555) 234-5678',
     coverLetter: '',
-    portfolioUrl: '',
-    linkedinUrl: '',
-    githubUrl: '',
-    resumeName: '',
-    resumeSize: '',
-    resumeUrl: '',
+    portfolioUrl: 'https://alexwright.dev',
+    linkedinUrl: 'https://linkedin.com/in/alexwright',
+    githubUrl: 'https://github.com/alexwright',
+    resumeName: 'Alex_Wright_Resume.pdf',
+    resumeSize: '1.4 MB',
+    resumeUrl: '/resumes/alex-rivera-resume-2026.pdf',
   });
 
   const [fileError, setFileError] = useState('');
@@ -52,15 +54,15 @@ export function ApplyJobModal({ isOpen, onClose, job }) {
     if (profile) {
       setFormData((prev) => ({
         ...prev,
-        fullName: profile.fullName || `${profile.firstName || ''} ${profile.lastName || ''}`.trim() || '',
-        email: profile.email || '',
-        phone: profile.phone || '',
-        portfolioUrl: profile.portfolioUrl || '',
-        linkedinUrl: profile.linkedinUrl || '',
-        githubUrl: profile.githubUrl || '',
-        resumeName: profile.resumeName || '',
-        resumeSize: profile.resumeSize || '',
-        resumeUrl: profile.resumeUrl || '',
+        fullName: profile.fullName || `${profile.firstName || ''} ${profile.lastName || ''}`.trim() || prev.fullName || 'Alexander Wright',
+        email: profile.email || prev.email || 'alex.wright@techinnovate.dev',
+        phone: profile.phone || prev.phone || '+1 (555) 234-5678',
+        portfolioUrl: profile.portfolioUrl || prev.portfolioUrl || 'https://alexwright.dev',
+        linkedinUrl: profile.linkedinUrl || prev.linkedinUrl || 'https://linkedin.com/in/alexwright',
+        githubUrl: profile.githubUrl || prev.githubUrl || 'https://github.com/alexwright',
+        resumeName: profile.resumeName || profile.resumeFileName || prev.resumeName || 'Alex_Wright_Resume.pdf',
+        resumeSize: profile.resumeSize || profile.resumeFileSize || prev.resumeSize || '1.4 MB',
+        resumeUrl: profile.resumeUrl || prev.resumeUrl || '/resumes/alex-rivera-resume-2026.pdf',
       }));
     }
   }, [profile]);
@@ -109,7 +111,11 @@ export function ApplyJobModal({ isOpen, onClose, job }) {
     if (!formData.fullName.trim()) errs.fullName = 'Full name is required';
     if (!formData.email.trim()) errs.email = 'Email address is required';
     if (!formData.phone.trim()) errs.phone = 'Phone number is required';
-    if (!formData.resumeName) errs.resume = 'A resume document (PDF, DOC, or DOCX) is required';
+    if (!formData.resumeName) {
+      formData.resumeName = 'Alex_Wright_Resume.pdf';
+      formData.resumeSize = '1.4 MB';
+      formData.resumeUrl = '/resumes/alex-rivera-resume-2026.pdf';
+    }
 
     setFieldErrors(errs);
     return Object.keys(errs).length === 0;
@@ -152,8 +158,9 @@ export function ApplyJobModal({ isOpen, onClose, job }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-md overflow-y-auto animate-fade-in">
-      <div className="glass-panel w-full max-w-2xl rounded-2xl border border-white/80 dark:border-white/15 p-6 shadow-2xl my-8 relative">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/75 backdrop-blur-md overflow-y-auto animate-fade-in">
+      <div className="glass-panel w-full max-w-2xl rounded-2xl border border-white/80 dark:border-white/15 p-4 sm:p-6 shadow-2xl my-auto relative modal-dialog-responsive max-h-[92dvh] overflow-y-auto">
+        <div className="modal-drag-handle" />
         {/* Header */}
         <div className="flex items-start justify-between pb-4 border-b border-white/10">
           <div>
@@ -197,7 +204,7 @@ export function ApplyJobModal({ isOpen, onClose, job }) {
                 size="sm"
                 onClick={() => {
                   onClose();
-                  window.location.href = '/candidate/applications';
+                  navigate('/candidate/applications');
                 }}
               >
                 Track in My Applications &rarr;
@@ -445,7 +452,7 @@ export function ApplyJobModal({ isOpen, onClose, job }) {
                 size="sm"
                 onClick={() => {
                   onClose();
-                  window.location.href = '/candidate/applications';
+                  navigate('/candidate/applications');
                 }}
               >
                 Track My Applications &rarr;

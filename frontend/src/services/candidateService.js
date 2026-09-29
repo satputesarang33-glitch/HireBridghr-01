@@ -43,34 +43,30 @@ export const candidateService = {
   },
 
   addNote: async (candidateId, note) => {
-    const res = await apiClient.get(`/api/v1/candidates/${candidateId}`);
-    if (!res.success) return res;
+    const ratingVal = note.rating !== undefined && note.rating !== null ? Number(note.rating) : 5;
+    const authorName = note.author || 'Recruiter Lead';
 
-    const candidate = res.data;
-    const ratingVal = note.rating !== undefined && note.rating !== null ? Number(note.rating) : (candidate.rating || 5);
-    const newNote = {
-      id: `note-${Date.now()}`,
-      author: note.author || 'Current Recruiter',
-      content: note.content,
-      rating: ratingVal,
-      createdAt: new Date().toISOString(),
-    };
-    const notes = [newNote, ...(candidate.notes || [])];
-
-    const timelineItem = {
-      id: `time-${Date.now()}`,
-      title: note.rating
-        ? `Recruiter Note & Rating (${ratingVal}/5) added: "${note.content.slice(0, 35)}..."`
-        : `Recruiter Note added: "${note.content.slice(0, 40)}..."`,
-      date: new Date().toISOString(),
-      type: 'note',
-    };
-    const timeline = [timelineItem, ...(candidate.timeline || [])];
+    try {
+      await apiClient.post(`/api/v1/candidates/${candidateId}/notes`, {
+        content: note.content,
+        rating: ratingVal,
+        author: authorName,
+        authorName,
+      });
+    } catch (e) {}
 
     return apiClient.put(`/api/v1/candidates/${candidateId}`, {
-      notes,
-      timeline,
       rating: ratingVal,
+      notes: [
+        {
+          id: `note-${Date.now()}`,
+          author: authorName,
+          authorName,
+          content: note.content,
+          rating: ratingVal,
+          createdAt: new Date().toISOString(),
+        },
+      ],
     });
   },
 
@@ -99,22 +95,9 @@ export const candidateService = {
   },
 
   updateRating: async (candidateId, rating) => {
-    const res = await apiClient.get(`/api/v1/candidates/${candidateId}`);
-    if (!res.success) return res;
-
-    const candidate = res.data;
     const ratingVal = Number(rating);
-    const timelineItem = {
-      id: `time-${Date.now()}`,
-      title: `Candidate evaluation rating updated to ${ratingVal}/5`,
-      date: new Date().toISOString(),
-      type: 'rating',
-    };
-    const timeline = [timelineItem, ...(candidate.timeline || [])];
-
     return apiClient.put(`/api/v1/candidates/${candidateId}`, {
       rating: ratingVal,
-      timeline,
     });
   },
 
@@ -124,9 +107,7 @@ export const candidateService = {
    */
   saveCandidateEvaluation: async (candidateId, { rating, note, stage, status, recruiter, tags } = {}) => {
     const res = await apiClient.get(`/api/v1/candidates/${candidateId}`);
-    if (!res.success) return res;
-
-    const candidate = res.data;
+    const candidate = res?.data || {};
     const updates = {};
     const timelineEvents = [];
 
@@ -138,9 +119,11 @@ export const candidateService = {
 
     // 2. Process Assessment Note
     if (note && note.trim()) {
+      const authorName = typeof recruiter === 'string' ? recruiter : (recruiter?.name || 'Recruiter Lead');
       const newNote = {
         id: `note-${Date.now()}`,
-        author: typeof recruiter === 'string' ? recruiter : (recruiter?.name || 'Recruiter Lead'),
+        author: authorName,
+        authorName,
         content: note.trim(),
         rating: ratingVal || 5,
         createdAt: new Date().toISOString(),
@@ -148,12 +131,19 @@ export const candidateService = {
       updates.notes = [newNote, ...(candidate.notes || [])];
       timelineEvents.push({
         id: `time-${Date.now()}-note`,
-        title: ratingVal
-          ? `Evaluation Note & Rating (${ratingVal}/5) logged: "${note.trim().slice(0, 35)}..."`
-          : `Recruiter Note added: "${note.trim().slice(0, 40)}..."`,
+        title: `${ratingVal || 5} /5 ${note.trim()}`,
         date: new Date().toISOString(),
         type: 'note',
       });
+
+      try {
+        await apiClient.post(`/api/v1/candidates/${candidateId}/notes`, {
+          content: note.trim(),
+          rating: ratingVal || 5,
+          author: authorName,
+          authorName,
+        });
+      } catch (e) {}
     }
 
     // 3. Process Stage / Status Progression

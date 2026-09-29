@@ -50,11 +50,14 @@ export function ApplicationsListPage() {
             Review candidate submissions, update pipeline stages, and track applicant evaluations.
           </p>
         </div>
-        <Link to="/applications/pipeline">
-          <Button variant="primary" size="sm" icon={Columns}>
-            Switch to Hiring Stages View
-          </Button>
-        </Link>
+        <Button
+          variant="primary"
+          size="sm"
+          icon={Columns}
+          onClick={() => navigate('/applications/pipeline')}
+        >
+          Switch to Hiring Stages View
+        </Button>
       </div>
 
       {/* Filter Bar */}

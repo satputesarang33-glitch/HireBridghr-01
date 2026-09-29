@@ -18,38 +18,49 @@ export function SignInPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-
-    if (!email || !password) {
-      setError('Please provide both email and password.');
-      return;
-    }
-
+  const executeLogin = async (creds) => {
     setIsLoading(true);
+    setError('');
     try {
-      const res = await login({ email, password });
-      if (res.success) {
-        toast.success('Welcome back', `Signed in as ${res.data.user.name}`);
-        if (res.data.user.role === 'CANDIDATE') {
+      const res = await login(creds);
+      if (res.success || res.data?.user) {
+        const u = res.data?.user || res.user;
+        toast.success('Welcome back', `Signed in as ${u?.name || 'User'}`);
+        if (u?.role === 'CANDIDATE' && !u?.organizationId) {
           navigate('/candidate/dashboard');
         } else {
           navigate('/dashboard');
         }
       } else {
-        setError(res.error?.message || 'Invalid credentials.');
+        setError(res.error?.message || res.message || 'Invalid credentials.');
       }
-    } catch (err) {
+    } catch {
       setError('An error occurred during authentication. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
+  const handleSelectPersona = (creds, autoLogin = false) => {
+    setEmail(creds.email);
+    setPassword(creds.password);
+    if (autoLogin) {
+      executeLogin(creds);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!email || !password) {
+      setError('Please provide both email and password.');
+      return;
+    }
+    executeLogin({ email, password });
+  };
+
   return (
     <div>
-      <div className="mb-6 text-center sm:text-left">
+      <div className="mb-5 text-center sm:text-left">
         <h2 className="text-2xl font-extrabold text-white tracking-tight">Sign in to your ATS</h2>
         <p className="text-xs text-slate-400 mt-1">
           Enter your credentials to access your organization workspace.
@@ -61,6 +72,61 @@ export function SignInPage() {
           {error}
         </div>
       )}
+
+      {/* Demo Persona Quick Access */}
+      <div className="mb-5 p-3 rounded-xl bg-slate-900/60 border border-brand-500/20 backdrop-blur-md space-y-2.5">
+        <div className="flex items-center justify-between">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-brand-300">
+            Demo Personas &amp; Quick Access
+          </span>
+          <span className="text-[10px] text-slate-400">1-click test login</span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <button
+            type="button"
+            onClick={() => handleSelectPersona({ email: 'elena.rostova@apextech.com', password: 'Password123!' }, true)}
+            className="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-brand-500/10 hover:bg-brand-500/20 border border-brand-400/30 text-white text-xs font-semibold transition-all text-left"
+          >
+            <span>Enter as Lead Recruiter (Elena Rostova)</span>
+            <span className="text-[10px] text-brand-300 bg-brand-500/20 px-1.5 py-0.5 rounded">Enter &rarr;</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => handleSelectPersona({ email: 'sarah.connor@apextech.com', password: 'Password123!' }, true)}
+            className="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 border border-purple-400/30 text-white text-xs font-semibold transition-all text-left"
+          >
+            <span>Enter as Workspace Owner (Sarah Connor)</span>
+            <span className="text-[10px] text-purple-300 bg-purple-500/20 px-1.5 py-0.5 rounded">Enter &rarr;</span>
+          </button>
+        </div>
+
+        <div className="flex items-center flex-wrap gap-1.5 pt-1 text-[11px] text-slate-400">
+          <span>Quick fill:</span>
+          <button
+            type="button"
+            onClick={() => handleSelectPersona({ email: 'elena.rostova@apextech.com', password: 'Password123!' }, false)}
+            className="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-white/10 font-medium"
+          >
+            RECRUITER Elena
+          </button>
+          <button
+            type="button"
+            onClick={() => handleSelectPersona({ email: 'sarah.connor@apextech.com', password: 'Password123!' }, false)}
+            className="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-white/10 font-medium"
+          >
+            OWNER Sarah
+          </button>
+          <button
+            type="button"
+            onClick={() => handleSelectPersona({ email: 'marcus.vance@apextech.com', password: 'Password123!' }, false)}
+            className="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-white/10 font-medium"
+          >
+            ADMIN Marcus
+          </button>
+        </div>
+      </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <Input

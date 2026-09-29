@@ -31,10 +31,30 @@ export function CandidateSavedJobsPage() {
 
   const [selectedJobToApply, setSelectedJobToApply] = useState(null);
 
-  // Match saved IDs against full job objects
-  const savedJobs = allJobs.filter((job) =>
-    savedJobIds.some((saved) => (typeof saved === 'string' ? saved === job.id : saved.id === job.id))
-  );
+  const rawSaved = Array.isArray(savedJobIds)
+    ? savedJobIds
+    : Array.isArray(savedJobIds?.data)
+    ? savedJobIds.data
+    : Array.isArray(savedJobIds?.savedIds)
+    ? savedJobIds.savedIds
+    : [];
+
+  const jobsList = Array.isArray(allJobs)
+    ? allJobs
+    : Array.isArray(allJobs?.data)
+    ? allJobs.data
+    : [];
+
+  // Match saved IDs against full job objects or preserve already-populated job objects
+  const savedJobs = rawSaved
+    .map((item) => {
+      if (item && typeof item === 'object' && item.title) {
+        return item;
+      }
+      const id = typeof item === 'string' ? item : item?.id;
+      return jobsList.find((j) => j.id === id || j.slug === id) || (typeof item === 'object' && item?.id ? item : null);
+    })
+    .filter(Boolean);
 
   const handleRemove = (jobId, jobTitle) => {
     removeSavedMutation.mutate(jobId, {
@@ -65,9 +85,10 @@ export function CandidateSavedJobsPage() {
             variant="outline"
             size="sm"
             icon={Briefcase}
+            aria-label="Browse Open Jobs"
             onClick={() => navigate('/candidate/jobs')}
           >
-            Explore More Jobs
+            Browse Open Jobs
           </Button>
         </div>
       </div>

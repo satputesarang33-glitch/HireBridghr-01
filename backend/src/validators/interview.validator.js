@@ -1,19 +1,38 @@
 import { z } from 'zod';
 
-export const scheduleInterviewSchema = z.object({
-  applicationId: z.string().min(1, 'Application ID is required'),
-  candidateId: z.string().optional(),
-  jobId: z.string().optional(),
-  interviewerId: z.string().optional(),
-  interviewerName: z.string().optional(),
-  interviewType: z.enum(['PHONE', 'VIDEO', 'TECHNICAL', 'HR', 'ONSITE']).default('VIDEO'),
-  scheduledDate: z.string().min(1, 'Scheduled date is required'),
-  startTime: z.string().optional(),
-  duration: z.coerce.number().optional().default(45),
-  meetingUrl: z.string().url().optional().or(z.literal('')),
-  location: z.string().optional(),
-  notes: z.string().optional(),
-});
+export const scheduleInterviewSchema = z
+  .object({
+    applicationId: z.string().optional(),
+    candidateId: z.string().optional(),
+    jobId: z.string().optional(),
+    interviewerId: z.string().optional(),
+    interviewerName: z.string().optional(),
+    interviewType: z.enum(['PHONE', 'VIDEO', 'TECHNICAL', 'HR', 'ONSITE']).optional(),
+    type: z.enum(['PHONE', 'VIDEO', 'TECHNICAL', 'HR', 'ONSITE']).optional(),
+    scheduledDate: z.string().optional(),
+    datetime: z.string().optional(),
+    date: z.string().optional(),
+    startTime: z.string().optional(),
+    duration: z.coerce.number().optional().default(45),
+    meetingUrl: z.string().url().optional().or(z.literal('')),
+    location: z.string().optional(),
+    notes: z.string().optional(),
+  })
+  .refine((data) => data.applicationId || data.candidateId, {
+    message: 'Either applicationId or candidateId is required',
+    path: ['applicationId'],
+  })
+  .refine((data) => data.scheduledDate || data.datetime || data.date, {
+    message: 'Scheduled date is required',
+    path: ['scheduledDate'],
+  })
+  .transform((data) => {
+    return {
+      ...data,
+      interviewType: data.interviewType || data.type || 'VIDEO',
+      scheduledDate: data.scheduledDate || data.datetime || data.date || new Date().toISOString(),
+    };
+  });
 
 export const submitInterviewFeedbackSchema = z.object({
   rating: z.coerce.number().min(1).max(5),

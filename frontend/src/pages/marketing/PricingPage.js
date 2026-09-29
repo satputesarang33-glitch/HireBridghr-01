@@ -8,7 +8,7 @@ export function PricingPage() {
   const tiers = [
     {
       name: 'Starter Recruiter',
-      price: '$49',
+      price: '₹3,999',
       period: '/ recruiter / month',
       desc: 'Ideal for small recruiting teams and fast-growing startups.',
       features: [
@@ -23,7 +23,7 @@ export function PricingPage() {
     },
     {
       name: 'Agency & Scale',
-      price: '$129',
+      price: '₹9,999',
       period: '/ recruiter / month',
       desc: 'Built for high-velocity recruitment agencies and staffing firms.',
       features: [

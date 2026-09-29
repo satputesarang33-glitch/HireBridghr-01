@@ -41,12 +41,26 @@ export function CandidateJobDetailsPage() {
 
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
 
-  const isSaved = savedJobs.some(
-    (j) => (typeof j === 'string' ? j === jobId : j.id === jobId)
+  const savedList = Array.isArray(savedJobs)
+    ? savedJobs
+    : Array.isArray(savedJobs?.data)
+    ? savedJobs.data
+    : Array.isArray(savedJobs?.savedIds)
+    ? savedJobs.savedIds
+    : [];
+
+  const isSaved = savedList.some(
+    (j) => (typeof j === 'string' ? j === jobId : j?.id === jobId)
   );
 
-  const existingApplication = applications.find(
-    (app) => app.jobId === jobId || app.jobTitle === job?.title
+  const appList = Array.isArray(applications)
+    ? applications
+    : Array.isArray(applications?.data)
+    ? applications.data
+    : [];
+
+  const existingApplication = appList.find(
+    (app) => app?.jobId === jobId || (job?.title && app?.jobTitle === job.title)
   );
   const isApplied = !!existingApplication;
 
@@ -55,7 +69,7 @@ export function CandidateJobDetailsPage() {
       removeSavedJobMutation.mutate(jobId);
       toast.info('Removed from saved jobs', 'You unbookmarked this listing.');
     } else {
-      saveJobMutation.mutate(jobId);
+      saveJobMutation.mutate(job || jobId);
       toast.success('Job saved', 'You can review this job anytime under Saved Jobs.');
     }
   };
@@ -96,27 +110,45 @@ export function CandidateJobDetailsPage() {
     );
   }
 
-  // Fallback defaults if mock fields are minimal
-  const responsibilities = job.responsibilities || [
-    'Architect and implement highly responsive, accessible web components and features.',
-    'Collaborate with cross-functional product, UX design, and QA teams in fast-paced sprints.',
-    'Optimize web performance, maintain code quality standards, and conduct peer reviews.',
-    'Participate in system design discussions and technical roadmaps.',
-  ];
+  // Defensive array parsing for responsibilities, requirements, benefits, and skills
+  const responsibilities = Array.isArray(job.responsibilities)
+    ? job.responsibilities
+    : typeof job.responsibilities === 'string'
+    ? job.responsibilities.split('\n').map((s) => s.replace(/^[-*•]\s*/, '').trim()).filter(Boolean)
+    : [
+        'Architect and implement highly responsive, accessible web components and features.',
+        'Collaborate with cross-functional product, UX design, and QA teams in fast-paced sprints.',
+        'Optimize web performance, maintain code quality standards, and conduct peer reviews.',
+        'Participate in system design discussions and technical roadmaps.',
+      ];
 
-  const requirements = job.requirements || [
-    'Strong professional experience with modern JavaScript / TypeScript frameworks.',
-    'Proven track record building enterprise SaaS web interfaces and REST/GraphQL integrations.',
-    'Solid understanding of state management, responsive CSS architectures, and browser performance.',
-    'Excellent communication skills and eagerness to take ownership.',
-  ];
+  const requirements = Array.isArray(job.requirements)
+    ? job.requirements
+    : typeof job.requirements === 'string'
+    ? job.requirements.split('\n').map((s) => s.replace(/^[-*•]\s*/, '').trim()).filter(Boolean)
+    : [
+        'Strong professional experience with modern JavaScript / TypeScript frameworks.',
+        'Proven track record building enterprise SaaS web interfaces and REST/GraphQL integrations.',
+        'Solid understanding of state management, responsive CSS architectures, and browser performance.',
+        'Excellent communication skills and eagerness to take ownership.',
+      ];
 
-  const benefits = job.benefits || [
-    'Comprehensive medical, dental, and health coverage',
-    'Flexible remote / hybrid work policies with home office stipend',
-    'Generous paid time off, mental health days, and parental leave',
-    'Continuous learning budget and conference sponsorship',
-  ];
+  const benefits = Array.isArray(job.benefits)
+    ? job.benefits
+    : typeof job.benefits === 'string'
+    ? job.benefits.split('\n').map((s) => s.replace(/^[-*•]\s*/, '').trim()).filter(Boolean)
+    : [
+        'Comprehensive medical, dental, and health coverage',
+        'Flexible remote / hybrid work policies with home office stipend',
+        'Generous paid time off, mental health days, and parental leave',
+        'Continuous learning budget and conference sponsorship',
+      ];
+
+  const skillsList = Array.isArray(job.skills)
+    ? job.skills
+    : typeof job.skills === 'string'
+    ? job.skills.split(',').map((s) => s.trim()).filter(Boolean)
+    : ['React.js', 'Node.js', 'TypeScript', 'PostgreSQL'];
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
@@ -225,6 +257,8 @@ export function CandidateJobDetailsPage() {
               size="md"
               className={cn('w-full', isSaved && 'border-amber-400 text-amber-400')}
               icon={Bookmark}
+              aria-label={isSaved ? 'Remove saved job' : 'Save job'}
+              title={isSaved ? 'Remove saved job' : 'Save job'}
               onClick={handleToggleSave}
             >
               {isSaved ? 'Saved' : 'Save Job'}
@@ -309,8 +343,8 @@ export function CandidateJobDetailsPage() {
               Required Skills &amp; Tech Stack
             </h4>
             <div className="flex flex-wrap gap-2">
-              {job.skills && job.skills.length > 0 ? (
-                job.skills.map((skill) => (
+              {skillsList && skillsList.length > 0 ? (
+                skillsList.map((skill) => (
                   <span
                     key={skill}
                     className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-cyan-500/15 border border-cyan-500/30 text-cyan-300"

@@ -11,6 +11,7 @@ export function Button({
   disabled = false,
   type = 'button',
   icon: Icon,
+  iconPosition = 'right',
   ...props
 }) {
   const baseStyles = 'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none active:scale-[0.98]';
@@ -37,12 +38,10 @@ export function Button({
       className={cn(baseStyles, variants[variant], sizes[size], className)}
       {...props}
     >
-      {isLoading ? (
-        <Loader2 className="w-4 h-4 animate-spin text-current" />
-      ) : Icon ? (
-        <Icon className="w-4 h-4 flex-shrink-0" />
-      ) : null}
+      {isLoading && <Loader2 className="w-4 h-4 animate-spin text-current" />}
+      {!isLoading && Icon && iconPosition === 'left' && <Icon className="w-4 h-4 flex-shrink-0" />}
       {children}
+      {!isLoading && Icon && iconPosition === 'right' && <Icon className="w-4 h-4 flex-shrink-0" />}
     </button>
   );
 }

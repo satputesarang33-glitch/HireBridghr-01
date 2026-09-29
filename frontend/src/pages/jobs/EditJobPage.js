@@ -134,13 +134,7 @@ export function EditJobPage() {
               value={formData.currency}
               onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
               options={[
-                { label: 'USD ($)', value: 'USD' },
                 { label: 'INR (₹)', value: 'INR' },
-                { label: 'GBP (£)', value: 'GBP' },
-                { label: 'EUR (€)', value: 'EUR' },
-                { label: 'AED (د.إ)', value: 'AED' },
-                { label: 'SAR (﷼)', value: 'SAR' },
-                { label: 'CAD ($)', value: 'CAD' },
               ]}
             />
 

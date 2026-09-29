@@ -47,8 +47,17 @@ export function useCandidateSavedJobs() {
 export function useSaveJob() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (jobId) => candidatePortalService.saveJob(jobId),
-    onSuccess: () => {
+    mutationFn: (job) => candidatePortalService.saveJob(job),
+    onSuccess: (data, job) => {
+      const jobId = typeof job === 'string' ? job : job?.id;
+      queryClient.setQueryData(CANDIDATE_QUERY_KEYS.SAVED_JOBS, (old) => {
+        const oldList = Array.isArray(old) ? old : (Array.isArray(old?.data) ? old.data : []);
+        if (oldList.some((j) => (typeof j === 'string' ? j === jobId : j?.id === jobId))) {
+          return old;
+        }
+        const itemToAdd = typeof job === 'object' && job?.title ? job : jobId;
+        return Array.isArray(old) ? [...oldList, itemToAdd] : { ...old, data: [...oldList, itemToAdd] };
+      });
       queryClient.invalidateQueries({ queryKey: CANDIDATE_QUERY_KEYS.SAVED_JOBS });
     },
   });
@@ -75,7 +84,16 @@ export function useApplyJob() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ jobId, applicationData }) => candidatePortalService.applyToJob(jobId, applicationData),
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
+      if (data) {
+        queryClient.setQueryData(CANDIDATE_QUERY_KEYS.APPLICATIONS, (old) => {
+          const oldList = Array.isArray(old) ? old : (Array.isArray(old?.data) ? old.data : []);
+          if (oldList.some((a) => a.id === data.id || (a.jobId && a.jobId === data.jobId))) {
+            return old;
+          }
+          return Array.isArray(old) ? [data, ...oldList] : { ...old, data: [data, ...oldList] };
+        });
+      }
       queryClient.invalidateQueries({ queryKey: CANDIDATE_QUERY_KEYS.APPLICATIONS });
       queryClient.invalidateQueries({ queryKey: CANDIDATE_QUERY_KEYS.NOTIFICATIONS });
     },

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   User,
   Mail,
@@ -43,6 +44,7 @@ export function CandidateDetailsPage() {
   const { id } = useParams();
   const { user } = useAuth();
   const toast = useToast();
+  const queryClient = useQueryClient();
 
   const [activeTab, setActiveTab] = useState('overview');
   const [newNoteContent, setNewNoteContent] = useState('');
@@ -85,18 +87,54 @@ export function CandidateDetailsPage() {
     e.preventDefault();
     if (!newNoteContent.trim()) return;
 
+    const noteText = newNoteContent.trim();
+    const ratingNumber = Number(newNoteRating) || 5;
+    const authorName = user?.name || 'Recruiter Lead';
+
+    const newNoteObj = {
+      id: `note-${Date.now()}`,
+      author: authorName,
+      authorName: authorName,
+      content: noteText,
+      rating: ratingNumber,
+      createdAt: new Date().toISOString(),
+    };
+
+    const newTimelineObj = {
+      id: `time-${Date.now()}`,
+      title: `${ratingNumber} /5 ${noteText}`,
+      date: new Date().toISOString(),
+      type: 'note',
+    };
+
+    // Optimistically update candidate in query cache so UI reflects it immediately
+    queryClient.setQueryData(['candidate', id], (old) => {
+      if (!old) return old;
+      const currentCandidate = old.data || old;
+      const updatedCand = {
+        ...currentCandidate,
+        rating: ratingNumber,
+        notes: [newNoteObj, ...(currentCandidate.notes || [])],
+        timeline: [newTimelineObj, ...(currentCandidate.timeline || [])],
+      };
+      return old.data ? { ...old, data: updatedCand } : updatedCand;
+    });
+
+    setNewNoteContent('');
+
     saveEvaluationMutation.mutate(
       {
         candidateId: id,
         evaluationData: {
-          note: newNoteContent.trim(),
-          rating: Number(newNoteRating),
-          recruiter: user?.name || 'Recruiter Lead',
+          note: noteText,
+          rating: ratingNumber,
+          recruiter: authorName,
         },
       },
       {
         onSuccess: () => {
-          setNewNoteContent('');
+          queryClient.invalidateQueries({ queryKey: ['candidate', id] });
+          queryClient.invalidateQueries({ queryKey: ['candidates'] });
         },
       }
     );
@@ -552,7 +590,7 @@ export function CandidateDetailsPage() {
                 <Card key={note.id} className="p-4 border-l-4 border-l-brand-400">
                   <div className="flex items-center justify-between text-xs mb-1.5 flex-wrap gap-2">
                     <div className="flex items-center gap-2.5">
-                      <span className="font-bold text-white">{note.author}</span>
+                      <span className="font-bold text-white">{note.author || note.authorName || 'Recruiter Lead'}</span>
                       <div
                         className="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[11px] font-semibold"
                         aria-label={`Rating: ${note.rating || candidate.rating || 5} out of 5`}
@@ -565,7 +603,12 @@ export function CandidateDetailsPage() {
                       {new Date(note.createdAt).toLocaleString()}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-200 leading-relaxed">{note.content}</p>
+                  <p className="text-xs text-slate-200 leading-relaxed">
+                    <span className="font-bold text-amber-400 mr-1.5 font-mono">
+                      {note.rating || candidate.rating || 5} /5
+                    </span>{' '}
+                    <span>{note.content}</span>
+                  </p>
                 </Card>
               ))
             )}

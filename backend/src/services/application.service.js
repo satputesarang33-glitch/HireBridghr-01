@@ -12,7 +12,11 @@ export const applicationService = {
     if (!env.DATABASE_URL) {
       let list = [...devStore.applications];
       if (organizationId) list = list.filter((a) => a.organizationId === organizationId);
-      if (filters.jobId && filters.jobId !== 'ALL') list = list.filter((a) => a.jobId === filters.jobId);
+      if (filters.jobId && filters.jobId !== 'ALL' && filters.jobId !== '') {
+        const targetJob = devStore.jobs.find((j) => j.id === filters.jobId || j.title === filters.jobId);
+        const matchingIds = targetJob ? devStore.jobs.filter((j) => j.title === targetJob.title).map((j) => j.id) : [filters.jobId];
+        list = list.filter((a) => matchingIds.includes(a.jobId) || a.jobId === filters.jobId);
+      }
       if (filters.stage && filters.stage !== 'ALL') list = list.filter((a) => a.stage === filters.stage);
       if (filters.search) {
         const q = filters.search.toLowerCase();
@@ -24,9 +28,23 @@ export const applicationService = {
     const { page = 1, limit = 20, jobId, stage, search } = filters;
     const skip = (Number(page) - 1) * Number(limit);
 
+    let targetJobIds = undefined;
+    if (jobId && jobId !== 'ALL' && jobId !== '') {
+      try {
+        const targetJob = await prisma.job.findUnique({ where: { id: jobId } });
+        if (targetJob) {
+          const sameTitleJobs = await prisma.job.findMany({
+            where: { title: targetJob.title, ...(organizationId ? { organizationId } : {}) },
+            select: { id: true },
+          });
+          targetJobIds = sameTitleJobs.map((j) => j.id);
+        }
+      } catch {}
+    }
+
     const where = {
       ...(organizationId ? { organizationId } : {}),
-      ...(jobId && jobId !== 'ALL' ? { jobId } : {}),
+      ...(targetJobIds && targetJobIds.length > 0 ? { jobId: { in: targetJobIds } } : (jobId && jobId !== 'ALL' && jobId !== '' ? { jobId } : {})),
       ...(stage && stage !== 'ALL' ? { stage } : {}),
     };
 
@@ -224,6 +242,25 @@ export const applicationService = {
       return app;
     });
 
+    try {
+      devStore.applications.unshift({
+        id: newApp.id,
+        organizationId: newApp.organizationId,
+        jobId: newApp.jobId,
+        candidateId: newApp.candidateId,
+        candidateName: newApp.candidateName,
+        candidateEmail: newApp.candidateEmail,
+        candidatePhone: newApp.candidatePhone,
+        jobTitle: newApp.jobTitle,
+        company: newApp.company,
+        stage: newApp.stage,
+        status: newApp.status,
+        source: newApp.source,
+        appliedDate: newApp.appliedDate ? newApp.appliedDate.toISOString() : new Date().toISOString(),
+        createdAt: newApp.createdAt ? newApp.createdAt.toISOString() : new Date().toISOString(),
+      });
+    } catch (e) {}
+
     return newApp;
   },
 
@@ -231,11 +268,17 @@ export const applicationService = {
    * Update application stage
    */
   updateStage: async (id, organizationId, { stage, notes }, actor) => {
+    let normalizedStage = String(stage || '').toUpperCase();
+    if (normalizedStage === 'NEW') normalizedStage = 'APPLIED';
+    if (!['APPLIED', 'SCREENING', 'SHORTLISTED', 'INTERVIEW', 'OFFER', 'HIRED', 'REJECTED', 'WITHDRAWN'].includes(normalizedStage)) {
+      normalizedStage = 'APPLIED';
+    }
+
     if (!env.DATABASE_URL) {
       const idx = devStore.applications.findIndex((a) => a.id === id);
       if (idx === -1) throw ApiError.notFound('Application not found');
-      devStore.applications[idx].stage = stage;
-      devStore.applications[idx].status = stage;
+      devStore.applications[idx].stage = normalizedStage;
+      devStore.applications[idx].status = normalizedStage;
       return devStore.applications[idx];
     }
 
@@ -247,23 +290,135 @@ export const applicationService = {
       throw ApiError.notFound('Application not found');
     }
 
-    return prisma.application.update({
+    const updated = await prisma.application.update({
       where: { id },
-      data: { stage, status: stage },
+      data: { stage: normalizedStage, status: normalizedStage },
     });
+
+    const devApp = devStore.applications.find((a) => a.id === id);
+    if (devApp) {
+      devApp.stage = normalizedStage;
+      devApp.status = normalizedStage;
+    }
+
+    return updated;
   },
 
   /**
    * Candidate Applications
    */
   getCandidateApplications: async (userEmail, userId) => {
-    return devStore.applications.filter((a) => a.candidateEmail.toLowerCase() === (userEmail || '').toLowerCase());
+    const email = (userEmail || '').toLowerCase();
+
+    if (!env.DATABASE_URL) {
+      return devStore.applications.filter((a) => a.candidateEmail.toLowerCase() === email);
+    }
+
+    try {
+      const candidates = await prisma.candidate.findMany({
+        where: {
+          OR: [
+            ...(email ? [{ email: { equals: email, mode: 'insensitive' } }] : []),
+            ...(userId ? [{ userId }] : []),
+          ],
+        },
+        select: { id: true },
+      });
+      const candidateIds = candidates.map((c) => c.id);
+
+      const dbApplications = await prisma.application.findMany({
+        where: {
+          OR: [
+            ...(email ? [{ candidateEmail: { equals: email, mode: 'insensitive' } }] : []),
+            ...(candidateIds.length > 0 ? [{ candidateId: { in: candidateIds } }] : []),
+          ],
+        },
+        include: {
+          job: {
+            select: {
+              id: true,
+              title: true,
+              department: true,
+              location: true,
+              workplaceType: true,
+              employmentType: true,
+              salaryMin: true,
+              salaryMax: true,
+              currency: true,
+              organization: {
+                select: { name: true },
+              },
+            },
+          },
+          activities: {
+            orderBy: { createdAt: 'desc' },
+            take: 5,
+          },
+        },
+        orderBy: { appliedDate: 'desc' },
+      });
+
+      const formatted = dbApplications.map((app) => ({
+        id: app.id,
+        jobId: app.jobId,
+        candidateId: app.candidateId,
+        candidateName: app.candidateName,
+        candidateEmail: app.candidateEmail,
+        candidatePhone: app.candidatePhone,
+        jobTitle: app.jobTitle || app.job?.title || 'Position',
+        company: app.company || app.job?.organization?.name || 'Apex Global Tech',
+        location: app.job?.location || 'Remote',
+        stage: app.stage,
+        status: app.status || app.stage,
+        appliedDate: app.appliedDate ? app.appliedDate.toISOString() : app.createdAt.toISOString(),
+        resumeUrl: app.resumeUrl,
+        resumeFileName: app.resumeFileName,
+        job: app.job,
+        timeline: (app.activities || []).map((act) => ({
+          id: act.id,
+          stage: act.title || act.type,
+          status: act.type,
+          date: act.createdAt ? act.createdAt.toISOString() : new Date().toISOString(),
+          note: act.notes || '',
+        })),
+      }));
+
+      // Merge any devStore applications for this candidate if not in DB
+      const memoryApps = devStore.applications.filter(
+        (a) => a.candidateEmail?.toLowerCase() === email
+      );
+      for (const m of memoryApps) {
+        if (!formatted.some((f) => f.id === m.id || (f.jobId && f.jobId === m.jobId) || f.jobTitle === m.jobTitle)) {
+          formatted.push(m);
+        }
+      }
+
+      return formatted;
+    } catch (err) {
+      console.error('[ApplicationService] Error in getCandidateApplications:', err);
+      return devStore.applications.filter((a) => a.candidateEmail.toLowerCase() === email);
+    }
   },
 
   /**
    * Withdraw application
    */
   withdrawApplication: async (id, userEmail) => {
+    if (env.DATABASE_URL) {
+      try {
+        const updated = await prisma.application.update({
+          where: { id },
+          data: { stage: 'WITHDRAWN', status: 'WITHDRAWN' },
+        });
+        const app = devStore.applications.find((a) => a.id === id);
+        if (app) {
+          app.stage = 'WITHDRAWN';
+          app.status = 'WITHDRAWN';
+        }
+        return updated;
+      } catch (e) {}
+    }
+
     const app = devStore.applications.find((a) => a.id === id);
     if (!app) throw ApiError.notFound('Application not found');
     app.stage = 'WITHDRAWN';
@@ -275,6 +430,11 @@ export const applicationService = {
    * Delete application
    */
   deleteApplication: async (id, organizationId, actor) => {
+    if (env.DATABASE_URL) {
+      try {
+        await prisma.application.delete({ where: { id } });
+      } catch (e) {}
+    }
     const idx = devStore.applications.findIndex((a) => a.id === id);
     if (idx !== -1) devStore.applications.splice(idx, 1);
     return { id, message: 'Application deleted successfully' };

@@ -24,10 +24,13 @@ export function Modal({ isOpen, onClose, title, description, children, maxWidth 
       {/* Modal Dialog Body */}
       <div
         className={cn(
-          'relative w-full glass-panel rounded-2xl p-6 shadow-glass-lg border border-white/15 z-10 animate-scale-in max-h-[90vh] flex flex-col',
+          'relative w-full glass-panel rounded-2xl p-5 sm:p-6 shadow-glass-lg border border-white/80 dark:border-white/15 z-10 animate-scale-in max-h-[90vh] flex flex-col modal-dialog-responsive',
           maxWidth
         )}
       >
+        {/* Mobile bottom-sheet drag handle */}
+        <div className="modal-drag-handle" />
+
         <div className="flex items-start justify-between gap-4 pb-4 border-b border-slate-200/80 dark:border-white/10">
           <div>
             <h3 className="text-lg font-bold text-slate-900 dark:text-white">{title}</h3>

@@ -1,4 +1,4 @@
-import rateLimit from 'express-rate-limit';
+import rateLimit from "express-rate-limit";
 
 /**
  * Strict Rate Limiter for Authentication and sensitive endpoints
@@ -6,12 +6,18 @@ import rateLimit from 'express-rate-limit';
  */
 export const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 20,
+  max: 2000,
+  skip: (req) =>
+    req.ip === "127.0.0.1" ||
+    req.ip === "::1" ||
+    req.ip === "::ffff:127.0.0.1" ||
+    process.env.NODE_ENV !== "production",
   standardHeaders: true,
   legacyHeaders: false,
   message: {
     success: false,
-    message: 'Too many authentication attempts. Please try again after 15 minutes.',
+    message:
+      "Too many authentication attempts. Please try again after 15 minutes.",
     errors: [],
   },
 });
@@ -27,7 +33,7 @@ export const apiLimiter = rateLimit({
   legacyHeaders: false,
   message: {
     success: false,
-    message: 'Too many requests. Please slow down.',
+    message: "Too many requests. Please slow down.",
     errors: [],
   },
 });

@@ -15,12 +15,29 @@ export function useUpdateApplicationStage() {
 
   return useMutation({
     mutationFn: ({ id, stage }) => applicationService.updateStage(id, stage),
+    onMutate: async ({ id, stage }) => {
+      await queryClient.cancelQueries({ queryKey: ['applications'] });
+      const previousApps = queryClient.getQueryData(['applications']);
+
+      queryClient.setQueriesData({ queryKey: ['applications'] }, (old) => {
+        if (!old) return old;
+        const apps = Array.isArray(old) ? old : (Array.isArray(old?.data) ? old.data : []);
+        const updated = apps.map((app) => (app.id === id ? { ...app, stage, status: stage } : app));
+        return Array.isArray(old) ? updated : { ...old, data: updated };
+      });
+
+      return { previousApps };
+    },
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['applications'] });
       queryClient.invalidateQueries({ queryKey: ['candidates'] });
-      toast.success('Stage Updated', `Candidate moved to ${variables.stage}.`);
+      const targetLabel = variables.stage === 'APPLIED' ? 'New Applicants' : variables.stage;
+      toast.success('Stage Updated', `Candidate moved to ${targetLabel}.`);
     },
-    onError: (err) => {
+    onError: (err, variables, context) => {
+      if (context?.previousApps) {
+        queryClient.setQueryData(['applications'], context.previousApps);
+      }
       toast.error('Update Failed', err?.message || 'Could not update pipeline stage.');
     },
   });

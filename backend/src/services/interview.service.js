@@ -95,7 +95,8 @@ export const interviewService = {
       const newInterview = {
         id: `int-${Date.now().toString().slice(-4)}`,
         organizationId: organizationId || 'org-1',
-        applicationId: data.applicationId,
+        applicationId: data.applicationId || `app-${Date.now().toString().slice(-4)}`,
+        candidateId: data.candidateId || 'cand-1',
         candidateName: data.candidateName || 'Candidate',
         jobTitle: data.jobTitle || 'Position',
         interviewerName: data.interviewerName || actor?.name || 'Recruiter',
@@ -111,13 +112,60 @@ export const interviewService = {
       return newInterview;
     }
 
-    const application = await prisma.application.findFirst({
-      where: { id: data.applicationId, ...(organizationId ? { organizationId } : {}) },
-      include: { candidate: true, job: true },
-    });
+    let application = null;
+    if (data.applicationId) {
+      application = await prisma.application.findFirst({
+        where: { id: data.applicationId, ...(organizationId ? { organizationId } : {}) },
+        include: { candidate: true, job: true },
+      });
+    } else if (data.candidateId) {
+      application = await prisma.application.findFirst({
+        where: { candidateId: data.candidateId, ...(organizationId ? { organizationId } : {}) },
+        include: { candidate: true, job: true },
+      });
+      if (!application) {
+        let job = await prisma.job.findFirst({
+          where: { ...(organizationId ? { organizationId } : {}), status: 'PUBLISHED' },
+        });
+        if (!job) {
+          job = await prisma.job.findFirst({
+            where: { ...(organizationId ? { organizationId } : {}) },
+          });
+        }
+        if (!job) {
+          job = await prisma.job.create({
+            data: {
+              organizationId,
+              slug: `general-pool-${Date.now().toString().slice(-4)}`,
+              title: 'General Candidate Pool',
+              department: 'General',
+              location: 'Remote',
+              employmentType: 'FULL_TIME',
+              status: 'PUBLISHED',
+              description: 'General candidate pool for interviews',
+            },
+          });
+        }
+        const candidate = await prisma.candidate.findUnique({
+          where: { id: data.candidateId },
+        });
+        application = await prisma.application.create({
+          data: {
+            organizationId,
+            jobId: job.id,
+            candidateId: data.candidateId,
+            candidateName: candidate ? candidate.name : 'Candidate',
+            candidateEmail: candidate?.email || 'candidate@example.com',
+            jobTitle: job.title,
+            stage: 'INTERVIEW',
+            status: 'IN_REVIEW',
+          },
+        });
+      }
+    }
 
     if (!application) {
-      throw ApiError.notFound('Application not found');
+      throw ApiError.notFound('Application or candidate not found');
     }
 
     const scheduledDate = new Date(data.scheduledDate);

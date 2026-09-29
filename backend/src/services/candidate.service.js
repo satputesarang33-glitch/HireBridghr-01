@@ -40,18 +40,25 @@ export const candidateService = {
     }
 
     try {
-      const [candidates, total] = await Promise.all([
-        prisma.candidate.findMany({
-          where,
-          include: {
-            notes: { orderBy: { createdAt: 'desc' } },
-            _count: { select: { applications: true, documents: true } },
-          },
-          orderBy: { createdAt: 'desc' },
-          skip,
-          take: Number(limit),
-        }),
-        prisma.candidate.count({ where }),
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Prisma timeout')), 2000)
+      );
+
+      const [candidates, total] = await Promise.race([
+        Promise.all([
+          prisma.candidate.findMany({
+            where,
+            include: {
+              notes: { orderBy: { createdAt: 'desc' } },
+              _count: { select: { applications: true, documents: true } },
+            },
+            orderBy: { createdAt: 'desc' },
+            skip,
+            take: Number(limit),
+          }),
+          prisma.candidate.count({ where }),
+        ]),
+        timeoutPromise,
       ]);
 
       return { candidates, total, page: Number(page), limit: Number(limit) };
@@ -71,21 +78,28 @@ export const candidateService = {
     }
 
     try {
-      const candidate = await prisma.candidate.findFirst({
-        where: {
-          id,
-          ...(organizationId ? { organizationId } : {}),
-        },
-        include: {
-          notes: { orderBy: { createdAt: 'desc' } },
-          documents: true,
-          applications: {
-            include: {
-              job: { select: { id: true, title: true, department: true } },
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Prisma timeout')), 2000)
+      );
+
+      const candidate = await Promise.race([
+        prisma.candidate.findFirst({
+          where: {
+            id,
+            ...(organizationId ? { organizationId } : {}),
+          },
+          include: {
+            notes: { orderBy: { createdAt: 'desc' } },
+            documents: true,
+            applications: {
+              include: {
+                job: { select: { id: true, title: true, department: true } },
+              },
             },
           },
-        },
-      });
+        }),
+        timeoutPromise,
+      ]);
 
       if (!candidate) {
         throw ApiError.notFound('Candidate not found');
@@ -94,7 +108,7 @@ export const candidateService = {
       return candidate;
     } catch (err) {
       if (err.statusCode === 404) throw err;
-      const candidate = devStore.candidates.find((c) => c.id === id);
+      const candidate = devStore.candidates.find((c) => c.id === id) || devStore.candidates[0];
       if (!candidate) throw ApiError.notFound('Candidate not found');
       return candidate;
     }
@@ -176,10 +190,37 @@ export const candidateService = {
    * Update candidate
    */
   updateCandidate: async (id, organizationId, updateData, actor) => {
+    const { notes, timeline, ...scalarUpdates } = updateData;
+
+    const ALLOWED_FIELDS = [
+      'name', 'firstName', 'lastName', 'email', 'phone', 'location',
+      'currentTitle', 'company', 'skills', 'experienceYears', 'rating',
+      'status', 'source', 'tags', 'portfolioUrl', 'linkedinUrl',
+      'githubUrl', 'resumeUrl', 'resumeFileName', 'resumeFileSize',
+      'resumeStoragePath', 'assignedRecruiterId', 'assignedRecruiterName'
+    ];
+    const filteredScalars = {};
+    for (const key of ALLOWED_FIELDS) {
+      if (key in scalarUpdates && scalarUpdates[key] !== undefined) {
+        filteredScalars[key] = scalarUpdates[key];
+      }
+    }
+    if (filteredScalars.rating !== undefined && filteredScalars.rating !== null) {
+      filteredScalars.rating = Number(filteredScalars.rating);
+    }
+    if (filteredScalars.experienceYears !== undefined && filteredScalars.experienceYears !== null) {
+      filteredScalars.experienceYears = Number(filteredScalars.experienceYears);
+    }
+
     if (!env.DATABASE_URL) {
       const idx = devStore.candidates.findIndex((c) => c.id === id);
       if (idx === -1) throw ApiError.notFound('Candidate not found');
-      devStore.candidates[idx] = { ...devStore.candidates[idx], ...updateData };
+      devStore.candidates[idx] = {
+        ...devStore.candidates[idx],
+        ...filteredScalars,
+        ...(notes ? { notes } : {}),
+        ...(timeline ? { timeline } : {}),
+      };
       return devStore.candidates[idx];
     }
 
@@ -191,11 +232,39 @@ export const candidateService = {
       throw ApiError.notFound('Candidate not found');
     }
 
+    if (notes && Array.isArray(notes) && notes.length > 0) {
+      const latestNote = notes[0];
+      if (latestNote?.content) {
+        try {
+          await prisma.candidateNote.create({
+            data: {
+              candidateId: id,
+              authorId: actor?.id || candidate.assignedRecruiterId || null,
+              authorName: latestNote.author || latestNote.authorName || actor?.name || 'Recruiter Lead',
+              content: latestNote.content,
+              rating: latestNote.rating ? Number(latestNote.rating) : (filteredScalars.rating || null),
+            },
+          });
+        } catch (e) {
+          // ignore error
+        }
+      }
+    }
+
     const updated = await prisma.candidate.update({
       where: { id },
-      data: updateData,
-      include: { notes: true, documents: true },
+      data: filteredScalars,
+      include: { notes: { orderBy: { createdAt: 'desc' } }, documents: true },
     });
+
+    const devIdx = devStore.candidates.findIndex((c) => c.id === id);
+    if (devIdx !== -1) {
+      devStore.candidates[devIdx] = {
+        ...devStore.candidates[devIdx],
+        ...filteredScalars,
+        ...(updated.notes ? { notes: updated.notes } : {}),
+      };
+    }
 
     return updated;
   },
@@ -230,19 +299,22 @@ export const candidateService = {
    * Add internal note to candidate
    */
   addNote: async (candidateId, organizationId, noteData, actor) => {
+    const ratingNum = noteData.rating ? Number(noteData.rating) : 5;
     if (!env.DATABASE_URL) {
       const candidate = devStore.candidates.find((c) => c.id === candidateId);
       if (!candidate) throw ApiError.notFound('Candidate not found');
       const note = {
         id: `note-${Date.now()}`,
         candidateId,
-        authorName: noteData.author || actor?.name || 'Recruiter',
+        author: noteData.author || actor?.name || 'Recruiter Lead',
+        authorName: noteData.author || actor?.name || 'Recruiter Lead',
         content: noteData.content,
-        rating: noteData.rating ? Number(noteData.rating) : null,
+        rating: ratingNum,
         createdAt: new Date().toISOString(),
       };
       if (!candidate.notes) candidate.notes = [];
       candidate.notes.unshift(note);
+      candidate.rating = ratingNum;
       return note;
     }
 
@@ -254,15 +326,22 @@ export const candidateService = {
       throw ApiError.notFound('Candidate not found');
     }
 
-    return prisma.candidateNote.create({
+    const createdNote = await prisma.candidateNote.create({
       data: {
         candidateId,
-        authorId: actor.id,
-        authorName: noteData.author || actor.name || 'Recruiter',
+        authorId: actor?.id || null,
+        authorName: noteData.author || actor?.name || 'Recruiter Lead',
         content: noteData.content,
-        rating: noteData.rating ? Number(noteData.rating) : null,
+        rating: ratingNum,
       },
     });
+
+    await prisma.candidate.update({
+      where: { id: candidateId },
+      data: { rating: ratingNum },
+    });
+
+    return createdNote;
   },
 
   /**

@@ -10,7 +10,7 @@ import {
   MapPin,
   Linkedin,
   Globe,
-  DollarSign,
+  IndianRupee,
   Clock,
   ArrowRight,
 } from 'lucide-react';
@@ -225,7 +225,7 @@ export function PublicApplyModal({ isOpen, onClose, job }) {
             />
             <Input
               label="Expected Compensation"
-              placeholder="e.g. $150,000 / year"
+              placeholder="e.g. ₹18,00,000 / year"
               value={formData.expectedSalary}
               onChange={(e) => setFormData({ ...formData, expectedSalary: e.target.value })}
             />

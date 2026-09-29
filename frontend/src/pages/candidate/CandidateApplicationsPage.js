@@ -24,11 +24,15 @@ import { cn } from '../../utils/cn.js';
 export function CandidateApplicationsPage() {
   const navigate = useNavigate();
   const toast = useToast();
-  const { data: applications = [], isLoading } = useCandidateApplications();
+  const { data: applications = [], isLoading, refetch } = useCandidateApplications();
   const withdrawMutation = useWithdrawApplication();
 
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [selectedAppModal, setSelectedAppModal] = useState(null);
+
+  React.useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   const STAGES = [
     { key: 'APPLIED', label: 'Applied' },
@@ -50,7 +54,11 @@ export function CandidateApplicationsPage() {
     }
   };
 
-  const filteredApplications = applications.filter((app) => {
+  const appList = Array.isArray(applications)
+    ? applications
+    : (Array.isArray(applications?.data) ? applications.data : []);
+
+  const filteredApplications = appList.filter((app) => {
     if (statusFilter === 'ALL') return true;
     if (statusFilter === 'ACTIVE') {
       return !['REJECTED', 'WITHDRAWN', 'HIRED'].includes(app.status?.toUpperCase());

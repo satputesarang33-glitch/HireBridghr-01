@@ -24,24 +24,84 @@ export const candidatePortalService = {
 
   // Saved Jobs
   getSavedJobs: async () => {
-    const res = await apiClient.get('/api/candidates/saved-jobs');
-    return res.data;
+    let serverJobs = [];
+    try {
+      const res = await apiClient.get('/api/candidates/saved-jobs');
+      serverJobs = Array.isArray(res?.data) ? res.data : (Array.isArray(res) ? res : []);
+    } catch (e) {
+      serverJobs = [];
+    }
+
+    // Merge with localStorage backup
+    try {
+      const localSaved = JSON.parse(localStorage.getItem('hb_candidate_saved_jobs') || '[]');
+      if (Array.isArray(localSaved) && localSaved.length > 0) {
+        const merged = [...serverJobs];
+        for (const item of localSaved) {
+          const id = typeof item === 'string' ? item : item?.id;
+          if (id && !merged.some((j) => (typeof j === 'string' ? j === id : j?.id === id))) {
+            merged.push(item);
+          }
+        }
+        return merged;
+      }
+    } catch (e) {}
+
+    return serverJobs;
   },
 
   saveJob: async (jobId) => {
-    const res = await apiClient.post(`/api/jobs/${jobId}/save`);
+    try {
+      const localSaved = JSON.parse(localStorage.getItem('hb_candidate_saved_jobs') || '[]');
+      const id = typeof jobId === 'string' ? jobId : jobId?.id;
+      if (id && !localSaved.some((item) => (typeof item === 'string' ? item === id : item?.id === id))) {
+        localSaved.push(jobId);
+        localStorage.setItem('hb_candidate_saved_jobs', JSON.stringify(localSaved));
+      }
+    } catch (e) {}
+
+    const targetId = typeof jobId === 'string' ? jobId : jobId?.id;
+    const res = await apiClient.post(`/api/jobs/${targetId}/save`);
     return res.data;
   },
 
   removeSavedJob: async (jobId) => {
-    const res = await apiClient.delete(`/api/jobs/${jobId}/save`);
+    try {
+      const localSaved = JSON.parse(localStorage.getItem('hb_candidate_saved_jobs') || '[]');
+      const id = typeof jobId === 'string' ? jobId : jobId?.id;
+      const updated = localSaved.filter((item) => (typeof item === 'string' ? item !== id : item?.id !== id));
+      localStorage.setItem('hb_candidate_saved_jobs', JSON.stringify(updated));
+    } catch (e) {}
+
+    const targetId = typeof jobId === 'string' ? jobId : jobId?.id;
+    const res = await apiClient.delete(`/api/jobs/${targetId}/save`);
     return res.data;
   },
 
   // Applications
   getApplications: async () => {
-    const res = await apiClient.get('/api/candidates/applications');
-    return res.data;
+    let serverApps = [];
+    try {
+      const res = await apiClient.get('/api/candidates/applications');
+      serverApps = Array.isArray(res?.data) ? res.data : (Array.isArray(res) ? res : []);
+    } catch (e) {
+      serverApps = [];
+    }
+
+    try {
+      const localApps = JSON.parse(localStorage.getItem('hb_candidate_applications') || '[]');
+      if (Array.isArray(localApps) && localApps.length > 0) {
+        const merged = [...serverApps];
+        for (const item of localApps) {
+          if (item && !merged.some((a) => a.id === item.id || (a.jobId && item.jobId && a.jobId === item.jobId))) {
+            merged.unshift(item);
+          }
+        }
+        return merged;
+      }
+    } catch (e) {}
+
+    return serverApps;
   },
 
   getApplicationById: async (id) => {
@@ -51,10 +111,34 @@ export const candidatePortalService = {
 
   applyToJob: async (jobId, applicationData) => {
     const res = await apiClient.post(`/api/jobs/${jobId}/apply`, applicationData);
-    return res.data;
+    const createdApp = res.data;
+
+    try {
+      const localApps = JSON.parse(localStorage.getItem('hb_candidate_applications') || '[]');
+      const itemToSave = createdApp?.id ? createdApp : {
+        id: `app-local-${Date.now()}`,
+        jobId,
+        jobTitle: applicationData?.jobTitle || 'Application',
+        status: 'APPLIED',
+        stage: 'APPLIED',
+        appliedDate: new Date().toISOString(),
+      };
+      if (!localApps.some((a) => a.id === itemToSave.id || (a.jobId && a.jobId === jobId))) {
+        localApps.unshift(itemToSave);
+        localStorage.setItem('hb_candidate_applications', JSON.stringify(localApps));
+      }
+    } catch (e) {}
+
+    return createdApp;
   },
 
   withdrawApplication: async (id) => {
+    try {
+      const localApps = JSON.parse(localStorage.getItem('hb_candidate_applications') || '[]');
+      const updated = localApps.map((a) => (a.id === id ? { ...a, status: 'WITHDRAWN', stage: 'WITHDRAWN' } : a));
+      localStorage.setItem('hb_candidate_applications', JSON.stringify(updated));
+    } catch (e) {}
+
     const res = await apiClient.patch(`/api/applications/${id}/withdraw`);
     return res.data;
   },
@@ -77,7 +161,7 @@ export const candidatePortalService = {
 
   // Jobs
   getJobs: async (params = {}) => {
-    const res = await apiClient.get('/api/v1/jobs', { params });
+    const res = await apiClient.get('/api/v1/jobs', params);
     return res.data;
   },
 

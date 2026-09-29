@@ -30,12 +30,29 @@ export const resetPasswordSchema = z.object({
     .regex(/[0-9]/, 'Password must contain at least one number'),
 });
 
-export const candidateSignupSchema = z.object({
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().min(1, 'Last name is required'),
-  email: z.string().email('Please enter a valid email address'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-  phone: z.string().optional(),
-  location: z.string().optional(),
-  avatar: z.string().url().optional().or(z.literal('')),
-});
+export const candidateSignupSchema = z
+  .object({
+    name: z.string().optional(),
+    firstName: z.string().optional(),
+    lastName: z.string().optional(),
+    email: z.string().email('Please enter a valid email address'),
+    password: z.string().min(8, 'Password must be at least 8 characters'),
+    phone: z.string().optional(),
+    location: z.string().optional(),
+    avatar: z.string().url().optional().or(z.literal('')),
+  })
+  .refine((data) => data.name || (data.firstName && data.lastName), {
+    message: 'First and last name, or name, is required',
+    path: ['firstName'],
+  })
+  .transform((data) => {
+    if (!data.firstName && data.name) {
+      const parts = data.name.trim().split(/\s+/);
+      return {
+        ...data,
+        firstName: parts[0] || 'Candidate',
+        lastName: parts.slice(1).join(' ') || 'User',
+      };
+    }
+    return data;
+  });

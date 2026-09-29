@@ -1,5 +1,6 @@
 /* ==========================================================================
-   HIREBRIDGEHR — COMPONENT STYLES (LIQUID GLASS ENHANCED)
+   HIREBRIDGEHR — COMPONENT STYLES (LIQUID GLASS 2.0 ENHANCED)
+   Fully Responsive Across Desktop, Tablet, and Mobile
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -17,6 +18,7 @@
   text-transform: uppercase;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  white-space: nowrap;
 }
 
 .badge-published {
@@ -91,10 +93,19 @@
 }
 
 /* --------------------------------------------------------------------------
-   2. Liquid Glass Tables
+   2. Responsive Liquid Glass Tables
    -------------------------------------------------------------------------- */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 1rem;
+  position: relative;
+}
+
 .glass-table {
   width: 100%;
+  min-width: 680px;
   border-collapse: separate;
   border-spacing: 0;
 }
@@ -107,45 +118,68 @@
   letter-spacing: 0.06em;
   color: #94a3b8;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  background: linear-gradient(180deg, rgba(15, 23, 42, 0.75) 0%, rgba(11, 17, 32, 0.6) 100%);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.88) 0%, rgba(11, 17, 32, 0.8) 100%);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  white-space: nowrap;
 }
 
 .light .glass-table th {
   color: #475569;
-  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.94) 0%, rgba(248, 250, 252, 0.88) 100%);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.9);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(248, 250, 252, 0.92) 100%);
 }
 
 .glass-table td {
-  padding: 1.125rem 1.25rem;
+  padding: 1rem 1.25rem;
   font-size: 0.875rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   color: #e2e8f0;
-  transition: all 0.15s ease;
+  transition: background 0.15s ease;
+  vertical-align: middle;
 }
 
 .light .glass-table td {
-  border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.7);
   color: #0f172a;
 }
 
 .glass-table tr {
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.glass-table tr:hover td {
+.glass-table tbody tr:hover td {
   background: linear-gradient(90deg, rgba(6, 182, 212, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
 }
 
-.light .glass-table tr:hover td {
-  background: linear-gradient(90deg, rgba(6, 182, 212, 0.06) 0%, rgba(255, 255, 255, 0.4) 100%);
+.light .glass-table tbody tr:hover td {
+  background: linear-gradient(90deg, rgba(6, 182, 212, 0.06) 0%, rgba(255, 255, 255, 0.5) 100%);
+}
+
+/* Horizontal Table Scroll Hint on Mobile */
+@media (max-width: 768px) {
+  .glass-table th,
+  .glass-table td {
+    padding: 0.75rem 1rem;
+  }
 }
 
 /* --------------------------------------------------------------------------
-   3. Liquid Kanban Columns (Frosted Glass Trays)
+   3. Responsive Liquid Kanban Columns (Frosted Glass Trays)
    -------------------------------------------------------------------------- */
+.kanban-board {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  scroll-padding: 1rem;
+  padding-bottom: 0.75rem;
+}
+
 .kanban-column {
   background: linear-gradient(
     180deg,
@@ -157,6 +191,15 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 1rem;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.12);
+  scroll-snap-align: start;
+}
+
+@media (max-width: 640px) {
+  .kanban-column {
+    width: 84vw !important;
+    min-width: 270px;
+    flex-shrink: 0;
+  }
 }
 
 .light .kanban-column {
@@ -166,10 +209,69 @@
   backdrop-filter: blur(20px) saturate(185%) contrast(102%);
   -webkit-backdrop-filter: blur(20px) saturate(185%) contrast(102%);
   border: 1px solid rgba(255, 255, 255, 0.95);
-  border-radius: 1rem;
   box-shadow:
     0 12px 28px -6px rgba(15, 23, 42, 0.04),
     inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1),
     inset 0 -1px 1px 0 rgba(226, 232, 240, 0.5);
 }
 
+/* --------------------------------------------------------------------------
+   4. Responsive Modal / Sheet Transforms
+   -------------------------------------------------------------------------- */
+@keyframes modal-scale-desktop {
+  0% {
+    opacity: 0;
+    transform: scale(0.95) translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes sheet-slide-mobile {
+  0% {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-scale-in {
+  animation: modal-scale-desktop 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@media (max-width: 640px) {
+  .modal-dialog-responsive {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    max-width: 100% !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    border-top-left-radius: 1.5rem !important;
+    border-top-right-radius: 1.5rem !important;
+    max-height: 92dvh !important;
+    animation: sheet-slide-mobile 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px)) !important;
+  }
+}
+
+/* Drag indicator for mobile sheets */
+.modal-drag-handle {
+  display: none;
+}
+@media (max-width: 640px) {
+  .modal-drag-handle {
+    display: block;
+    width: 38px;
+    height: 4px;
+    background: rgba(148, 163, 184, 0.4);
+    border-radius: 9999px;
+    margin: 0 auto 0.75rem auto;
+  }
+}

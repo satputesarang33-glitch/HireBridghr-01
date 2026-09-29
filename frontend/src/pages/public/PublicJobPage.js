@@ -4,7 +4,7 @@ import {
   Building2,
   MapPin,
   Clock,
-  DollarSign,
+  IndianRupee,
   Briefcase,
   Share2,
   Calendar,
@@ -125,9 +125,11 @@ export function PublicJobPage() {
           {/* Quick Details Badges */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
             <div className="p-3 rounded-xl bg-white/5 border border-white/5">
-              <span className="text-slate-400 block text-[10px] uppercase font-semibold">Compensation</span>
+              <span className="text-slate-400 flex items-center gap-1 text-[10px] uppercase font-semibold">
+                <IndianRupee className="w-3 h-3 text-emerald-400" /> Compensation
+              </span>
               <span className="font-mono font-bold text-emerald-400 text-sm">
-                {job.currency} {job.salaryMin?.toLocaleString()} - {job.salaryMax?.toLocaleString()}
+                ₹{job.salaryMin?.toLocaleString('en-IN')} - ₹{job.salaryMax?.toLocaleString('en-IN')}
               </span>
             </div>
             <div className="p-3 rounded-xl bg-white/5 border border-white/5">
