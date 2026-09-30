@@ -139,12 +139,42 @@
     display: none !important;
   }
 
-  /* Touch ergonomics: min 42px touch hit box */
-  button,
-  a[role="button"],
-  input,
+  /* Touch ergonomics: min 42px touch hit box for main actions while preserving small pill badges */
+  button:not(.btn-compact):not(.badge-pill):not([class*="py-0"]):not([class*="py-1"]):not([class*="p-1"]):not([class*="p-0"]),
+  a[role="button"]:not(.btn-compact):not(.badge-pill),
+  input:not([type="checkbox"]):not([type="radio"]),
   select {
     min-height: 42px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Full Responsiveness: Auth, Persona Cards & Touch Optimization
+   Desktop (1024px+), Tablet (641px–1023px), Mobile (<=640px)
+   -------------------------------------------------------------------------- */
+.auth-card-responsive {
+  width: 100%;
+  max-width: 100%;
+}
+
+@media (max-width: 640px) {
+  .auth-card-responsive {
+    padding: 1.125rem !important;
+    border-radius: 1.25rem !important;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1023px) {
+  .auth-card-responsive {
+    max-width: 540px !important;
+    padding: 1.75rem !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .auth-card-responsive {
+    max-width: 28rem !important;
+    padding: 2rem !important;
   }
 }
 

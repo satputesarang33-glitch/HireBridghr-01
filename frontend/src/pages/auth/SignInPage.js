@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Lock, Mail, ArrowRight } from 'lucide-react';
+import { Eye, EyeOff, Lock, Mail, ArrowRight, Sparkles } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.js';
 import { useToast } from '../../context/ToastContext.js';
 import { Input } from '../../components/ui/Input.js';
@@ -73,57 +73,90 @@ export function SignInPage() {
         </div>
       )}
 
-      {/* Demo Persona Quick Access */}
-      <div className="mb-5 p-3 rounded-xl bg-slate-900/60 border border-brand-500/20 backdrop-blur-md space-y-2.5">
-        <div className="flex items-center justify-between">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-brand-300">
-            Demo Personas &amp; Quick Access
+      {/* Demo Persona Quick Access - Enhanced High-Contrast Glassmorphism */}
+      <div className="mb-5 p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-b from-slate-900/95 via-slate-900/90 to-slate-950/95 border border-cyan-500/30 shadow-xl shadow-black/40 backdrop-blur-xl relative overflow-hidden space-y-2.5 sm:space-y-3">
+        {/* Ambient background glows */}
+        <div className="absolute -top-12 -right-12 w-28 h-28 bg-cyan-500/15 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute -bottom-12 -left-12 w-28 h-28 bg-purple-500/15 rounded-full blur-2xl pointer-events-none" />
+
+        {/* Header */}
+        <div className="flex items-center justify-between relative z-10">
+          <div className="flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-cyan-400 flex-shrink-0" />
+            <span className="text-[11px] sm:text-xs font-extrabold uppercase tracking-wider bg-gradient-to-r from-cyan-300 via-teal-200 to-indigo-300 bg-clip-text text-transparent">
+              Demo Personas &amp; Quick Access
+            </span>
+          </div>
+          <span className="px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 flex items-center gap-1 flex-shrink-0">
+            ⚡ 1-Click Access
           </span>
-          <span className="text-[10px] text-slate-400">1-click test login</span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        {/* 1-Click Direct Launch Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5 relative z-10">
           <button
             type="button"
             onClick={() => handleSelectPersona({ email: 'elena.rostova@apextech.com', password: 'Password123!' }, true)}
-            className="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-brand-500/10 hover:bg-brand-500/20 border border-brand-400/30 text-white text-xs font-semibold transition-all text-left"
+            className="group p-2 sm:p-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-800 border border-cyan-500/40 hover:border-cyan-400 transition-all duration-200 shadow-md hover:shadow-cyan-500/20 text-left flex items-center justify-between gap-2 touch-manipulation cursor-pointer w-full"
           >
-            <span>Enter as Lead Recruiter (Elena Rostova)</span>
-            <span className="text-[10px] text-brand-300 bg-brand-500/20 px-1.5 py-0.5 rounded">Enter &rarr;</span>
+            <div className="min-w-0 flex-1">
+              <span className="block text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-cyan-400 truncate">
+                Lead Recruiter
+              </span>
+              <span className="block text-xs font-bold text-white group-hover:text-cyan-200 transition-colors truncate">
+                Elena Rostova
+              </span>
+            </div>
+            <span className="px-2 sm:px-2.5 py-1 rounded-lg bg-gradient-to-r from-cyan-500 to-teal-500 text-slate-950 text-[10px] sm:text-[11px] font-extrabold flex items-center gap-1 shadow group-hover:scale-105 transition-transform flex-shrink-0">
+              Enter <ArrowRight className="w-3 h-3" />
+            </span>
           </button>
 
           <button
             type="button"
             onClick={() => handleSelectPersona({ email: 'sarah.connor@apextech.com', password: 'Password123!' }, true)}
-            className="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 border border-purple-400/30 text-white text-xs font-semibold transition-all text-left"
+            className="group p-2 sm:p-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-800 border border-purple-500/40 hover:border-purple-400 transition-all duration-200 shadow-md hover:shadow-purple-500/20 text-left flex items-center justify-between gap-2 touch-manipulation cursor-pointer w-full"
           >
-            <span>Enter as Workspace Owner (Sarah Connor)</span>
-            <span className="text-[10px] text-purple-300 bg-purple-500/20 px-1.5 py-0.5 rounded">Enter &rarr;</span>
+            <div className="min-w-0 flex-1">
+              <span className="block text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-purple-400 truncate">
+                Workspace Owner
+              </span>
+              <span className="block text-xs font-bold text-white group-hover:text-purple-200 transition-colors truncate">
+                Sarah Connor
+              </span>
+            </div>
+            <span className="px-2 sm:px-2.5 py-1 rounded-lg bg-gradient-to-r from-purple-500 to-indigo-500 text-white text-[10px] sm:text-[11px] font-extrabold flex items-center gap-1 shadow group-hover:scale-105 transition-transform flex-shrink-0">
+              Enter <ArrowRight className="w-3 h-3" />
+            </span>
           </button>
         </div>
 
-        <div className="flex items-center flex-wrap gap-1.5 pt-1 text-[11px] text-slate-400">
-          <span>Quick fill:</span>
+        {/* Quick Fill Form Row */}
+        <div className="flex items-center flex-wrap gap-1.5 sm:gap-2 pt-2 border-t border-white/10 relative z-10 text-xs">
+          <span className="text-[10px] sm:text-[11px] font-medium text-slate-300">Quick fill:</span>
           <button
             type="button"
             onClick={() => handleSelectPersona({ email: 'elena.rostova@apextech.com', password: 'Password123!' }, false)}
-            className="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-white/10 font-medium"
+            className="px-2 sm:px-2.5 py-1 rounded-lg bg-slate-800/95 hover:bg-cyan-950/70 text-cyan-200 hover:text-white border border-cyan-500/35 hover:border-cyan-400 font-semibold text-[10px] sm:text-[11px] transition-all flex items-center gap-1 shadow-sm touch-manipulation cursor-pointer"
           >
-            RECRUITER Elena
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+            Elena <span className="text-[9px] sm:text-[10px] text-cyan-400 font-normal">(Recruiter)</span>
           </button>
           <button
             type="button"
             onClick={() => handleSelectPersona({ email: 'sarah.connor@apextech.com', password: 'Password123!' }, false)}
-            className="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-white/10 font-medium"
+            className="px-2 sm:px-2.5 py-1 rounded-lg bg-slate-800/95 hover:bg-purple-950/70 text-purple-200 hover:text-white border border-purple-500/35 hover:border-purple-400 font-semibold text-[10px] sm:text-[11px] transition-all flex items-center gap-1 shadow-sm touch-manipulation cursor-pointer"
           >
-            OWNER Sarah
+            <span className="w-1.5 h-1.5 rounded-full bg-purple-400" />
+            Sarah <span className="text-[9px] sm:text-[10px] text-purple-400 font-normal">(Owner)</span>
           </button>
           <button
             type="button"
             onClick={() => handleSelectPersona({ email: 'marcus.vance@apextech.com', password: 'Password123!' }, false)}
-            className="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-white/10 font-medium"
+            className="px-2 sm:px-2.5 py-1 rounded-lg bg-slate-800/95 hover:bg-amber-950/70 text-amber-200 hover:text-white border border-amber-500/35 hover:border-amber-400 font-semibold text-[10px] sm:text-[11px] transition-all flex items-center gap-1 shadow-sm touch-manipulation cursor-pointer"
           >
-            ADMIN Marcus
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+            Marcus <span className="text-[9px] sm:text-[10px] text-amber-400 font-normal">(Admin)</span>
           </button>
         </div>
       </div>

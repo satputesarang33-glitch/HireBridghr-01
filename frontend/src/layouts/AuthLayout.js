@@ -62,8 +62,8 @@ export function AuthLayout() {
           </div>
 
           {/* Right Form Card */}
-          <div className="w-full lg:col-span-6 flex justify-center">
-            <div className="w-full max-w-md glass-panel rounded-2xl p-6 sm:p-8 border border-white/80 dark:border-white/15 shadow-glass-lg">
+          <div className="w-full lg:col-span-6 flex justify-center px-1 sm:px-0">
+            <div className="w-full max-w-md auth-card-responsive glass-panel rounded-2xl p-4 sm:p-6 md:p-8 border border-white/80 dark:border-white/15 shadow-glass-lg">
               <Outlet />
             </div>
           </div>
