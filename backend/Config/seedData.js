@@ -1,4 +1,4 @@
-import { db } from "./connetDB.js";
+import { db } from "./connetdb.js";
 
 /**
  * Default Seed Data for HireBridgeHR

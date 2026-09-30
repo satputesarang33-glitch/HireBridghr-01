@@ -1,4 +1,4 @@
-import { db } from "../Config/connetDB.js";
+import { db } from "../Config/connetdb.js";
 
 const USERS_COLLECTION = "users";
 const CANDIDATE_PROFILES = "candidate_profiles";

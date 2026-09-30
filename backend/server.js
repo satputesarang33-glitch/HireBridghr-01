@@ -3,7 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 // Database & Seed
-import "./Config/connetDB.js";
+import "./Config/connetdb.js";
 import { seedInitialDatabase } from "./Config/seedData.js";
 
 // Routes

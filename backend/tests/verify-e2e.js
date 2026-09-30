@@ -123,12 +123,14 @@ async function runEndToEndVerification() {
   );
 
   // 13. Candidate Live Job Application Submission
+  const uniqueTestId = Date.now();
   const testApplyRes = await fetch(`http://localhost:5000/api/jobs/${jobId}/apply`, {
     method: "POST",
-    headers: authHeaders,
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
+      candidateId: `cand-e2e-${uniqueTestId}`,
       fullName: "End-to-End Test Applicant",
-      email: `applicant-${Date.now()}@example.com`,
+      email: `applicant-${uniqueTestId}@example.com`,
       phone: "+1 (555) 019-2831",
       coverLetter: "Live integration test application.",
     }),

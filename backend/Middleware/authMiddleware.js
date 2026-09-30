@@ -1,4 +1,4 @@
-import { auth } from "../Config/connetDB.js";
+import { auth } from "../Config/connetdb.js";
 
 /**
  * Authentication Middleware

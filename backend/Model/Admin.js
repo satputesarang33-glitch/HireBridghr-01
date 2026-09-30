@@ -1,4 +1,4 @@
-import { db } from "../Config/connetDB.js";
+import { db } from "../Config/connetdb.js";
 
 const ORGS_COLLECTION = "organizations";
 const PUBLICATIONS_COLLECTION = "job_publications";
