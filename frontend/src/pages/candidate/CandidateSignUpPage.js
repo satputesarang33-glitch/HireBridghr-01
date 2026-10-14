@@ -101,18 +101,38 @@ export function CandidateSignUpPage() {
 
   return (
     <div className="max-w-md mx-auto">
-      <div className="mb-6 text-center sm:text-left">
-        <h2 className="text-2xl font-extrabold text-white tracking-tight">
+      {/* Top Segmented Portal Switcher */}
+      <div className="auth-segmented-tabs">
+        <div className="auth-tab-btn active">
+          <User className="w-4 h-4 flex-shrink-0 text-indigo-600" />
+          <span>Candidate Sign Up</span>
+          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-indigo-100 text-indigo-700 uppercase">
+            Free
+          </span>
+        </div>
+        <Link
+          to="/signup"
+          className="auth-tab-btn"
+        >
+          <span>Employer / ATS</span>
+          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-slate-200 text-slate-700 uppercase">
+            Trial
+          </span>
+        </Link>
+      </div>
+
+      <div className="mb-5 text-left">
+        <h2 className="auth-title">
           Create your candidate account
         </h2>
-        <p className="text-xs text-slate-400 mt-1">
+        <p className="auth-subtitle">
           Create your profile and start applying for jobs.
         </p>
       </div>
 
       {serverError && (
-        <div className="mb-4 p-3 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
-          <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+        <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
+          <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
           <span>{serverError}</span>
         </div>
       )}
@@ -186,13 +206,13 @@ export function CandidateSignUpPage() {
         </div>
 
         <div className="space-y-1">
-          <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700">
             Password
           </label>
           <div className="relative">
             <input
               type={showPassword ? 'text' : 'password'}
-              className="glass-input w-full rounded-lg pl-9 pr-10 py-2 text-sm shadow-sm"
+              className="w-full rounded-xl pl-9 pr-10 py-2 text-sm border border-slate-300 bg-white text-slate-900 focus:outline-hidden focus:border-indigo-600 focus:ring-3 focus:ring-indigo-100 shadow-xs"
               placeholder="At least 8 characters"
               value={formData.password}
               onChange={(e) => handleChange('password', e.target.value)}
@@ -204,22 +224,22 @@ export function CandidateSignUpPage() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-white"
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-700"
             >
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
-          {errors.password && <p className="text-[11px] text-rose-400 mt-1">{errors.password}</p>}
+          {errors.password && <p className="text-[11px] text-rose-500 mt-1">{errors.password}</p>}
         </div>
 
         <div className="space-y-1">
-          <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700">
             Confirm Password
           </label>
           <div className="relative">
             <input
               type={showConfirmPassword ? 'text' : 'password'}
-              className="glass-input w-full rounded-lg pl-9 pr-10 py-2 text-sm shadow-sm"
+              className="w-full rounded-xl pl-9 pr-10 py-2 text-sm border border-slate-300 bg-white text-slate-900 focus:outline-hidden focus:border-indigo-600 focus:ring-3 focus:ring-indigo-100 shadow-xs"
               placeholder="Re-enter password"
               value={formData.confirmPassword}
               onChange={(e) => handleChange('confirmPassword', e.target.value)}
@@ -231,49 +251,54 @@ export function CandidateSignUpPage() {
             <button
               type="button"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-white"
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-700"
             >
               {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
           {errors.confirmPassword && (
-            <p className="text-[11px] text-rose-400 mt-1">{errors.confirmPassword}</p>
+            <p className="text-[11px] text-rose-500 mt-1">{errors.confirmPassword}</p>
           )}
         </div>
 
         {/* Terms Agreement Checkbox */}
         <div className="pt-1">
-          <label className="flex items-start gap-2.5 cursor-pointer select-none text-xs text-slate-300">
+          <label className="flex items-start gap-2.5 cursor-pointer select-none text-xs text-slate-600 font-medium">
             <input
               type="checkbox"
               checked={formData.agreeTerms}
               onChange={(e) => handleChange('agreeTerms', e.target.checked)}
-              className="mt-0.5 rounded bg-slate-800 border-white/20 text-brand-500 focus:ring-brand-400 w-4 h-4 shrink-0"
+              className="mt-0.5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 w-3.5 h-3.5 shrink-0"
             />
             <span>
               I agree to the{' '}
-              <span className="text-brand-400 underline hover:text-brand-300">Terms &amp; Conditions</span> and{' '}
-              <span className="text-brand-400 underline hover:text-brand-300">Privacy Policy</span>.
+              <span className="text-indigo-600 underline font-semibold">Terms &amp; Conditions</span> and{' '}
+              <span className="text-indigo-600 underline font-semibold">Privacy Policy</span>.
             </span>
           </label>
-          {errors.agreeTerms && <p className="text-[11px] text-rose-400 mt-1">{errors.agreeTerms}</p>}
+          {errors.agreeTerms && <p className="text-[11px] text-rose-500 mt-1">{errors.agreeTerms}</p>}
         </div>
 
-        <Button type="submit" variant="primary" className="w-full mt-3" isLoading={isLoading} icon={ArrowRight}>
-          Create Account
-        </Button>
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="auth-btn-primary w-full flex items-center justify-center gap-2 mt-3"
+        >
+          <span>{isLoading ? "Creating Account..." : "Create Account"}</span>
+          <ArrowRight className="w-4 h-4" />
+        </button>
       </form>
 
-      <div className="mt-5 text-center text-xs text-slate-400">
+      <div className="mt-5 text-center text-xs text-slate-500">
         Already have an account?{' '}
-        <Link to="/candidate/login" className="text-brand-400 hover:text-brand-300 font-semibold underline">
+        <Link to="/candidate/login" className="text-indigo-600 hover:text-indigo-800 font-semibold underline">
           Sign In
         </Link>
       </div>
 
-      <div className="mt-3 pt-3 border-t border-white/10 text-center text-xs text-slate-400">
+      <div className="mt-3 pt-3 border-t border-slate-200 text-center text-xs text-slate-500">
         Are you an employer or recruiter?{' '}
-        <Link to="/signin" className="text-brand-400 hover:text-brand-300 font-medium">
+        <Link to="/signin" className="text-indigo-600 hover:text-indigo-800 font-medium">
           ATS Login &rarr;
         </Link>
       </div>

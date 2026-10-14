@@ -1,0 +1,83 @@
+/* Reusable Dropdown Styling */
+.ats-dropdown-container {
+  position: relative;
+  display: inline-block;
+}
+
+.ats-dropdown-trigger {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+
+.ats-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  margin-top: 0.375rem;
+  z-index: 50;
+  min-width: 12rem;
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+  padding: 0.375rem;
+  animation: atsDropdownFade 0.15s ease-out;
+}
+
+.ats-dropdown-menu.align-right {
+  right: 0;
+  left: auto;
+}
+
+.ats-dropdown-menu.align-left {
+  left: 0;
+  right: auto;
+}
+
+.ats-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #334155;
+  border-radius: 0.5rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.1s ease-in-out;
+}
+
+.ats-dropdown-item:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+.ats-dropdown-item.is-danger {
+  color: #ef4444;
+}
+
+.ats-dropdown-item.is-danger:hover {
+  background-color: #fef2f2;
+  color: #dc2626;
+}
+
+.ats-dropdown-divider {
+  height: 1px;
+  background-color: #f1f5f9;
+  margin: 0.25rem 0;
+}
+
+@keyframes atsDropdownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

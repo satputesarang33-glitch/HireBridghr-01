@@ -1,77 +1,79 @@
-import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import React from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 // Layouts
-import { MarketingLayout } from '../layouts/MarketingLayout.js';
-import { AuthLayout } from '../layouts/AuthLayout.js';
-import { AppLayout } from '../layouts/AppLayout.js';
-import { AdminLayout } from '../layouts/AdminLayout.js';
-import { CandidateLayout } from '../layouts/CandidateLayout.js';
+import { MarketingLayout } from "../layouts/MarketingLayout.js";
+import { AuthLayout } from "../layouts/AuthLayout.js";
+import { AppLayout } from "../layouts/AppLayout.js";
+import { AdminLayout } from "../layouts/AdminLayout.js";
+import { CandidateLayout } from "../layouts/CandidateLayout.js";
 
 // Route Guards
-import { ProtectedRoute } from './ProtectedRoute.js';
-import { RoleProtectedRoute } from './RoleProtectedRoute.js';
-import { CandidateProtectedRoute } from './CandidateProtectedRoute.js';
+import { ProtectedRoute } from "./ProtectedRoute.js";
+import { RoleProtectedRoute } from "./RoleProtectedRoute.js";
+import { CandidateProtectedRoute } from "./CandidateProtectedRoute.js";
 
 // Marketing Pages
-import { HomePage } from '../pages/marketing/HomePage.js';
-import { FeaturesPage } from '../pages/marketing/FeaturesPage.js';
-import { PricingPage } from '../pages/marketing/PricingPage.js';
-import { AboutPage } from '../pages/marketing/AboutPage.js';
-import { ContactPage } from '../pages/marketing/ContactPage.js';
+import { HomePage } from "../pages/marketing/HomePage.js";
+import { FeaturesPage } from "../pages/marketing/FeaturesPage.js";
+import { PricingPage } from "../pages/marketing/PricingPage.js";
+import { AboutPage } from "../pages/marketing/AboutPage.js";
+import { ContactPage } from "../pages/marketing/ContactPage.js";
 
 // Auth Pages
-import { SignInPage } from '../pages/auth/SignInPage.js';
-import { SignUpPage } from '../pages/auth/SignUpPage.js';
-import { ForgotPasswordPage } from '../pages/auth/ForgotPasswordPage.js';
-import { ResetPasswordPage } from '../pages/auth/ResetPasswordPage.js';
-import { VerifyEmailPage } from '../pages/auth/VerifyEmailPage.js';
+import { SignInPage } from "../pages/auth/SignInPage.js";
+import { SignUpPage } from "../pages/auth/SignUpPage.js";
+import { ForgotPasswordPage } from "../pages/auth/ForgotPasswordPage.js";
+import { ResetPasswordPage } from "../pages/auth/ResetPasswordPage.js";
+import { VerifyEmailPage } from "../pages/auth/VerifyEmailPage.js";
 
 // Candidate Auth & Portal Pages
-import { CandidateLoginPage } from '../pages/candidate/CandidateLoginPage.js';
-import { CandidateSignUpPage } from '../pages/candidate/CandidateSignUpPage.js';
-import { CandidateForgotPasswordPage } from '../pages/candidate/CandidateForgotPasswordPage.js';
-import { CandidateResetPasswordPage } from '../pages/candidate/CandidateResetPasswordPage.js';
-import { CandidateDashboardPage } from '../pages/candidate/CandidateDashboardPage.js';
-import { CandidateJobsPage } from '../pages/candidate/CandidateJobsPage.js';
-import { CandidateJobDetailsPage } from '../pages/candidate/CandidateJobDetailsPage.js';
-import { CandidateSavedJobsPage } from '../pages/candidate/CandidateSavedJobsPage.js';
-import { CandidateApplicationsPage } from '../pages/candidate/CandidateApplicationsPage.js';
-import { CandidateProfilePage } from '../pages/candidate/CandidateProfilePage.js';
-import { CandidateNotificationsPage } from '../pages/candidate/CandidateNotificationsPage.js';
-import { CandidateSettingsPage } from '../pages/candidate/CandidateSettingsPage.js';
+import { CandidateLoginPage } from "../pages/candidate/CandidateLoginPage.js";
+import { CandidateSignUpPage } from "../pages/candidate/CandidateSignUpPage.js";
+import { CandidateForgotPasswordPage } from "../pages/candidate/CandidateForgotPasswordPage.js";
+import { CandidateResetPasswordPage } from "../pages/candidate/CandidateResetPasswordPage.js";
+import { CandidateDashboardPage } from "../pages/candidate/CandidateDashboardPage.js";
+import { CandidateJobsPage } from "../pages/candidate/CandidateJobsPage.js";
+import { CandidateJobDetailsPage } from "../pages/candidate/CandidateJobDetailsPage.js";
+import { CandidateSavedJobsPage } from "../pages/candidate/CandidateSavedJobsPage.js";
+import { CandidateApplicationsPage } from "../pages/candidate/CandidateApplicationsPage.js";
+import { CandidateProfilePage } from "../pages/candidate/CandidateProfilePage.js";
+import { CandidateNotificationsPage } from "../pages/candidate/CandidateNotificationsPage.js";
+import { CandidateSettingsPage } from "../pages/candidate/CandidateSettingsPage.js";
 
 // Onboarding
-import { OnboardingPage } from '../pages/onboarding/OnboardingPage.js';
+import { OnboardingPage } from "../pages/onboarding/OnboardingPage.js";
 
 // Customer ATS Pages
-import { DashboardPage } from '../pages/dashboard/DashboardPage.js';
-import { JobListPage } from '../pages/jobs/JobListPage.js';
-import { CreateJobPage } from '../pages/jobs/CreateJobPage.js';
-import { JobDetailsPage } from '../pages/jobs/JobDetailsPage.js';
-import { EditJobPage } from '../pages/jobs/EditJobPage.js';
-import { CandidateListPage } from '../pages/candidates/CandidateListPage.js';
-import { CandidateDetailsPage } from '../pages/candidates/CandidateDetailsPage.js';
-import { ApplicationsListPage } from '../pages/applications/ApplicationsListPage.js';
-import { PipelinePage } from '../pages/applications/PipelinePage.js';
-import { InterviewsListPage } from '../pages/interviews/InterviewsListPage.js';
-import { NotificationsPage } from '../pages/notifications/NotificationsPage.js';
-import { ReportsPage } from '../pages/reports/ReportsPage.js';
-import { SettingsPage } from '../pages/settings/SettingsPage.js';
+import { DashboardPage } from "../pages/dashboard/DashboardPage.js";
+import { JobListPage } from "../pages/jobs/JobListPage.js";
+import { CreateJobPage } from "../pages/jobs/CreateJobPage.js";
+import { JobDetailsPage } from "../pages/jobs/JobDetailsPage.js";
+import { EditJobPage } from "../pages/jobs/EditJobPage.js";
+import { CandidateListPage } from "../pages/candidates/CandidateListPage.js";
+import { CandidateDetailsPage } from "../pages/candidates/CandidateDetailsPage.js";
+import { ApplicationsListPage } from "../pages/applications/ApplicationsListPage.js";
+import { PipelinePage } from "../pages/applications/PipelinePage.js";
+import { InterviewsListPage } from "../pages/interviews/InterviewsListPage.js";
+import { NotificationsPage } from "../pages/notifications/NotificationsPage.js";
+import { ReportsPage } from "../pages/reports/ReportsPage.js";
+import { SettingsPage } from "../pages/settings/SettingsPage.js";
+import { TestsPage } from "../pages/tests/TestsPage.js";
 
 // Super Admin Pages
-import { AdminDashboardPage } from '../pages/admin/AdminDashboardPage.js';
-import { PublicationQueuePage } from '../pages/admin/PublicationQueuePage.js';
-import { AdminOrgsPage } from '../pages/admin/AdminOrgsPage.js';
-import { AdminUsersPage } from '../pages/admin/AdminUsersPage.js';
-import { AuditLogsPage } from '../pages/admin/AuditLogsPage.js';
+import { AdminDashboardPage } from "../pages/admin/AdminDashboardPage.js";
+import { PublicationQueuePage } from "../pages/admin/PublicationQueuePage.js";
+import { AdminOrgsPage } from "../pages/admin/AdminOrgsPage.js";
+import { AdminUsersPage } from "../pages/admin/AdminUsersPage.js";
+import { AuditLogsPage } from "../pages/admin/AuditLogsPage.js";
 
 // Public Applicant Pages
-import { PublicJobPage } from '../pages/public/PublicJobPage.js';
-import { CompanyCareersPage } from '../pages/public/CompanyCareersPage.js';
+import { PublicJobPage } from "../pages/public/PublicJobPage.js";
+import { CompanyCareersPage } from "../pages/public/CompanyCareersPage.js";
+import { CandidatePortalPage } from "../pages/candidate/CandidatePortalPage.js";
 
 // 404
-import { NotFoundPage } from '../pages/NotFoundPage.js';
+import { NotFoundPage } from "../pages/NotFoundPage.js";
 
 export function AppRoutes() {
   return (
@@ -95,6 +97,7 @@ export function AppRoutes() {
       {/* Public Applicant Job Routes */}
       <Route path="/jobs/:slug" element={<PublicJobPage />} />
       <Route path="/careers/:companySlug" element={<CompanyCareersPage />} />
+      <Route path="/portal/:id" element={<CandidatePortalPage />} />
 
       {/* Authentication Routes */}
       <Route element={<AuthLayout />}>
@@ -107,8 +110,14 @@ export function AppRoutes() {
         {/* Candidate Authentication Routes */}
         <Route path="/candidate/login" element={<CandidateLoginPage />} />
         <Route path="/candidate/signup" element={<CandidateSignUpPage />} />
-        <Route path="/candidate/forgot-password" element={<CandidateForgotPasswordPage />} />
-        <Route path="/candidate/reset-password" element={<CandidateResetPasswordPage />} />
+        <Route
+          path="/candidate/forgot-password"
+          element={<CandidateForgotPasswordPage />}
+        />
+        <Route
+          path="/candidate/reset-password"
+          element={<CandidateResetPasswordPage />}
+        />
       </Route>
 
       {/* Onboarding Wizard */}
@@ -139,9 +148,13 @@ export function AppRoutes() {
         <Route path="/jobs/:id/applications" element={<JobDetailsPage />} />
         <Route path="/jobs/:id/distribution" element={<JobDetailsPage />} />
 
-        {/* Candidates */}
+        {/* Candidates & Talent Pool */}
         <Route path="/candidates" element={<CandidateListPage />} />
+        <Route path="/talent-pool" element={<CandidateListPage />} />
         <Route path="/candidates/:id" element={<CandidateDetailsPage />} />
+
+        {/* Skill Assessments & Tests */}
+        <Route path="/tests" element={<TestsPage />} />
 
         {/* Applications & Pipeline */}
         <Route path="/applications" element={<ApplicationsListPage />} />
@@ -166,7 +179,9 @@ export function AppRoutes() {
         path="/admin"
         element={
           <ProtectedRoute>
-            <RoleProtectedRoute allowedRoles={['OWNER', 'ADMIN', 'SUPER_ADMIN']}>
+            <RoleProtectedRoute
+              allowedRoles={["OWNER", "ADMIN", "SUPER_ADMIN"]}
+            >
               <AdminLayout />
             </RoleProtectedRoute>
           </ProtectedRoute>
@@ -196,7 +211,10 @@ export function AppRoutes() {
         <Route path="jobs/:jobId" element={<CandidateJobDetailsPage />} />
         <Route path="saved-jobs" element={<CandidateSavedJobsPage />} />
         <Route path="applications" element={<CandidateApplicationsPage />} />
-        <Route path="applications/:id" element={<CandidateApplicationsPage />} />
+        <Route
+          path="applications/:id"
+          element={<CandidateApplicationsPage />}
+        />
         <Route path="profile" element={<CandidateProfilePage />} />
         <Route path="notifications" element={<CandidateNotificationsPage />} />
         <Route path="settings" element={<CandidateSettingsPage />} />

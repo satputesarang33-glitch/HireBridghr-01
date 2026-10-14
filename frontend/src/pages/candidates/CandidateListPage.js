@@ -22,6 +22,9 @@ import { ApplicationStageBadge } from '../../components/ui/Badge.js';
 import { Modal } from '../../components/ui/Modal.js';
 import { TableSkeleton } from '../../components/ui/Skeleton.js';
 import { EmptyState } from '../../components/ui/EmptyState.js';
+import { CandidateSourcingGuide, ScreenAssessGuide } from '../../components/dashboard/index.js';
+import { ChromeSourcingModal } from '../../components/enterprise/ChromeSourcingModal.js';
+import { Globe } from 'lucide-react';
 
 export function CandidateListPage() {
   const navigate = useNavigate();
@@ -29,6 +32,7 @@ export function CandidateListPage() {
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [tagFilter, setTagFilter] = useState('ALL');
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showSourcingModal, setShowSourcingModal] = useState(false);
 
   const { data: candRes, isLoading } = useCandidates({
     search,
@@ -88,6 +92,12 @@ export function CandidateListPage() {
 
   return (
     <div className="space-y-6 animate-fade-in">
+      {/* Candidate Guides */}
+      <div className="space-y-4">
+        <CandidateSourcingGuide />
+        <ScreenAssessGuide />
+      </div>
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -96,9 +106,19 @@ export function CandidateListPage() {
             Centralized talent vault. Search skills, review resumes, track recruitment stages and recruiter ownership.
           </p>
         </div>
-        <Button variant="primary" size="sm" icon={Plus} onClick={() => setShowAddModal(true)}>
-          Add Candidate
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="secondary"
+            size="sm"
+            icon={Globe}
+            onClick={() => setShowSourcingModal(true)}
+          >
+            Import via Chrome Extension
+          </Button>
+          <Button variant="primary" size="sm" icon={Plus} onClick={() => setShowAddModal(true)}>
+            Add Candidate
+          </Button>
+        </div>
       </div>
 
       {/* Filter Bar */}
@@ -249,7 +269,7 @@ export function CandidateListPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <Input
               label="Full Name"
-              placeholder="Alexander Wright"
+              placeholder="sarang"
               value={newCandidate.name}
               onChange={(e) => setNewCandidate({ ...newCandidate, name: e.target.value })}
               required
@@ -257,20 +277,20 @@ export function CandidateListPage() {
             <Input
               label="Email Address"
               type="email"
-              placeholder="alex@example.com"
+              placeholder="satputesarang33@gmail.com"
               value={newCandidate.email}
               onChange={(e) => setNewCandidate({ ...newCandidate, email: e.target.value })}
               required
             />
             <Input
               label="Phone Number"
-              placeholder="+1 (555) 000-0000"
+              placeholder="9834050012"
               value={newCandidate.phone}
               onChange={(e) => setNewCandidate({ ...newCandidate, phone: e.target.value })}
             />
             <Input
               label="Location"
-              placeholder="San Francisco, CA"
+              placeholder="India"
               value={newCandidate.location}
               onChange={(e) => setNewCandidate({ ...newCandidate, location: e.target.value })}
             />
@@ -326,6 +346,12 @@ export function CandidateListPage() {
           </div>
         </form>
       </Modal>
+
+      {/* Chrome Sourcing Extension Modal */}
+      <ChromeSourcingModal
+        isOpen={showSourcingModal}
+        onClose={() => setShowSourcingModal(false)}
+      />
     </div>
   );
 }

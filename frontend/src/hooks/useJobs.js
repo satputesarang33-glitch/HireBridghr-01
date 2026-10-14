@@ -66,3 +66,20 @@ export function useRequestPublication() {
     },
   });
 }
+
+export function useCloseJob() {
+  const queryClient = useQueryClient();
+  const toast = useToast();
+
+  return useMutation({
+    mutationFn: (id) => jobService.closeJob(id),
+    onSuccess: (data, id) => {
+      queryClient.invalidateQueries({ queryKey: ['jobs'] });
+      queryClient.invalidateQueries({ queryKey: ['job', id] });
+      toast.success('Job Status Updated', 'Job has been marked as closed.');
+    },
+    onError: (error) => {
+      toast.error('Action Failed', error?.message || 'Could not update job status.');
+    },
+  });
+}

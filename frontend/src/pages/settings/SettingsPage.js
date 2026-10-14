@@ -23,6 +23,7 @@ import { Button } from '../../components/ui/Button.js';
 import { Card } from '../../components/ui/Card.js';
 import { Tabs } from '../../components/ui/Tabs.js';
 import { Modal } from '../../components/ui/Modal.js';
+import { EnterpriseSsoSettings } from '../../components/enterprise/EnterpriseSsoSettings.js';
 
 export function SettingsPage() {
   const { user, role, availableUsers } = useAuth();
@@ -330,9 +331,11 @@ export function SettingsPage() {
         </Card>
       )}
 
-      {/* TAB 5: Security */}
+      {/* TAB 5: Security & Enterprise SSO */}
       {activeTab === 'security' && (
         <div className="space-y-6">
+          <EnterpriseSsoSettings />
+
           <Card className="p-6 space-y-4">
             <h3 className="text-sm font-bold text-white">Change Password</h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl">

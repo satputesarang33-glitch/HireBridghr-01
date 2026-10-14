@@ -41,28 +41,28 @@ export function ResetPasswordPage() {
 
   return (
     <div>
-      <div className="mb-6 text-center sm:text-left">
-        <h2 className="text-2xl font-extrabold text-white tracking-tight">Set new password</h2>
-        <p className="text-xs text-slate-400 mt-1">
+      <div className="mb-6 text-left">
+        <h2 className="auth-title">Set new password</h2>
+        <p className="auth-subtitle">
           Create a new secure password for your HirebridgeHR account.
         </p>
       </div>
 
       {error && (
-        <div className="mb-4 p-3 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs">
+        <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs">
           {error}
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
+        <div className="space-y-1">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700">
             New Password
           </label>
           <div className="relative">
             <input
               type="password"
-              className="glass-input w-full rounded-lg pl-9 pr-3 py-2 text-sm"
+              className="w-full rounded-xl pl-9 pr-3 py-2 text-sm border border-slate-300 bg-white text-slate-900 focus:outline-hidden focus:border-indigo-600 focus:ring-3 focus:ring-indigo-100 shadow-xs"
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -74,14 +74,14 @@ export function ResetPasswordPage() {
           </div>
         </div>
 
-        <div>
-          <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
+        <div className="space-y-1">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700">
             Confirm Password
           </label>
           <div className="relative">
             <input
               type="password"
-              className="glass-input w-full rounded-lg pl-9 pr-3 py-2 text-sm"
+              className="w-full rounded-xl pl-9 pr-3 py-2 text-sm border border-slate-300 bg-white text-slate-900 focus:outline-hidden focus:border-indigo-600 focus:ring-3 focus:ring-indigo-100 shadow-xs"
               placeholder="••••••••"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
@@ -93,9 +93,14 @@ export function ResetPasswordPage() {
           </div>
         </div>
 
-        <Button type="submit" variant="primary" className="w-full" isLoading={isLoading} icon={ArrowRight}>
-          Reset Password
-        </Button>
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="auth-btn-primary w-full flex items-center justify-center gap-2 mt-2"
+        >
+          <span>{isLoading ? "Updating..." : "Reset Password"}</span>
+          <ArrowRight className="w-4 h-4" />
+        </button>
       </form>
     </div>
   );

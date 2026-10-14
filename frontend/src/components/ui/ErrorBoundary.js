@@ -5,19 +5,20 @@ import { Button } from './Button.js';
 export class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { hasError: false };
+    this.state = { hasError: false, error: null, errorInfo: null };
   }
 
   static getDerivedStateFromError(error) {
-    return { hasError: true };
+    return { hasError: true, error };
   }
 
   componentDidCatch(error, errorInfo) {
     console.error('Frontend ErrorBoundary caught an error:', error, errorInfo);
+    this.setState({ error, errorInfo });
   }
 
   handleReset = () => {
-    this.setState({ hasError: false });
+    this.setState({ hasError: false, error: null, errorInfo: null });
     window.location.reload();
   };
 
@@ -25,14 +26,24 @@ export class ErrorBoundary extends React.Component {
     if (this.state.hasError) {
       return (
         <div className="min-h-screen flex items-center justify-center p-6 bg-slate-950 text-slate-100">
-          <div className="max-w-md w-full glass-panel rounded-2xl p-8 border border-white/10 shadow-glass-lg text-center">
+          <div className="max-w-xl w-full glass-panel rounded-2xl p-8 border border-white/10 shadow-glass-lg text-center">
             <div className="w-14 h-14 mx-auto rounded-2xl bg-rose-500/15 border border-rose-500/30 flex items-center justify-center text-rose-400 mb-5">
               <AlertTriangle className="w-7 h-7" />
             </div>
             <h2 className="text-xl font-bold text-white mb-2">Something went wrong</h2>
-            <p className="text-sm text-slate-400 mb-6 leading-relaxed">
+            <p className="text-sm text-slate-400 mb-4 leading-relaxed">
               We encountered an unexpected issue rendering this view. Please reload the page or return to your dashboard.
             </p>
+            {this.state.error && (
+              <div className="mb-6 p-4 rounded-xl bg-rose-950/70 border border-rose-500/30 text-left overflow-x-auto text-xs font-mono text-rose-200">
+                <p className="font-bold text-rose-300 mb-1">{this.state.error.toString()}</p>
+                {this.state.errorInfo?.componentStack && (
+                  <pre className="text-[10px] text-rose-300/80 max-h-48 overflow-y-auto whitespace-pre-wrap">
+                    {this.state.errorInfo.componentStack}
+                  </pre>
+                )}
+              </div>
+            )}
             <div className="flex items-center justify-center gap-3">
               <Button variant="primary" icon={RotateCcw} onClick={this.handleReset}>
                 Reload Application

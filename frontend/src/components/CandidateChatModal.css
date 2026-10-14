@@ -1,0 +1,34 @@
+/* CandidateChatModal styling */
+.ats-chat-modal-card {
+  background-color: #ffffff;
+  border-radius: 1.25rem;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  max-width: 580px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.ats-chat-bubble {
+  max-width: 80%;
+  padding: 0.75rem 1rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+.ats-chat-bubble.recruiter {
+  background-color: #4f46e5;
+  color: #ffffff;
+  border-bottom-right-radius: 0.25rem;
+  margin-left: auto;
+}
+
+.ats-chat-bubble.candidate {
+  background-color: #f1f5f9;
+  color: #1e293b;
+  border-bottom-left-radius: 0.25rem;
+  margin-right: auto;
+}

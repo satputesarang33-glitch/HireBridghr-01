@@ -1,0 +1,182 @@
+/* JobForm Wizard styling */
+.ats-job-form-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 1.5rem 2rem;
+  background-color: #f8fafc;
+  min-height: 100vh;
+  box-sizing: border-box;
+  gap: 1.5rem;
+}
+
+/* Top Navigation Bar */
+.ats-wizard-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  padding: 0.875rem 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  flex-wrap: wrap;
+}
+
+.ats-wizard-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ats-wizard-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.375rem 0.625rem;
+  border-radius: 0.5rem;
+  transition: all 0.15s ease;
+}
+
+.ats-wizard-back-btn:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+.ats-wizard-topbar-center {
+  flex: 1;
+  max-width: 580px;
+}
+
+.ats-wizard-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Wizard Content */
+.ats-wizard-content {
+  width: 100%;
+}
+
+/* Form Card */
+.ats-form-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  padding: 1.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.ats-form-section-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 1rem;
+}
+
+.ats-form-section-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.ats-form-section-desc {
+  font-size: 0.8125rem;
+  color: #64748b;
+}
+
+/* Grid Layouts for Fields */
+.ats-form-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+.ats-form-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .ats-form-grid-2,
+  .ats-form-grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Skills Chips */
+.ats-skills-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin-top: 0.5rem;
+}
+
+.ats-skill-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.3125rem 0.625rem;
+  background-color: #eef2ff;
+  border: 1px solid #e0e7ff;
+  border-radius: 9999px;
+  color: #4f46e5;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.ats-skill-chip-remove {
+  cursor: pointer;
+  color: #818cf8;
+}
+
+.ats-skill-chip-remove:hover {
+  color: #ef4444;
+}
+
+/* Finishing Up Summary Cards */
+.ats-finish-settings-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .ats-finish-settings-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ats-finish-box {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.875rem;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.ats-finish-box-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #1e293b;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}

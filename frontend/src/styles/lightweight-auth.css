@@ -1,0 +1,246 @@
+/* ==========================================================================
+   HIREBRIDGEHR — LIGHTWEIGHT MARKET HUB AUTHENTICATION STYLES
+   Simple, Clean, Modern SaaS Styling for Sign In, Sign Up & Auth Workflows
+   Crisp Light Canvas, High-Contrast Typography & Modern Market SaaS Visuals
+   ========================================================================== */
+
+/* 1. Main Auth Container & Canvas */
+.auth-hub-layout {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background-color: #f8fafc;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.08) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(14, 165, 233, 0.06) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, rgba(241, 245, 249, 0.6) 0px, transparent 50%);
+  color: #0f172a;
+}
+
+/* 2. Light Auth Card Surface */
+.auth-hub-card,
+.auth-card-responsive {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 
+    0 1px 3px 0 rgba(15, 23, 42, 0.04),
+    0 10px 25px -5px rgba(15, 23, 42, 0.06),
+    0 8px 10px -6px rgba(15, 23, 42, 0.03) !important;
+  border-radius: 1.25rem !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* 3. Segmented Role Switcher Tabs (Candidate / ATS) */
+.auth-segmented-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.3125rem;
+  background-color: #f1f5f9 !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 1rem !important;
+  margin-bottom: 1.5rem;
+}
+
+.auth-tab-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 0.875rem;
+  border-radius: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  background: transparent;
+  border: 1px solid transparent;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  user-select: none;
+}
+
+.auth-tab-btn:hover {
+  color: #1e293b;
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.auth-tab-btn.active {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  font-weight: 700;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.08) !important;
+}
+
+/* 4. Auth Headings & Text */
+.auth-title {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 800;
+  color: #0f172a !important;
+  letter-spacing: -0.025em;
+  margin-bottom: 0.25rem;
+}
+
+.auth-subtitle {
+  font-size: 0.8125rem;
+  line-height: 1.25rem;
+  color: #64748b !important;
+}
+
+/* 5. Inputs & Form Elements (Clean Market SaaS Form) */
+.auth-hub-card input[type="text"],
+.auth-hub-card input[type="email"],
+.auth-hub-card input[type="password"],
+.auth-hub-card input[type="tel"],
+.auth-hub-card select,
+.auth-hub-card textarea,
+.auth-card-responsive input[type="text"],
+.auth-card-responsive input[type="email"],
+.auth-card-responsive input[type="password"],
+.auth-card-responsive input[type="tel"],
+.auth-card-responsive select,
+.auth-card-responsive textarea,
+.auth-hub-input {
+  background-color: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
+  box-shadow: 0 1px 2px 0 rgba(15, 23, 42, 0.04) !important;
+  border-radius: 0.75rem !important;
+  transition: all 0.2s ease !important;
+}
+
+.auth-hub-card input:focus,
+.auth-hub-card select:focus,
+.auth-hub-card textarea:focus,
+.auth-card-responsive input:focus,
+.auth-card-responsive select:focus,
+.auth-card-responsive textarea:focus,
+.auth-hub-input:focus {
+  outline: none !important;
+  border-color: #4f46e5 !important;
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.14) !important;
+}
+
+.auth-hub-card input::placeholder,
+.auth-card-responsive input::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* 6. Form Labels */
+.auth-hub-card label,
+.auth-card-responsive label {
+  color: #334155 !important;
+}
+
+/* 7. Checkboxes */
+.auth-hub-card input[type="checkbox"],
+.auth-card-responsive input[type="checkbox"],
+.auth-checkbox {
+  background-color: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #4f46e5 !important;
+  border-radius: 0.25rem !important;
+  accent-color: #4f46e5 !important;
+}
+
+/* 8. Primary Buttons */
+.auth-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.625rem 1.25rem;
+  background: linear-gradient(180deg, #4f46e5 0%, #4338ca 100%) !important;
+  color: #ffffff !important;
+  font-weight: 700;
+  font-size: 0.875rem;
+  border-radius: 0.75rem !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 
+    0 1px 2px 0 rgba(15, 23, 42, 0.08),
+    0 4px 12px 0 rgba(79, 70, 229, 0.25) !important;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.auth-btn-primary:hover {
+  background: linear-gradient(180deg, #4338ca 0%, #3730a3 100%) !important;
+  box-shadow: 
+    0 2px 4px 0 rgba(15, 23, 42, 0.1),
+    0 6px 16px 0 rgba(79, 70, 229, 0.35) !important;
+  transform: translateY(-0.5px);
+}
+
+.auth-btn-primary:active {
+  transform: translateY(0);
+}
+
+/* 9. Feature Hero Cards on Left Side */
+.auth-feature-card {
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 0.875rem !important;
+  padding: 0.875rem 1rem !important;
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04) !important;
+}
+
+.auth-feature-title {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #0f172a !important;
+  line-height: 1.25;
+}
+
+.auth-feature-desc {
+  font-size: 0.75rem;
+  color: #64748b !important;
+  line-height: 1.35;
+  margin-top: 0.125rem;
+}
+
+/* 10. Dividers & Links */
+.auth-divider {
+  border-top: 1px solid #e2e8f0 !important;
+  margin-top: 1rem;
+  padding-top: 1rem;
+}
+
+.auth-link {
+  color: #4f46e5 !important;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.auth-link:hover {
+  color: #3730a3 !important;
+  text-decoration: underline;
+}
+
+/* 11. Normalize dark utility text inside auth layout cards */
+.auth-card-responsive .text-white,
+.auth-hub-card .text-white {
+  color: #0f172a !important;
+}
+
+.auth-card-responsive .text-slate-400,
+.auth-hub-card .text-slate-400 {
+  color: #64748b !important;
+}
+
+.auth-card-responsive .text-slate-300,
+.auth-hub-card .text-slate-300 {
+  color: #475569 !important;
+}
+
+.auth-card-responsive .border-white\/10,
+.auth-card-responsive .border-white\/15,
+.auth-card-responsive .border-white\/20,
+.auth-hub-card .border-white\/10 {
+  border-color: #e2e8f0 !important;
+}

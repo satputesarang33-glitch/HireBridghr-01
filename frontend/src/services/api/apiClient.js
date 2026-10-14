@@ -39,7 +39,16 @@ function getStorage(key, initial) {
       localStorage.setItem(key, JSON.stringify(initial));
       return initial;
     }
-    return JSON.parse(data);
+    const parsed = JSON.parse(data);
+    if (key === STORAGE_KEYS.JOBS && Array.isArray(parsed)) {
+      const hasPyjamaJob = parsed.some((j) => j.id === 'job-130134');
+      if (!hasPyjamaJob) {
+        const merged = [...initial, ...parsed.filter((p) => !initial.some((i) => i.id === p.id))];
+        localStorage.setItem(key, JSON.stringify(merged));
+        return merged;
+      }
+    }
+    return parsed;
   } catch (e) {
     return initial;
   }
@@ -253,9 +262,8 @@ function mockRouter(method, url, payload = {}) {
     const users = getStorage(STORAGE_KEYS.USERS, mockUsers);
     let user = users.find(u => u.email.toLowerCase() === payload.email?.toLowerCase());
 
-    // Test runner & demo persona fallback
     if (!user) {
-      user = users.find(u => u.role === 'RECRUITER') || users.find(u => u.role === 'ADMIN') || users[0];
+      return { success: false, error: { message: 'No account found with this email address.' } };
     }
 
     localStorage.setItem('hb_auth_user', JSON.stringify(user));
@@ -267,17 +275,8 @@ function mockRouter(method, url, payload = {}) {
     const users = getStorage(STORAGE_KEYS.USERS, mockUsers);
     let candidate = users.find(u => u.email.toLowerCase() === payload.email?.toLowerCase() && u.role === 'CANDIDATE');
 
-    // Test runner & demo candidate fallback
     if (!candidate) {
-      candidate = users.find(u => u.role === 'CANDIDATE') || {
-        id: 'usr-cand-101',
-        name: 'Alexander Wright',
-        firstName: 'Alexander',
-        lastName: 'Wright',
-        email: payload.email || 'alex.wright@techinnovate.dev',
-        role: 'CANDIDATE',
-        status: 'ACTIVE',
-      };
+      return { success: false, error: { message: 'Invalid candidate credentials or account does not exist.' } };
     }
 
     localStorage.setItem('hb_auth_user', JSON.stringify(candidate));

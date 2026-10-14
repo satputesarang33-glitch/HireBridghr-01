@@ -16,9 +16,12 @@ import { Card } from '../../components/ui/Card.js';
 import { Select } from '../../components/ui/Select.js';
 import { Skeleton } from '../../components/ui/Skeleton.js';
 import { useToast } from '../../context/ToastContext.js';
+import { RecruitmentAnalytics } from '../../components/RecruitmentAnalytics.js';
+import { PredictiveExecutiveAnalytics } from '../../components/enterprise/PredictiveExecutiveAnalytics.js';
 
 export function ReportsPage() {
   const toast = useToast();
+  const [activeTab, setActiveTab] = useState('analytics'); // 'analytics' | 'executive'
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [dateRange, setDateRange] = useState('30d');
@@ -94,9 +97,50 @@ export function ReportsPage() {
         </div>
       </div>
 
-      {/* Primary KPI Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <Card className="p-4">
+      {/* Navigation Tabs */}
+      <div className="flex gap-2 border-b border-white/10 pb-2">
+        <button
+          type="button"
+          onClick={() => setActiveTab('analytics')}
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+            activeTab === 'analytics'
+              ? 'bg-brand-500 text-white shadow-glow-brand'
+              : 'text-slate-400 hover:text-white hover:bg-white/5'
+          }`}
+        >
+          Live Pipeline Funnel & Scorecards
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab('executive')}
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+            activeTab === 'executive'
+              ? 'bg-brand-500 text-white shadow-glow-brand'
+              : 'text-slate-400 hover:text-white hover:bg-white/5'
+          }`}
+        >
+          Executive Sourcing & Productivity
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab('predictive')}
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+            activeTab === 'predictive'
+              ? 'bg-brand-500 text-white shadow-glow-brand'
+              : 'text-slate-400 hover:text-white hover:bg-white/5'
+          }`}
+        >
+          Executive Diversity & Predictive Analytics
+        </button>
+      </div>
+
+      {activeTab === 'analytics' && <RecruitmentAnalytics />}
+      {activeTab === 'predictive' && <PredictiveExecutiveAnalytics />}
+      {activeTab === 'executive' && (
+        <>
+          {/* Primary KPI Stats */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <Card className="p-4">
           <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Total Applications</span>
           <p className="text-2xl font-black text-white mt-1">{data?.totalApplications || 0}</p>
           <span className="text-[10px] text-emerald-400 font-semibold">+14% vs last period</span>
@@ -205,6 +249,8 @@ export function ReportsPage() {
           </table>
         </div>
       </div>
+        </>
+      )}
     </div>
   );
 }

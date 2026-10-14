@@ -1,54 +1,51 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Lock, Mail, ArrowRight, Briefcase } from 'lucide-react';
-import { useAuth } from '../../context/AuthContext.js';
-import { useToast } from '../../context/ToastContext.js';
-import { Input } from '../../components/ui/Input.js';
-import { Button } from '../../components/ui/Button.js';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Eye, EyeOff, Lock, Mail, ArrowRight, Briefcase } from "lucide-react";
+import { useAuth } from "../../context/AuthContext.js";
+import { useToast } from "../../context/ToastContext.js";
+import { Input } from "../../components/ui/Input.js";
+import { Button } from "../../components/ui/Button.js";
 
 export function CandidateLoginPage() {
   const navigate = useNavigate();
   const { candidateLogin } = useAuth();
   const toast = useToast();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const executeLogin = async (creds) => {
     setIsLoading(true);
-    setError('');
+    setError("");
     try {
       const res = await candidateLogin(creds);
       if (res.data?.user || res.success) {
         const u = res.data?.user || res.user;
-        toast.success('Welcome back', `Signed in as ${u?.name || 'Candidate'}`);
-        navigate('/candidate/dashboard');
+        toast.success("Welcome back", `Signed in as ${u?.name || "Candidate"}`);
+        navigate("/candidate/dashboard");
       } else {
-        setError(res.error?.message || res.message || 'Invalid candidate credentials.');
+        setError(
+          res.error?.message || res.message || "Invalid candidate credentials.",
+        );
       }
     } catch (err) {
-      setError(err?.response?.data?.message || 'An error occurred during candidate authentication.');
+      setError(
+        err?.response?.data?.message ||
+          "An error occurred during candidate authentication.",
+      );
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleSelectPersona = (creds, autoLogin = false) => {
-    setEmail(creds.email);
-    setPassword(creds.password);
-    if (autoLogin) {
-      executeLogin(creds);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email || !password) {
-      setError('Please provide both email and password.');
+      setError("Please provide both email and password.");
       return;
     }
     executeLogin({ email, password });
@@ -56,79 +53,45 @@ export function CandidateLoginPage() {
 
   return (
     <div>
-      <div className="mb-5 text-center sm:text-left">
-        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-brand-500/10 border border-brand-400/30 text-brand-300 text-xs font-semibold mb-3">
+      {/* Top Segmented Portal Selector: Candidate Active */}
+      <div className="auth-segmented-tabs">
+        <div className="auth-tab-btn active">
+          <Briefcase className="w-4 h-4 flex-shrink-0" />
+          <span>Candidate Portal</span>
+          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-indigo-100 text-indigo-700 uppercase">
+            Active
+          </span>
+        </div>
+
+        <Link
+          to="/signin?role=recruiter"
+          className="auth-tab-btn"
+        >
+          <span>Employer / ATS</span>
+          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-slate-200 text-slate-700 uppercase">
+            ATS
+          </span>
+        </Link>
+      </div>
+
+      <div className="mb-5 text-left">
+        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-semibold mb-2.5">
           <Briefcase className="w-3.5 h-3.5" />
           <span>Candidate Career Portal</span>
         </div>
-        <h2 className="text-2xl font-extrabold text-white tracking-tight">Sign in as Candidate</h2>
-        <p className="text-xs text-slate-400 mt-1">
+        <h2 className="auth-title">
+          Sign in as Candidate
+        </h2>
+        <p className="auth-subtitle">
           Access your job applications, saved listings, and interview schedules.
         </p>
       </div>
 
       {error && (
-        <div className="mb-4 p-3 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
+        <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
           <span>{error}</span>
         </div>
       )}
-
-      {/* Demo Persona Quick Access - Enhanced High-Contrast Glassmorphism */}
-      <div className="mb-5 p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-b from-slate-900/95 via-slate-900/90 to-slate-950/95 border border-cyan-500/30 shadow-xl shadow-black/40 backdrop-blur-xl relative overflow-hidden space-y-2.5 sm:space-y-3">
-        {/* Ambient background glows */}
-        <div className="absolute -top-12 -right-12 w-28 h-28 bg-cyan-500/15 rounded-full blur-2xl pointer-events-none" />
-        <div className="absolute -bottom-12 -left-12 w-28 h-28 bg-teal-500/15 rounded-full blur-2xl pointer-events-none" />
-
-        <div className="flex items-center justify-between relative z-10">
-          <div className="flex items-center gap-1.5">
-            <Briefcase className="w-3.5 h-3.5 text-cyan-400 flex-shrink-0" />
-            <span className="text-[11px] sm:text-xs font-extrabold uppercase tracking-wider bg-gradient-to-r from-cyan-300 via-teal-200 to-emerald-300 bg-clip-text text-transparent">
-              Demo Candidate Quick Access
-            </span>
-          </div>
-          <span className="px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 flex items-center gap-1 flex-shrink-0">
-            ⚡ 1-Click Access
-          </span>
-        </div>
-
-        <button
-          type="button"
-          onClick={() => handleSelectPersona({ email: 'alex.candidate@example.com', password: 'Password123!' }, true)}
-          className="group w-full p-2 sm:p-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-800 border border-cyan-500/40 hover:border-cyan-400 transition-all duration-200 shadow-md hover:shadow-cyan-500/20 text-left flex items-center justify-between gap-2 relative z-10 touch-manipulation cursor-pointer"
-        >
-          <div className="min-w-0 flex-1">
-            <span className="block text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-cyan-400 truncate">
-              Demo Candidate
-            </span>
-            <span className="block text-xs font-bold text-white group-hover:text-cyan-200 transition-colors truncate">
-              Alexander Rivera
-            </span>
-          </div>
-          <span className="px-2 sm:px-2.5 py-1 rounded-lg bg-gradient-to-r from-cyan-500 to-teal-500 text-slate-950 text-[10px] sm:text-[11px] font-extrabold flex items-center gap-1 shadow group-hover:scale-105 transition-transform flex-shrink-0">
-            Enter Portal <ArrowRight className="w-3 h-3" />
-          </span>
-        </button>
-
-        <div className="flex items-center flex-wrap gap-1.5 sm:gap-2 pt-2 border-t border-white/10 relative z-10 text-xs">
-          <span className="text-[10px] sm:text-[11px] font-medium text-slate-300">Quick fill:</span>
-          <button
-            type="button"
-            onClick={() => handleSelectPersona({ email: 'alex.candidate@example.com', password: 'Password123!' }, false)}
-            className="px-2 sm:px-2.5 py-1 rounded-lg bg-slate-800/95 hover:bg-cyan-950/70 text-cyan-200 hover:text-white border border-cyan-500/35 hover:border-cyan-400 font-semibold text-[10px] sm:text-[11px] transition-all flex items-center gap-1 shadow-sm touch-manipulation cursor-pointer"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
-            Alex Rivera <span className="text-[9px] sm:text-[10px] text-cyan-400 font-normal">(Demo)</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => handleSelectPersona({ email: 'alex.wright@techinnovate.dev', password: 'Password123!' }, false)}
-            className="px-2 sm:px-2.5 py-1 rounded-lg bg-slate-800/95 hover:bg-teal-950/70 text-teal-200 hover:text-white border border-teal-500/35 hover:border-teal-400 font-semibold text-[10px] sm:text-[11px] transition-all flex items-center gap-1 shadow-sm touch-manipulation cursor-pointer"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-teal-400" />
-            Alex Wright <span className="text-[9px] sm:text-[10px] text-teal-400 font-normal">(Engineer)</span>
-          </button>
-        </div>
-      </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <Input
@@ -142,13 +105,13 @@ export function CandidateLoginPage() {
         />
 
         <div className="space-y-1">
-          <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700">
             Password
           </label>
           <div className="relative">
             <input
-              type={showPassword ? 'text' : 'password'}
-              className="glass-input w-full rounded-lg pl-9 pr-10 py-2 text-sm shadow-sm"
+              type={showPassword ? "text" : "password"}
+              className="w-full rounded-xl pl-9 pr-10 py-2 text-sm border border-slate-300 bg-white text-slate-900 focus:outline-hidden focus:border-indigo-600 focus:ring-3 focus:ring-indigo-100 shadow-xs"
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -160,43 +123,61 @@ export function CandidateLoginPage() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-white"
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-700"
             >
-              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              {showPassword ? (
+                <EyeOff className="w-4 h-4" />
+              ) : (
+                <Eye className="w-4 h-4" />
+              )}
             </button>
           </div>
         </div>
 
         <div className="flex items-center justify-between text-xs pt-1">
-          <label className="flex items-center gap-2 cursor-pointer select-none text-slate-300">
+          <label className="flex items-center gap-2 cursor-pointer select-none text-slate-600 font-medium">
             <input
               type="checkbox"
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
-              className="rounded bg-slate-800 border-white/20 text-brand-500 focus:ring-brand-400 w-3.5 h-3.5"
+              className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 w-3.5 h-3.5"
             />
             <span>Remember me</span>
           </label>
-          <Link to="/candidate/forgot-password" className="text-brand-400 hover:text-brand-300 font-semibold">
+          <Link
+            to="/candidate/forgot-password"
+            className="text-indigo-600 hover:text-indigo-800 font-semibold"
+          >
             Forgot password?
           </Link>
         </div>
 
-        <Button type="submit" variant="primary" className="w-full mt-2" isLoading={isLoading} icon={ArrowRight}>
-          Sign In
-        </Button>
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="auth-btn-primary w-full flex items-center justify-center gap-2 mt-2"
+        >
+          <span>{isLoading ? "Signing in..." : "Sign In"}</span>
+          <ArrowRight className="w-4 h-4" />
+        </button>
       </form>
 
-      <div className="mt-5 text-center text-xs text-slate-400">
-        Don&apos;t have an account?{' '}
-        <Link to="/candidate/signup" className="text-brand-400 hover:text-brand-300 font-semibold underline">
+      <div className="mt-5 text-center text-xs text-slate-500">
+        Don&apos;t have an account?{" "}
+        <Link
+          to="/candidate/signup"
+          className="text-indigo-600 hover:text-indigo-800 font-semibold"
+        >
           Create Candidate Account
         </Link>
       </div>
 
-      <div className="mt-3 pt-3 border-t border-white/10 text-center text-xs text-slate-400">
-        Are you an employer or recruiter?{' '}
-        <Link to="/signin" className="text-brand-400 hover:text-brand-300 font-medium">
+      <div className="mt-3 pt-3 border-t border-slate-200 text-center text-xs text-slate-500">
+        Are you an employer or recruiter?{" "}
+        <Link
+          to="/signin"
+          className="text-indigo-600 hover:text-indigo-800 font-semibold"
+        >
           Sign in to ATS &rarr;
         </Link>
       </div>

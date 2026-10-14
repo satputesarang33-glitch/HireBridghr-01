@@ -59,16 +59,14 @@ export const authController = {
         });
       }
 
-      let user = await UserModel.findByEmail(email);
-
-      // Create fallback recruiter user if not yet stored in DB
+      const user = await UserModel.findByEmail(email);
       if (!user) {
-        user = await UserModel.create({
-          id: `usr-rec-${Date.now().toString().slice(-4)}`,
-          email: email.toLowerCase(),
-          name: email.split("@")[0].replace(".", " "),
-          role: "RECRUITER",
-          organizationId: "org-1",
+        return res.status(401).json({
+          success: false,
+          error: {
+            code: "INVALID_CREDENTIALS",
+            message: "No account found with this email. Please check your credentials or register.",
+          },
         });
       }
 
@@ -168,21 +166,14 @@ export const authController = {
         });
       }
 
-      let candidate = await UserModel.findByEmail(email);
-      if (!candidate) {
-        candidate = await UserModel.create({
-          id: `usr-cand-${Date.now().toString().slice(-4)}`,
-          email: email.toLowerCase(),
-          name: email.split("@")[0].replace(".", " "),
-          role: "CANDIDATE",
-        });
-
-        // Initialize candidate profile
-        await UserModel.saveCandidateProfile(candidate.id, {
-          userId: candidate.id,
-          email: candidate.email,
-          fullName: candidate.name,
-          profileCompletion: 40,
+      const candidate = await UserModel.findByEmail(email);
+      if (!candidate || candidate.role !== "CANDIDATE") {
+        return res.status(401).json({
+          success: false,
+          error: {
+            code: "INVALID_CREDENTIALS",
+            message: "No candidate account found with this email. Please check your credentials or sign up.",
+          },
         });
       }
 

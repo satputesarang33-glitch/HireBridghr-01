@@ -18,6 +18,8 @@ import { Card } from '../../components/ui/Card.js';
 import { Skeleton } from '../../components/ui/Skeleton.js';
 import { PublicApplyModal } from './PublicApplyModal.js';
 import { useToast } from '../../context/ToastContext.js';
+import { getStoredJobs } from '../../data/Jobs.js';
+import { syndicationService } from '../../utils/syndicationService.js';
 
 export function PublicJobPage() {
   const { slug } = useParams();
@@ -26,8 +28,27 @@ export function PublicJobPage() {
 
   const [showApplyModal, setShowApplyModal] = useState(false);
 
-  const jobs = jobsRes?.data || [];
-  const job = jobs.find((j) => j.slug === slug || j.id === slug);
+  const apiJobs = jobsRes?.data || [];
+  const storedJobs = getStoredJobs() || [];
+  const allJobs = [...storedJobs, ...apiJobs];
+
+  // Robust lookup across slug, id, jobId, or normalized title
+  const job = allJobs.find((j) => {
+    if (!j) return false;
+    const cleanSlug = String(slug || '').toLowerCase().trim();
+    const jId = String(j.id || '').toLowerCase().trim();
+    const jJobId = String(j.jobId || '').toLowerCase().trim();
+    const jSlug = String(j.slug || '').toLowerCase().trim();
+    const titleSlug = String(j.title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
+    return (
+      jSlug === cleanSlug ||
+      jId === cleanSlug ||
+      jJobId === cleanSlug ||
+      titleSlug === cleanSlug ||
+      `job-${jJobId}` === cleanSlug
+    );
+  });
 
   if (isLoading) {
     return (
@@ -65,6 +86,14 @@ export function PublicJobPage() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-brand-500/30 selection:text-brand-200 relative overflow-x-hidden">
+      {/* Google for Jobs Structured Data (SEO) */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(syndicationService.generateGoogleJsonLd(job))
+        }}
+      />
+
       {/* Liquid background glow */}
       <div className="liquid-glow-brand -top-24 -left-24 opacity-60" />
       <div className="liquid-glow-accent top-1/2 -right-24 opacity-40" />

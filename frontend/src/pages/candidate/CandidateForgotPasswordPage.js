@@ -30,31 +30,31 @@ export function CandidateForgotPasswordPage() {
 
   return (
     <div>
-      <div className="mb-6 text-center sm:text-left">
-        <h2 className="text-2xl font-extrabold text-white tracking-tight">Forgot Password</h2>
-        <p className="text-xs text-slate-400 mt-1">
+      <div className="mb-6 text-left">
+        <h2 className="auth-title">Forgot Password</h2>
+        <p className="auth-subtitle">
           Enter your candidate email address and we will send you instructions to reset your password.
         </p>
       </div>
 
       {submitted ? (
         <div className="space-y-4">
-          <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs">
-            <div className="flex items-center gap-2 font-semibold text-sm mb-1 text-emerald-200">
-              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+          <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs">
+            <div className="flex items-center gap-2 font-semibold text-sm mb-1 text-emerald-900">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
               <span>Reset link dispatched</span>
             </div>
-            <p className="text-slate-300 text-[11px] leading-relaxed">
+            <p className="text-emerald-700 text-[11px] leading-relaxed">
               If an account with that email exists, we have sent a secure password reset link. Please check your inbox or spam folder.
             </p>
           </div>
 
           {resetToken && (
-            <div className="p-3 rounded-lg bg-white/5 border border-white/10 text-xs text-slate-400 flex items-center justify-between">
+            <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 flex items-center justify-between">
               <span>Password Reset Link:</span>
               <Link
                 to={`/candidate/reset-password?token=${resetToken}`}
-                className="text-brand-400 hover:text-brand-300 font-semibold"
+                className="text-indigo-600 hover:text-indigo-800 font-semibold"
               >
                 Click to Reset Password &rarr;
               </Link>
@@ -64,7 +64,7 @@ export function CandidateForgotPasswordPage() {
           <div className="pt-3">
             <Link
               to="/candidate/login"
-              className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-indigo-600 font-medium transition-colors"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Back to Candidate Sign In</span>
@@ -83,14 +83,19 @@ export function CandidateForgotPasswordPage() {
             required
           />
 
-          <Button type="submit" variant="primary" className="w-full mt-2" isLoading={isLoading} icon={ArrowRight}>
-            Send Reset Instructions
-          </Button>
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="auth-btn-primary w-full flex items-center justify-center gap-2 mt-2"
+          >
+            <span>{isLoading ? "Sending..." : "Send Reset Instructions"}</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
 
           <div className="pt-2 text-center">
             <Link
               to="/candidate/login"
-              className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-indigo-600 font-medium transition-colors"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Back to Candidate Sign In</span>

@@ -147,7 +147,13 @@ export const jobController = {
   saveJob: async (req, res, next) => {
     try {
       const { id: jobId } = req.params;
-      const userId = req.user?.uid || "usr-cand-1";
+      const userId = req.user?.uid;
+      if (!userId) {
+        return res.status(401).json({
+          success: false,
+          error: { code: "UNAUTHORIZED", message: "Authentication required to bookmark jobs." },
+        });
+      }
 
       await UserModel.addSavedJob(userId, jobId);
 
@@ -165,7 +171,13 @@ export const jobController = {
   unsaveJob: async (req, res, next) => {
     try {
       const { id: jobId } = req.params;
-      const userId = req.user?.uid || "usr-cand-1";
+      const userId = req.user?.uid;
+      if (!userId) {
+        return res.status(401).json({
+          success: false,
+          error: { code: "UNAUTHORIZED", message: "Authentication required to remove bookmarked jobs." },
+        });
+      }
 
       await UserModel.removeSavedJob(userId, jobId);
 
@@ -184,7 +196,13 @@ export const jobController = {
     try {
       const { id: jobId } = req.params;
       const payload = req.body;
-      const candidateId = req.user?.uid || payload.candidateId || "usr-cand-1";
+      const candidateId = req.user?.uid || payload.candidateId;
+      if (!candidateId) {
+        return res.status(400).json({
+          success: false,
+          error: { code: "VALIDATION_ERROR", message: "Candidate ID or authentication required to apply." },
+        });
+      }
       const candidateEmail = (payload.email || payload.candidateEmail || "").toLowerCase();
 
       // Check if job exists

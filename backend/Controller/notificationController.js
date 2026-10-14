@@ -1,9 +1,15 @@
 import { NotificationModel } from "../Model/Notification.js";
+import { notificationStreamService } from "../Services/notificationStreamService.js";
 
 /**
  * Controller for Recruiter / System Notifications
  */
 export const notificationController = {
+  // Real-time Server-Sent Events stream
+  streamNotifications: (req, res) => {
+    notificationStreamService.handleConnection(req, res);
+  },
+
   // Get all recruiter notifications
   getAllNotifications: async (req, res, next) => {
     try {
@@ -66,6 +72,7 @@ export const notificationController = {
   createNotification: async (req, res, next) => {
     try {
       const notif = await NotificationModel.createRecruiterNotification(req.body);
+      notificationStreamService.broadcast("NOTIFICATION_CREATED", notif);
       res.status(201).json({
         success: true,
         data: notif,
@@ -76,3 +83,4 @@ export const notificationController = {
     }
   },
 };
+

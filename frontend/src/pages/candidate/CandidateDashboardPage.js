@@ -77,7 +77,7 @@ export function CandidateDashboardPage() {
       <div className="glass-panel rounded-2xl p-6 border border-white/80 dark:border-white/10 relative overflow-hidden">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-cyan-400 text-xs font-semibold mb-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/15 border border-cyan-500/30 text-cyan-700 dark:text-cyan-300 text-xs font-semibold mb-2">
               <Sparkles className="w-3.5 h-3.5" />
               Candidate Command Center
             </div>
@@ -121,13 +121,13 @@ export function CandidateDashboardPage() {
             <FileText className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+            <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
               Applications
             </p>
             <h3 className="text-2xl font-black text-slate-900 dark:text-white mt-0.5">
               {applications.length}
             </h3>
-            <p className="text-[10px] text-slate-400">{activeApplications.length} currently active</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">{activeApplications.length} currently active</p>
           </div>
         </div>
 
@@ -137,13 +137,13 @@ export function CandidateDashboardPage() {
             <Bookmark className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+            <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
               Saved Jobs
             </p>
             <h3 className="text-2xl font-black text-slate-900 dark:text-white mt-0.5">
               {savedJobs.length}
             </h3>
-            <p className="text-[10px] text-slate-400">Bookmarked for later</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Bookmarked for later</p>
           </div>
         </div>
 
@@ -153,13 +153,13 @@ export function CandidateDashboardPage() {
             <Calendar className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+            <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
               Interviews
             </p>
             <h3 className="text-2xl font-black text-slate-900 dark:text-white mt-0.5">
               {interviewCount}
             </h3>
-            <p className="text-[10px] text-slate-400">Scheduled rounds</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Scheduled rounds</p>
           </div>
         </div>
 
@@ -169,13 +169,13 @@ export function CandidateDashboardPage() {
             <TrendingUp className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+            <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
               Profile Strength
             </p>
             <h3 className="text-2xl font-black text-slate-900 dark:text-white mt-0.5">
               {profileCompletion}%
             </h3>
-            <p className="text-[10px] text-emerald-500 font-medium">All core sections done</p>
+            <p className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">All core sections done</p>
           </div>
         </div>
       </div>
@@ -249,7 +249,7 @@ export function CandidateDashboardPage() {
 
                     {/* Timeline stepper row */}
                     <div className="pt-3">
-                      <div className="flex items-center justify-between text-[11px] font-semibold text-slate-400">
+                      <div className="flex items-center justify-between text-xs font-semibold text-slate-400">
                         {stages.map((stage, idx) => {
                           const isDone = currentIdx >= idx;
                           const isCurrent = currentIdx === idx;
@@ -257,7 +257,7 @@ export function CandidateDashboardPage() {
                             <div key={stage} className="flex flex-col items-center gap-1">
                               <div
                                 className={cn(
-                                  'w-5 h-5 rounded-full flex items-center justify-center text-[10px]',
+                                  'w-5 h-5 rounded-full flex items-center justify-center text-xs',
                                   isDone
                                     ? 'bg-cyan-500 text-white font-bold'
                                     : 'bg-slate-800 text-slate-500 border border-white/10'
@@ -267,7 +267,7 @@ export function CandidateDashboardPage() {
                               </div>
                               <span
                                 className={cn(
-                                  'text-[10px]',
+                                  'text-xs',
                                   isCurrent
                                     ? 'text-cyan-400 font-bold'
                                     : isDone
@@ -367,7 +367,7 @@ export function CandidateDashboardPage() {
                 <div>
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-cyan-500">
+                      <span className="text-xs font-semibold text-cyan-600 dark:text-cyan-400">
                         {job.jobType || 'Full-Time'} &bull; {job.workMode || 'Remote'}
                       </span>
                       <h4 className="text-base font-bold text-slate-900 dark:text-white mt-0.5">
@@ -413,7 +413,7 @@ export function CandidateDashboardPage() {
                       {job.skills.slice(0, 4).map((skill) => (
                         <span
                           key={skill}
-                          className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-white/5 border border-white/10 text-slate-300"
+                          className="px-2 py-0.5 rounded-md text-xs font-medium bg-white/5 border border-white/10 text-slate-300"
                         >
                           {skill}
                         </span>

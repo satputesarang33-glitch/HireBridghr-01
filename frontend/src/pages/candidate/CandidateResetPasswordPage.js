@@ -52,21 +52,21 @@ export function CandidateResetPasswordPage() {
 
   return (
     <div>
-      <div className="mb-6 text-center sm:text-left">
-        <h2 className="text-2xl font-extrabold text-white tracking-tight">Create New Password</h2>
-        <p className="text-xs text-slate-400 mt-1">
+      <div className="mb-6 text-left">
+        <h2 className="auth-title">Create New Password</h2>
+        <p className="auth-subtitle">
           Please enter your new password to secure your candidate account.
         </p>
       </div>
 
       {success ? (
-        <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-center space-y-3">
-          <CheckCircle2 className="w-10 h-10 text-emerald-400 mx-auto" />
-          <p className="text-sm font-semibold text-emerald-300">Password reset successful!</p>
-          <p className="text-xs text-slate-300">Redirecting to candidate sign-in page...</p>
+        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-center space-y-3">
+          <CheckCircle2 className="w-10 h-10 text-emerald-600 mx-auto" />
+          <p className="text-sm font-semibold text-emerald-800">Password reset successful!</p>
+          <p className="text-xs text-slate-600">Redirecting to candidate sign-in page...</p>
           <Link
             to="/candidate/login"
-            className="inline-block mt-2 text-xs font-semibold text-brand-400 hover:text-brand-300"
+            className="inline-block mt-2 text-xs font-semibold text-indigo-600 hover:text-indigo-800"
           >
             Click here if not redirected &rarr;
           </Link>
@@ -74,19 +74,19 @@ export function CandidateResetPasswordPage() {
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
-            <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs">
+            <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs">
               {error}
             </div>
           )}
 
           <div className="space-y-1">
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700">
               New Password
             </label>
             <div className="relative">
               <input
                 type={showPassword ? 'text' : 'password'}
-                className="glass-input w-full rounded-lg pl-9 pr-10 py-2 text-sm shadow-sm"
+                className="w-full rounded-xl pl-9 pr-10 py-2 text-sm border border-slate-300 bg-white text-slate-900 focus:outline-hidden focus:border-indigo-600 focus:ring-3 focus:ring-indigo-100 shadow-xs"
                 placeholder="Minimum 8 characters"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -98,7 +98,7 @@ export function CandidateResetPasswordPage() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-white"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-700"
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
@@ -106,13 +106,13 @@ export function CandidateResetPasswordPage() {
           </div>
 
           <div className="space-y-1">
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700">
               Confirm New Password
             </label>
             <div className="relative">
               <input
                 type={showPassword ? 'text' : 'password'}
-                className="glass-input w-full rounded-lg pl-9 pr-10 py-2 text-sm shadow-sm"
+                className="w-full rounded-xl pl-9 pr-10 py-2 text-sm border border-slate-300 bg-white text-slate-900 focus:outline-hidden focus:border-indigo-600 focus:ring-3 focus:ring-indigo-100 shadow-xs"
                 placeholder="Confirm new password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
@@ -124,9 +124,14 @@ export function CandidateResetPasswordPage() {
             </div>
           </div>
 
-          <Button type="submit" variant="primary" className="w-full mt-2" isLoading={isLoading} icon={ArrowRight}>
-            Reset Password
-          </Button>
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="auth-btn-primary w-full flex items-center justify-center gap-2 mt-2"
+          >
+            <span>{isLoading ? "Updating..." : "Reset Password"}</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
         </form>
       )}
     </div>

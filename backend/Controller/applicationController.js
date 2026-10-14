@@ -1,5 +1,7 @@
 import { ApplicationModel } from "../Model/Application.js";
 import { NotificationModel } from "../Model/Notification.js";
+import { emailService } from "../Services/emailService.js";
+import { notificationStreamService } from "../Services/notificationStreamService.js";
 
 /**
  * Controller for Job Applications management
@@ -55,6 +57,23 @@ export const applicationController = {
       const data = req.body;
       const newApp = await ApplicationModel.create(data);
 
+      // Dispatch confirmation email
+      if (newApp.candidateEmail) {
+        try {
+          await emailService.sendApplicationConfirmation({
+            candidateEmail: newApp.candidateEmail,
+            candidateName: newApp.candidateName || "Candidate",
+            jobTitle: newApp.jobTitle || "Open Role",
+            companyName: newApp.company || "Apex Global Tech",
+          });
+        } catch (emailErr) {
+          console.warn("⚠️ Non-blocking email dispatch warning:", emailErr.message);
+        }
+      }
+
+      // Broadcast live SSE event to recruiters
+      notificationStreamService.broadcast("APPLICATION_RECEIVED", newApp);
+
       res.status(201).json({
         success: true,
         data: newApp,
@@ -85,6 +104,14 @@ export const applicationController = {
           title: "Application Status Updated",
           message: `Your application status for ${updated.jobTitle} has been updated to "${req.body.stage}".`,
           type: "STAGE_CHANGE",
+        });
+
+        // Broadcast live SSE
+        notificationStreamService.broadcast("APPLICATION_STAGE_CHANGED", {
+          id,
+          stage: req.body.stage,
+          candidateName: updated.candidateName,
+          jobTitle: updated.jobTitle,
         });
       }
 

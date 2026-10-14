@@ -56,7 +56,14 @@ export const authService = {
 
   getCurrentUser: () => {
     const saved = localStorage.getItem('hb_auth_user');
-    return saved ? JSON.parse(saved) : null;
+    if (!saved) {
+      return null;
+    }
+    try {
+      return JSON.parse(saved);
+    } catch (e) {
+      return null;
+    }
   },
 
   forgotPassword: async (email) => {

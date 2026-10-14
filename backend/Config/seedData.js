@@ -6,9 +6,99 @@ import { db } from "./connetdb.js";
  */
 export const seedInitialDatabase = async () => {
   try {
+    // 0. Ensure Admin Job Publications exist
+    const pubsSnapshot = await db.collection("job_publications").limit(1).get();
+    if (pubsSnapshot.empty) {
+      const pubsBatch = db.batch();
+      const initialPubs = [
+        {
+          id: "pub-801",
+          jobId: "job-102",
+          jobTitle: "Lead DevOps & Cloud Architect",
+          organizationId: "org-1",
+          organizationName: "Apex Global Tech",
+          requestedBy: "Elena Rostova",
+          requestedDate: "2026-03-10T09:30:00Z",
+          targetPlatform: "MANUAL",
+          status: "PENDING",
+          internalNotes: "Awaiting recruiter client confirmation on remote budget caps before pushing to manual board.",
+          createdAt: new Date().toISOString(),
+        },
+        {
+          id: "pub-802",
+          jobId: "job-101",
+          jobTitle: "Senior Full Stack Engineer",
+          organizationId: "org-1",
+          organizationName: "Apex Global Tech",
+          requestedBy: "Elena Rostova",
+          requestedDate: "2026-03-01T11:00:00Z",
+          targetPlatform: "MANUAL",
+          status: "PUBLISHED",
+          publishedDate: "2026-03-02T14:30:00Z",
+          internalNotes: "Verified job specifications, published to active portal.",
+          createdAt: new Date().toISOString(),
+        },
+      ];
+      for (const pub of initialPubs) {
+        pubsBatch.set(db.collection("job_publications").doc(pub.id), pub);
+      }
+      await pubsBatch.commit();
+    }
+
+    // 0.1 Ensure Audit Logs exist
+    const auditSnapshot = await db.collection("audit_logs").limit(1).get();
+    if (auditSnapshot.empty) {
+      const auditBatch = db.batch();
+      const initialLogs = [
+        {
+          id: "audit-1",
+          actor: "Elena Rostova",
+          role: "RECRUITER",
+          action: "JOB_CREATED",
+          entity: "Job",
+          entityId: "job-102",
+          entityName: "Lead DevOps & Cloud Architect",
+          date: "2026-03-10T09:15:00Z",
+          organization: "Apex Global Tech",
+          ipAddress: "198.51.100.42",
+          timestamp: new Date().toISOString(),
+        },
+        {
+          id: "audit-2",
+          actor: "Elena Rostova",
+          role: "RECRUITER",
+          action: "PUBLICATION_REQUESTED",
+          entity: "JobDistribution",
+          entityId: "pub-801",
+          entityName: "Lead DevOps & Cloud Architect",
+          date: "2026-03-10T09:30:00Z",
+          organization: "Apex Global Tech",
+          ipAddress: "198.51.100.42",
+          timestamp: new Date().toISOString(),
+        },
+        {
+          id: "audit-3",
+          actor: "Sarah Connor",
+          role: "OWNER",
+          action: "OFFER_EXTENDED",
+          entity: "Application",
+          entityId: "app-101",
+          entityName: "Devon Vance (Engineering)",
+          date: "2026-03-08T16:00:00Z",
+          organization: "Apex Global Tech",
+          ipAddress: "198.51.100.18",
+          timestamp: new Date().toISOString(),
+        },
+      ];
+      for (const log of initialLogs) {
+        auditBatch.set(db.collection("audit_logs").doc(log.id), log);
+      }
+      await auditBatch.commit();
+    }
+
     const jobsSnapshot = await db.collection("jobs").limit(1).get();
     if (!jobsSnapshot.empty) {
-      // Database already seeded
+      // Core database collections already seeded
       return;
     }
 

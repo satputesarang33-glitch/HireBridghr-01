@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import path from "path";
 
 // Database & Seed
 import "./Config/connetdb.js";
@@ -15,6 +16,22 @@ import interviewRoutes from "./Routes/interviewRoutes.js";
 import notificationRoutes from "./Routes/notificationRoutes.js";
 import adminRoutes from "./Routes/adminRoutes.js";
 import reportRoutes from "./Routes/reportRoutes.js";
+import storageRoutes from "./Routes/storageRoutes.js";
+import aiRoutes from "./Routes/aiRoutes.js";
+import distributionRoutes from "./Routes/distributionRoutes.js";
+import offerRoutes from "./Routes/offerRoutes.js";
+import messageRoutes from "./Routes/messageRoutes.js";
+import billingRoutes from "./Routes/billingRoutes.js";
+import webhookRoutes from "./Routes/webhookRoutes.js";
+import screeningRoutes from "./Routes/screeningRoutes.js";
+import assessmentRoutes from "./Routes/assessmentRoutes.js";
+import complianceRoutes from "./Routes/complianceRoutes.js";
+import referenceRoutes from "./Routes/referenceRoutes.js";
+import sourcingRoutes from "./Routes/sourcingRoutes.js";
+import agentRoutes from "./Routes/agentRoutes.js";
+import predictiveAnalyticsRoutes from "./Routes/predictiveAnalyticsRoutes.js";
+import ssoRoutes from "./Routes/ssoRoutes.js";
+import onboardingRoutes from "./Routes/onboardingRoutes.js";
 
 // Middlewares
 import { notFoundHandler, errorHandler } from "./Middleware/errorHandler.js";
@@ -55,7 +72,12 @@ app.use(
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "X-Requested-With",
+      "Accept",
+    ],
   }),
 );
 
@@ -94,6 +116,9 @@ app.get("/api/health", (req, res) => {
   });
 });
 
+// Serve static public assets & uploads
+app.use(express.static(path.resolve(process.cwd(), "public")));
+
 // ==========================================
 // 3. MOUNT API ROUTES
 // ==========================================
@@ -125,6 +150,70 @@ app.use("/api/v1/admin", adminRoutes);
 // Analytics & Reports Routes
 app.use("/api/v1/reports", reportRoutes);
 
+// File & Cloud Storage Routes
+app.use("/api/v1/storage", storageRoutes);
+app.use("/api/storage", storageRoutes);
+
+// AI Candidate Matching & Resume Parsing
+app.use("/api/v1/ai", aiRoutes);
+app.use("/api/ai", aiRoutes);
+
+// Job Distribution Feeds & Syndication
+app.use("/api/v1/distribution", distributionRoutes);
+app.use("/api/distribution", distributionRoutes);
+
+// Digital Offer Letters & In-Portal e-Signatures
+app.use("/api/v1/offers", offerRoutes);
+app.use("/api/offers", offerRoutes);
+
+// Candidate Direct Messaging & SMS Alerts
+app.use("/api/v1/messages", messageRoutes);
+app.use("/api/messages", messageRoutes);
+
+// Multi-Tenant Billing, Plans & Stripe Subscriptions
+app.use("/api/v1/billing", billingRoutes);
+app.use("/api/billing", billingRoutes);
+
+// Outbound Webhooks & HRIS Integrations (Slack, BambooHR, Workday)
+app.use("/api/v1/webhooks", webhookRoutes);
+app.use("/api/webhooks", webhookRoutes);
+
+// Async Video/Voice Screening & Audio Transcription
+app.use("/api/v1/screenings", screeningRoutes);
+app.use("/api/screenings", screeningRoutes);
+
+// Automated Skill Assessments & Coding Quizzes
+app.use("/api/v1/assessments", assessmentRoutes);
+app.use("/api/assessments", assessmentRoutes);
+
+// Blind Hiring Mode & EEOC Compliance Suite
+app.use("/api/v1/compliance", complianceRoutes);
+app.use("/api/compliance", complianceRoutes);
+
+// Automated Candidate Reference Checks
+app.use("/api/v1/references", referenceRoutes);
+app.use("/api/references", referenceRoutes);
+
+// Chrome Sourcing Extension & Talent Pool CRM
+app.use("/api/v1/sourcing", sourcingRoutes);
+app.use("/api/sourcing", sourcingRoutes);
+
+// Autonomous AI Recruiter Agent & 2-Way Calendar Booking
+app.use("/api/v1/agent", agentRoutes);
+app.use("/api/agent", agentRoutes);
+
+// Predictive Hiring Analytics & Diversity Intelligence
+app.use("/api/v1/analytics", predictiveAnalyticsRoutes);
+app.use("/api/analytics", predictiveAnalyticsRoutes);
+
+// Enterprise SAML 2.0 / SSO & Granular RBAC
+app.use("/api/v1/sso", ssoRoutes);
+app.use("/api/sso", ssoRoutes);
+
+// Automated Background Checks & Employee Onboarding Workflow
+app.use("/api/v1/onboarding", onboardingRoutes);
+app.use("/api/onboarding", onboardingRoutes);
+
 // ==========================================
 // 4. ERROR HANDLING MIDDLEWARE
 // ==========================================
@@ -143,7 +232,7 @@ app.listen(PORT, async () => {
   📡 Local URL:      http://localhost:${PORT}
   🔗 Health Check:   http://localhost:${PORT}/api/health
   📂 Database:       Firebase Firestore
-  ⚡ Connected To:   Vite Frontend (http://localhost:5173)
+  ⚡ Connected To:   Vite Frontend (http://localhost:3000)
   ======================================================
   `);
 

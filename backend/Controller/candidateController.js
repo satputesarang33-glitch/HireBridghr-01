@@ -152,23 +152,21 @@ export const candidateController = {
   // Get current candidate profile
   getMyProfile: async (req, res, next) => {
     try {
-      const userId = req.user?.uid || "usr-cand-1";
-      let profile = await UserModel.getCandidateProfile(userId);
+      const userId = req.user?.uid;
+      if (!userId) {
+        return res.status(401).json({
+          success: false,
+          error: { code: "UNAUTHORIZED", message: "Authentication required to access candidate profile." },
+        });
+      }
+
+      const profile = await UserModel.getCandidateProfile(userId);
 
       if (!profile) {
-        profile = {
-          userId,
-          fullName: "Alexander Rivera",
-          firstName: "Alexander",
-          lastName: "Rivera",
-          email: "alex.rivera@example.com",
-          headline: "Full Stack Engineer | React & Node.js",
-          currentTitle: "Senior Software Engineer",
-          location: "San Francisco, CA",
-          phone: "+1 (555) 382-9912",
-          skills: ["React.js", "Node.js", "TypeScript", "Tailwind CSS"],
-          profileCompletion: 75,
-        };
+        return res.status(404).json({
+          success: false,
+          error: { code: "NOT_FOUND", message: "Candidate profile not found." },
+        });
       }
 
       res.status(200).json({
@@ -184,7 +182,14 @@ export const candidateController = {
   // Update current candidate profile
   updateMyProfile: async (req, res, next) => {
     try {
-      const userId = req.user?.uid || "usr-cand-1";
+      const userId = req.user?.uid;
+      if (!userId) {
+        return res.status(401).json({
+          success: false,
+          error: { code: "UNAUTHORIZED", message: "Authentication required to update profile." },
+        });
+      }
+
       const payload = req.body;
 
       // Calculate profile completion score
@@ -216,7 +221,14 @@ export const candidateController = {
   // Upload/Save Candidate Resume
   uploadResume: async (req, res, next) => {
     try {
-      const userId = req.user?.uid || "usr-cand-1";
+      const userId = req.user?.uid;
+      if (!userId) {
+        return res.status(401).json({
+          success: false,
+          error: { code: "UNAUTHORIZED", message: "Authentication required to upload resume." },
+        });
+      }
+
       const payload = req.body;
 
       const resumeData = {
@@ -241,7 +253,14 @@ export const candidateController = {
   // Get candidate saved jobs
   getSavedJobs: async (req, res, next) => {
     try {
-      const userId = req.user?.uid || "usr-cand-1";
+      const userId = req.user?.uid;
+      if (!userId) {
+        return res.status(401).json({
+          success: false,
+          error: { code: "UNAUTHORIZED", message: "Authentication required to view saved jobs." },
+        });
+      }
+
       const savedIds = await UserModel.getSavedJobs(userId);
       const allJobs = await JobModel.getAll();
 
@@ -261,7 +280,14 @@ export const candidateController = {
   // Get candidate applications
   getCandidateApplications: async (req, res, next) => {
     try {
-      const userId = req.user?.uid || "usr-cand-1";
+      const userId = req.user?.uid;
+      if (!userId) {
+        return res.status(401).json({
+          success: false,
+          error: { code: "UNAUTHORIZED", message: "Authentication required to view applications." },
+        });
+      }
+
       const userEmail = req.user?.email || "";
 
       const apps = await ApplicationModel.getByCandidate(userId, userEmail);
@@ -279,7 +305,14 @@ export const candidateController = {
   // Candidate notifications
   getCandidateNotifications: async (req, res, next) => {
     try {
-      const userId = req.user?.uid || "usr-cand-1";
+      const userId = req.user?.uid;
+      if (!userId) {
+        return res.status(401).json({
+          success: false,
+          error: { code: "UNAUTHORIZED", message: "Authentication required to view notifications." },
+        });
+      }
+
       const notifs = await NotificationModel.getAllCandidate(userId);
 
       res.status(200).json({
@@ -311,7 +344,14 @@ export const candidateController = {
   // Mark all candidate notifications as read
   markAllNotificationsRead: async (req, res, next) => {
     try {
-      const userId = req.user?.uid || "usr-cand-1";
+      const userId = req.user?.uid;
+      if (!userId) {
+        return res.status(401).json({
+          success: false,
+          error: { code: "UNAUTHORIZED", message: "Authentication required." },
+        });
+      }
+
       await NotificationModel.markAllCandidateRead(userId);
 
       res.status(200).json({

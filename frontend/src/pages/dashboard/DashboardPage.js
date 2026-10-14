@@ -24,6 +24,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Ca
 import { Button } from '../../components/ui/Button.js';
 import { JobStatusBadge, ApplicationStageBadge } from '../../components/ui/Badge.js';
 import { Skeleton } from '../../components/ui/Skeleton.js';
+import { QuickStartGuide } from '../../components/dashboard/QuickStartGuide.js';
 
 export function DashboardPage() {
   const navigate = useNavigate();
@@ -166,6 +167,9 @@ export function DashboardPage() {
 
   return (
     <div className="space-y-8 animate-fade-in">
+      {/* Get Started Quick Start Guide */}
+      <QuickStartGuide />
+
       {/* Welcome Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
         <div>

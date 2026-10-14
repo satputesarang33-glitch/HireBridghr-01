@@ -1,0 +1,186 @@
+/* ATS Left Filter Sidebar Styling matching reference video */
+.ats-sidebar {
+  width: 100%;
+  max-width: 280px;
+  background-color: #ffffff;
+  border-radius: 1rem;
+  border: 1px solid #e2e8f0;
+  padding: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  flex-shrink: 0;
+}
+
+@media (max-width: 1024px) {
+  .ats-sidebar {
+    max-width: 100%;
+  }
+}
+
+.ats-sidebar-cta {
+  width: 100%;
+}
+
+.ats-sidebar-create-btn {
+  width: 100%;
+  background-color: #4f46e5;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.6875rem 1rem;
+  border-radius: 0.75rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 2px 4px rgba(79, 70, 229, 0.2);
+}
+
+.ats-sidebar-create-btn:hover {
+  background-color: #4338ca;
+  transform: translateY(-1px);
+}
+
+.ats-sidebar-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ats-sidebar-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #475569;
+}
+
+/* Radio Group */
+.ats-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.ats-radio-label {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.ats-radio-custom {
+  width: 1.125rem;
+  height: 1.125rem;
+  border-radius: 50%;
+  border: 1.5px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.ats-radio-custom.is-checked {
+  border-color: #4f46e5;
+}
+
+.ats-radio-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background-color: #4f46e5;
+}
+
+.ats-radio-text {
+  font-size: 0.875rem;
+  color: #475569;
+  font-weight: 500;
+  transition: color 0.15s ease;
+}
+
+.ats-radio-text.is-checked {
+  color: #0f172a;
+  font-weight: 600;
+}
+
+/* Date Range Inputs */
+.ats-date-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ats-date-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.ats-date-input {
+  width: 100%;
+  padding: 0.5625rem 2.25rem 0.5625rem 0.75rem;
+  font-size: 0.8125rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.625rem;
+  background-color: #f8fafc;
+  color: #1e293b;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.15s ease;
+  cursor: pointer;
+}
+
+.ats-date-input:focus {
+  border-color: #4f46e5;
+  background-color: #ffffff;
+}
+
+/* Hide duplicate native calendar icon in Chromium/Edge/WebKit while keeping it clickable over the custom icon */
+.ats-date-input::-webkit-calendar-picker-indicator {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 2.25rem;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.ats-date-input::-webkit-inner-spin-button,
+.ats-date-input::-webkit-clear-button {
+  display: none;
+}
+
+.ats-date-icon {
+  position: absolute;
+  right: 0.75rem;
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+/* Clear filters */
+.ats-sidebar-reset-btn {
+  background: none;
+  border: none;
+  color: #6366f1;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.25rem 0;
+  text-align: left;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.ats-sidebar-reset-btn:hover {
+  text-decoration: underline;
+}

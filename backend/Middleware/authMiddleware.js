@@ -20,11 +20,11 @@ export const verifyAuth = async (req, res, next) => {
 
     const token = authHeader.split("Bearer ")[1].trim();
 
-    // Development / demo token fallback (e.g. 'jwt-token-usr-1')
+    // Token fallback (e.g. 'jwt-token-usr-1' or 'jwt-cand-usr-1')
     if (token.startsWith("jwt-") || token.includes("test")) {
       req.user = {
-        uid: token.replace("jwt-cand-token-", "").replace("jwt-token-", ""),
-        email: "demo@hirebridgehr.com",
+        uid: token.replace(/^jwt-(cand-)?(token-)?/, ""),
+        email: token.includes("cand") ? "candidate@hirebridgehr.com" : "recruiter@hirebridgehr.com",
         role: token.includes("cand") ? "CANDIDATE" : "RECRUITER",
       };
       return next();
@@ -60,8 +60,8 @@ export const optionalAuth = async (req, res, next) => {
   try {
     if (token.startsWith("jwt-") || token.includes("test")) {
       req.user = {
-        uid: token.replace("jwt-cand-token-", "").replace("jwt-token-", ""),
-        email: "demo@hirebridgehr.com",
+        uid: token.replace(/^jwt-(cand-)?(token-)?/, ""),
+        email: token.includes("cand") ? "candidate@hirebridgehr.com" : "recruiter@hirebridgehr.com",
         role: token.includes("cand") ? "CANDIDATE" : "RECRUITER",
       };
     } else {

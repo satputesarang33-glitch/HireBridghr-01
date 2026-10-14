@@ -26,6 +26,7 @@ import { useTheme } from '../context/ThemeContext.js';
 import { useNotifications } from '../hooks/useNotifications.js';
 import { Button } from '../components/ui/Button.js';
 import { cn } from '../utils/cn.js';
+import { TopNavBar } from '../components/navigation/TopNavBar.js';
 
 export function AppLayout() {
   const location = useLocation();
@@ -321,6 +322,9 @@ export function AppLayout() {
             </button>
           </div>
         </header>
+
+        {/* PyjamaHR Top Navigation Bar */}
+        <TopNavBar />
 
         {/* Scrollable Page Body */}
         <main className="flex-1 overflow-y-auto p-3 sm:p-6 lg:p-8">

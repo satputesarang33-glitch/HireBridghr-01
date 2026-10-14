@@ -17,10 +17,12 @@ import {
   Trash2,
   CheckCircle2,
   Share2,
-  ExternalLink,
-  ShieldCheck,
   Star,
+  Bot,
+  UserCheck,
 } from 'lucide-react';
+import { AutonomousRecruiterAgentCard } from '../../components/enterprise/AutonomousRecruiterAgentCard.js';
+import { OnboardingWorkflowCard } from '../../components/enterprise/OnboardingWorkflowCard.js';
 import {
   useCandidate,
   useAddCandidateNote,
@@ -248,6 +250,8 @@ export function CandidateDetailsPage() {
           { id: 'applications', label: 'Applied Positions', icon: Briefcase, badge: applications.length },
           { id: 'timeline', label: 'Activity Timeline', icon: Clock },
           { id: 'notes', label: 'Recruiter Notes', icon: MessageSquare, badge: (candidate.notes || []).length },
+          { id: 'ai-agent', label: 'Autonomous AI Recruiter', icon: Bot },
+          { id: 'onboarding', label: 'Onboarding & BG Check', icon: UserCheck },
         ]}
         activeTab={activeTab}
         onChange={setActiveTab}
@@ -614,6 +618,16 @@ export function CandidateDetailsPage() {
             )}
           </div>
         </div>
+      )}
+
+      {/* TAB 6: Autonomous AI Recruiter Agent */}
+      {activeTab === 'ai-agent' && (
+        <AutonomousRecruiterAgentCard candidateId={id} candidateName={candidate.name} />
+      )}
+
+      {/* TAB 7: Onboarding & Background Verification */}
+      {activeTab === 'onboarding' && (
+        <OnboardingWorkflowCard candidateId={id} candidateName={candidate.name} />
       )}
 
       {/* Assign Recruiter Modal */}
