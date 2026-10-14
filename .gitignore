@@ -1,0 +1,63 @@
+# HirebridgeHR Root Git Ignore Rules
+
+# Dependencies
+node_modules/
+*/node_modules/
+.pnp
+.pnp.js
+
+# Environment and Secret Files (CRITICAL)
+.env
+.env.*
+!.env.example
+*.env
+*.env.*
+!*.env.example
+serviceAccountKey.json
+serviceAccount*.json
+firebase-adminsdk*.json
+*.pem
+*.key
+*.cert
+*.p12
+*.pfx
+
+# Production Build Artifacts & User Uploads
+dist/
+*/dist/
+build/
+*/build/
+public/uploads/
+*/public/uploads/
+
+# Testing & Coverage
+coverage/
+*/coverage/
+*.lcov
+.nyc_output
+
+# Logs and Debug
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# IDE and OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Temporary / Scratch
+tmp/
+temp/
+scratch/
+testsprite_tests/tmp/

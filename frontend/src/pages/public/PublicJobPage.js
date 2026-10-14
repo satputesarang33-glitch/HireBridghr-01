@@ -86,11 +86,11 @@ export function PublicJobPage() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-brand-500/30 selection:text-brand-200 relative overflow-x-hidden">
-      {/* Google for Jobs Structured Data (SEO) */}
+      {/* Google for Jobs Structured Data (SEO - Sanitized against script breakout) */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(syndicationService.generateGoogleJsonLd(job))
+          __html: JSON.stringify(syndicationService.generateGoogleJsonLd(job)).replace(/</g, "\\u003c")
         }}
       />
 

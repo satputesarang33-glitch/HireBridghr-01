@@ -55,19 +55,62 @@ let webhookLogs = [
   },
 ];
 
+/**
+ * Validates target URL against SSRF attack vectors
+ */
+const isValidWebhookUrl = (targetUrl) => {
+  try {
+    const parsed = new URL(targetUrl);
+    if (parsed.protocol !== "https:" && parsed.protocol !== "http:") {
+      return false;
+    }
+    // Block internal metadata services and private loopbacks in production
+    if (process.env.NODE_ENV === "production") {
+      const hostname = parsed.hostname.toLowerCase();
+      if (
+        hostname === "localhost" ||
+        hostname === "127.0.0.1" ||
+        hostname === "169.254.169.254" ||
+        hostname.startsWith("10.") ||
+        hostname.startsWith("192.168.") ||
+        hostname.startsWith("172.16.")
+      ) {
+        return false;
+      }
+    }
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+/**
+ * Helper to mask sensitive webhook secrets
+ */
+const maskSecret = (secret) => {
+  if (!secret) return "";
+  if (secret.length <= 8) return "••••••••";
+  return `${secret.slice(0, 6)}••••••••`;
+};
+
 export const webhookController = {
   /**
-   * Get all registered webhooks
+   * Get all registered webhooks with masked secrets
    */
   async getWebhooks(req, res) {
+    const safeWebhooks = registeredWebhooks.map((h) => ({
+      ...h,
+      secret: maskSecret(h.secret),
+    }));
+
     return res.status(200).json({
       success: true,
-      data: registeredWebhooks,
+      data: safeWebhooks,
     });
   },
 
   /**
-   * Register a new webhook
+   * Register a new webhook (with SSRF defense)
    */
   async createWebhook(req, res) {
     const { name, url, platform = "CUSTOM", events = ["*"], secret } = req.body;
@@ -79,13 +122,22 @@ export const webhookController = {
       });
     }
 
+    if (!isValidWebhookUrl(url)) {
+      return res.status(400).json({
+        success: false,
+        error: { message: "Invalid webhook URL. Must be a valid public HTTP or HTTPS endpoint." },
+      });
+    }
+
+    const rawSecret = secret || `whsec_${Math.random().toString(36).substr(2, 12)}`;
+
     const newHook = {
       id: `wh-${Date.now()}`,
-      name,
-      url,
+      name: String(name).slice(0, 80),
+      url: String(url),
       platform,
       events: Array.isArray(events) ? events : [events],
-      secret: secret || `whsec_${Math.random().toString(36).substr(2, 10)}`,
+      secret: rawSecret,
       isActive: true,
       createdAt: new Date().toISOString(),
     };
@@ -102,7 +154,10 @@ export const webhookController = {
 
     return res.status(201).json({
       success: true,
-      data: newHook,
+      data: {
+        ...newHook,
+        secret: maskSecret(newHook.secret),
+      },
       message: "Webhook registered successfully.",
     });
   },
@@ -112,7 +167,10 @@ export const webhookController = {
    */
   async testWebhook(req, res, next) {
     try {
-      const { eventType = "test.ping", payload = { message: "Test integration ping from HireBridgeHR" } } = req.body;
+      const {
+        eventType = "test.ping",
+        payload = { message: "Test integration ping from HireBridgeHR" },
+      } = req.body;
       const result = await webhookService.dispatchEvent(eventType, payload);
 
       return res.status(200).json({

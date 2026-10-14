@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import path from "path";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 
 // Database & Seed
 import "./Config/connetdb.js";
@@ -41,34 +43,84 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Trust first proxy in containerized/cloud environments (Heroku, AWS, Vercel, Nginx)
+app.set("trust proxy", 1);
+
 // ==========================================
-// 1. GLOBAL MIDDLEWARES
+// 1. GLOBAL SECURITY MIDDLEWARES
 // ==========================================
 
-// Enable CORS for frontend Vite & custom clients
-const allowedOrigins = [
+// Helmet Security Headers (CSP, HSTS, Sniffing, Frameguard)
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'", "https://apis.google.com"],
+        styleSrc: [
+          "'self'",
+          "'unsafe-inline'",
+          "https://fonts.googleapis.com",
+        ],
+        fontSrc: ["'self'", "https://fonts.gstatic.com", "data:"],
+        imgSrc: ["'self'", "data:", "blob:", "https:", "http:"],
+        connectSrc: ["'self'", "https:", "http:", "ws:", "wss:"],
+        frameSrc: ["'self'", "https:"],
+        objectSrc: ["'none'"],
+        upgradeInsecureRequests: process.env.NODE_ENV === "production" ? [] : null,
+      },
+    },
+    crossOriginEmbedderPolicy: false,
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+    hsts: {
+      maxAge: 31536000,
+      includeSubDomains: true,
+      preload: true,
+    },
+    frameguard: { action: "sameorigin" },
+    noSniff: true,
+  })
+);
+
+// Strict CORS Allowlist
+const rawAllowed = [
   "http://localhost:3000",
   "http://localhost:3001",
   "http://localhost:5173",
   "http://127.0.0.1:3000",
   "http://127.0.0.1:3001",
   "http://127.0.0.1:5173",
-  process.env.CLIENT_URL,
-].filter(Boolean);
+  ...(process.env.CLIENT_URL ? process.env.CLIENT_URL.split(",") : []),
+];
+
+const allowedOrigins = [
+  ...new Set(rawAllowed.map((o) => o.trim()).filter(Boolean)),
+];
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (like mobile apps, curl, or Postman)
+      // Allow non-browser requests (Postman, curl, backend microservices)
       if (!origin) return callback(null, true);
-      // Allow any localhost or 127.0.0.1 port in development
-      if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
+
+      // In development / test mode, allow local development ports
+      if (
+        process.env.NODE_ENV !== "production" &&
+        /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)
+      ) {
         return callback(null, true);
       }
+
+      // Check strictly against configured allowlist
       if (allowedOrigins.includes(origin)) {
         return callback(null, true);
       }
-      return callback(null, true);
+
+      // Explicitly reject unauthorized cross-origin requests
+      return callback(
+        new Error("CORS policy violation: Access from origin is not allowed."),
+        false
+      );
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
@@ -77,13 +129,50 @@ app.use(
       "Authorization",
       "X-Requested-With",
       "Accept",
+      "X-CSRF-Token",
     ],
-  }),
+    maxAge: 86400, // Cache preflight response for 24 hours
+  })
 );
 
-// Body Parsing
-app.use(express.json({ limit: "15mb" }));
-app.use(express.urlencoded({ extended: true, limit: "15mb" }));
+// Rate Limiting Middlewares
+// Strict limiter for authentication routes (brute-force defense)
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: process.env.NODE_ENV === "production" ? 25 : 150,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    error: {
+      code: "RATE_LIMIT_EXCEEDED",
+      message: "Too many authentication attempts. Please try again after 15 minutes.",
+    },
+  },
+});
+
+// General API Rate Limiter
+const generalApiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: process.env.NODE_ENV === "production" ? 500 : 2000,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    error: {
+      code: "RATE_LIMIT_EXCEEDED",
+      message: "Too many requests from this IP. Please try again later.",
+    },
+  },
+});
+
+// Apply Rate Limiters
+app.use("/api/auth", authLimiter);
+app.use("/api", generalApiLimiter);
+
+// Body Parsing with defensive size limits (1MB for JSON/URL-encoded)
+app.use(express.json({ limit: "1mb" }));
+app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 
 // Request Logger (Development)
 if (process.env.NODE_ENV !== "production") {
@@ -116,8 +205,20 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-// Serve static public assets & uploads
-app.use(express.static(path.resolve(process.cwd(), "public")));
+// Serve static public assets with defensive security headers and dotfile ignoring
+app.use(
+  express.static(path.resolve(process.cwd(), "public"), {
+    dotfiles: "ignore",
+    index: false,
+    setHeaders: (res, filePath) => {
+      res.setHeader("X-Content-Type-Options", "nosniff");
+      if (filePath.includes("uploads")) {
+        // Prevent inline script execution for uploaded assets
+        res.setHeader("Content-Security-Policy", "default-src 'none'");
+      }
+    },
+  })
+);
 
 // ==========================================
 // 3. MOUNT API ROUTES
@@ -228,15 +329,17 @@ app.use(errorHandler);
 app.listen(PORT, async () => {
   console.log(`
   ======================================================
-  🚀 HireBridgeHR Backend Server Running
+  🚀 HireBridgeHR Backend Server Running (Secured)
   📡 Local URL:      http://localhost:${PORT}
   🔗 Health Check:   http://localhost:${PORT}/api/health
   📂 Database:       Firebase Firestore
   ⚡ Connected To:   Vite Frontend (http://localhost:3000)
+  🛡️ Security:       Helmet, Strict CORS, Rate Limiting Active
   ======================================================
   `);
 
   // Run optional initial Firestore seed if collection is empty
   await seedInitialDatabase();
 });
+
 export default app;

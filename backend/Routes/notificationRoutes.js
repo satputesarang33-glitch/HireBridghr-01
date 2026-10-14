@@ -1,7 +1,11 @@
 import { Router } from "express";
 import { notificationController } from "../Controller/notificationController.js";
+import { verifyAuth } from "../Middleware/authMiddleware.js";
 
 const router = Router();
+
+// Protect internal notifications with mandatory authentication
+router.use(verifyAuth);
 
 router.get("/stream", notificationController.streamNotifications);
 router.get("/", notificationController.getAllNotifications);

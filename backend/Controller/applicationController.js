@@ -129,6 +129,39 @@ export const applicationController = {
   withdrawApplication: async (req, res, next) => {
     try {
       const { id } = req.params;
+
+      // Ownership / IDOR verification
+      const existing = await ApplicationModel.getById(id);
+      if (!existing) {
+        return res.status(404).json({
+          success: false,
+          error: { code: "NOT_FOUND", message: "Application not found." },
+        });
+      }
+
+      if (req.user) {
+        const isOwner =
+          req.user.uid === existing.candidateId ||
+          (existing.candidateEmail &&
+            req.user.email?.toLowerCase() === existing.candidateEmail.toLowerCase());
+        const isStaff = [
+          "RECRUITER",
+          "ADMIN",
+          "SUPER_ADMIN",
+          "OWNER",
+        ].includes((req.user.role || "").toUpperCase());
+
+        if (!isOwner && !isStaff) {
+          return res.status(403).json({
+            success: false,
+            error: {
+              code: "FORBIDDEN",
+              message: "Access denied. You can only withdraw your own applications.",
+            },
+          });
+        }
+      }
+
       const withdrawn = await ApplicationModel.withdraw(id);
 
       if (!withdrawn) {

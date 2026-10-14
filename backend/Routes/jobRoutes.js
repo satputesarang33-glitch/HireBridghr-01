@@ -1,19 +1,36 @@
 import { Router } from "express";
 import { jobController } from "../Controller/jobController.js";
-import { optionalAuth } from "../Middleware/authMiddleware.js";
+import { verifyAuth, optionalAuth, requireRole } from "../Middleware/authMiddleware.js";
 
 const router = Router();
 
-// Candidate Job Actions (Apply & Save)
-router.post("/:id/apply", optionalAuth, jobController.applyToJob);
-router.post("/:id/save", optionalAuth, jobController.saveJob);
-router.delete("/:id/save", optionalAuth, jobController.unsaveJob);
+// Public Requisitions Browsing (Candidates & Guests)
+router.get("/", optionalAuth, jobController.getAllJobs);
+router.get("/:id", optionalAuth, jobController.getJobById);
 
-// Standard Job CRUD
-router.get("/", jobController.getAllJobs);
-router.get("/:id", jobController.getJobById);
-router.post("/", jobController.createJob);
-router.put("/:id", jobController.updateJob);
-router.delete("/:id", jobController.deleteJob);
+// Candidate Actions
+router.post("/:id/apply", optionalAuth, jobController.applyToJob);
+router.post("/:id/save", verifyAuth, jobController.saveJob);
+router.delete("/:id/save", verifyAuth, jobController.unsaveJob);
+
+// Recruiter Requisition Management (Protected)
+router.post(
+  "/",
+  verifyAuth,
+  requireRole("RECRUITER", "ADMIN", "SUPER_ADMIN", "OWNER"),
+  jobController.createJob
+);
+router.put(
+  "/:id",
+  verifyAuth,
+  requireRole("RECRUITER", "ADMIN", "SUPER_ADMIN", "OWNER"),
+  jobController.updateJob
+);
+router.delete(
+  "/:id",
+  verifyAuth,
+  requireRole("RECRUITER", "ADMIN", "SUPER_ADMIN", "OWNER"),
+  jobController.deleteJob
+);
 
 export default router;

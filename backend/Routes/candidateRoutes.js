@@ -1,27 +1,59 @@
 import { Router } from "express";
 import { candidateController } from "../Controller/candidateController.js";
-import { optionalAuth } from "../Middleware/authMiddleware.js";
+import { verifyAuth, requireRole } from "../Middleware/authMiddleware.js";
 
 const router = Router();
 
 // Candidate Self-Portal Endpoints (Defined before /:id)
-router.get("/me", optionalAuth, candidateController.getMyProfile);
-router.put("/me", optionalAuth, candidateController.updateMyProfile);
-router.post("/resume", optionalAuth, candidateController.uploadResume);
-router.get("/saved-jobs", optionalAuth, candidateController.getSavedJobs);
-router.get("/applications", optionalAuth, candidateController.getCandidateApplications);
+// Protected: Candidates and authorized users can access own profile data
+router.get("/me", verifyAuth, candidateController.getMyProfile);
+router.put("/me", verifyAuth, candidateController.updateMyProfile);
+router.post("/resume", verifyAuth, candidateController.uploadResume);
+router.get("/saved-jobs", verifyAuth, candidateController.getSavedJobs);
+router.get("/applications", verifyAuth, candidateController.getCandidateApplications);
 
 // Candidate Notification Endpoints
-router.get("/notifications", optionalAuth, candidateController.getCandidateNotifications);
-router.put("/notifications/read-all", optionalAuth, candidateController.markAllNotificationsRead);
-router.put("/notifications/:id/read", optionalAuth, candidateController.markNotificationRead);
+router.get("/notifications", verifyAuth, candidateController.getCandidateNotifications);
+router.put("/notifications/read-all", verifyAuth, candidateController.markAllNotificationsRead);
+router.put("/notifications/:id/read", verifyAuth, candidateController.markNotificationRead);
 
 // Recruiter / ATS Candidate Management
-router.get("/", candidateController.getAllCandidates);
-router.post("/", candidateController.createCandidate);
-router.get("/:id", candidateController.getCandidateById);
-router.put("/:id", candidateController.updateCandidate);
-router.delete("/:id", candidateController.deleteCandidate);
-router.post("/:id/notes", candidateController.addNote);
+// Protected: Only Recruiters, Hiring Managers, and Admins can view/manage candidates
+router.get(
+  "/",
+  verifyAuth,
+  requireRole("RECRUITER", "ADMIN", "SUPER_ADMIN", "OWNER", "HIRING_MANAGER"),
+  candidateController.getAllCandidates
+);
+router.post(
+  "/",
+  verifyAuth,
+  requireRole("RECRUITER", "ADMIN", "SUPER_ADMIN", "OWNER"),
+  candidateController.createCandidate
+);
+router.get(
+  "/:id",
+  verifyAuth,
+  requireRole("RECRUITER", "ADMIN", "SUPER_ADMIN", "OWNER", "HIRING_MANAGER"),
+  candidateController.getCandidateById
+);
+router.put(
+  "/:id",
+  verifyAuth,
+  requireRole("RECRUITER", "ADMIN", "SUPER_ADMIN", "OWNER"),
+  candidateController.updateCandidate
+);
+router.delete(
+  "/:id",
+  verifyAuth,
+  requireRole("RECRUITER", "ADMIN", "SUPER_ADMIN", "OWNER"),
+  candidateController.deleteCandidate
+);
+router.post(
+  "/:id/notes",
+  verifyAuth,
+  requireRole("RECRUITER", "ADMIN", "SUPER_ADMIN", "OWNER", "HIRING_MANAGER"),
+  candidateController.addNote
+);
 
 export default router;
